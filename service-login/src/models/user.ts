@@ -7,7 +7,7 @@ export interface IUser extends Document {
   comparePassword: (password: string) => Promise<Boolean>
 };
 
-const userSchema = new Schema({
+const userSchema = new Schema<IUser>({
   email: {
     type: String,
     unique: true,
@@ -21,7 +21,7 @@ const userSchema = new Schema({
   }
 });
 
-userSchema.pre<IUser>("save", async function(next) {
+userSchema.pre("save", async function(next) {
   const user = this;
 
   if (!user.isModified("password")) return next();
@@ -33,10 +33,8 @@ userSchema.pre<IUser>("save", async function(next) {
   next();
 });
 
-userSchema.methods.comparePassword = async function(
-  password: string
-): Promise<Boolean> {
-  return await bcrypt.compare(password, this.password);
+userSchema.methods.comparePassword = function(password: string): Promise<Boolean> {
+  return bcrypt.compare(password, this.password);
 };
 
 export default model<IUser>("User", userSchema);
