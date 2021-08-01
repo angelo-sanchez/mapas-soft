@@ -1,23 +1,45 @@
-<div class="row">
-  <p>app {{title}} running...</p>
+<div class="header">
+  <div>
+    <button type="button" mat-button (click)="drawer.toggle()" style="margin-right: 10px;">
+      <mat-icon aria-hidden="false" aria-label="Example home icon">menu</mat-icon>
+      <!-- <mat-icon *ngIf="!sidenav" aria-hidden="false" aria-label="Example home icon">clear</mat-icon> -->
+    </button>
+    <span>MAP-SOFT</span>
+  </div>
+  
+  <div class="content-user" [matMenuTriggerFor]="menu">
+    <!-- <button mat-button >
+      Menu
+    </button> -->
+    <span> {{ user.nombre }}</span>
+    <div class="separador-10"></div>
+    <div class="user">
+      <span>{{ user.nombre.charAt(0) }}</span>
+    </div>
+  </div>
+  <mat-menu #menu="matMenu" >
+    <!-- <div class="info-menu"> 
+      <div class="user">
+        <span>{{ user.nombre.charAt(0) }}</span>
+      </div>
+      {{user.nombre}} {{user.apellido}}
+    </div> -->
+    <button mat-menu-item><mat-icon aria-hidden="false" aria-label="Example home icon">logout</mat-icon>Cerrar sesion</button>
+  </mat-menu>
 </div>
 
-<mat-slider min="1" max="100" step="1" value="1"></mat-slider>
 
-<button mat-button>Basic</button>
+<mat-drawer-container class="example-container content" autosize>
+  <mat-drawer #drawer class="example-sidenav" class="width-sidenav sidenav" mode="side" opened>
+    <p>Auto-resizing sidenav</p>
+  </mat-drawer>
 
-<section>
-  <div class="example-label">Raised</div>
-  <div class="example-button-row">
-    <button mat-raised-button>Basic</button>
-    <button mat-raised-button color="primary">Primary</button>
-    <button mat-raised-button color="accent">Accent</button>
-    <button mat-raised-button color="warn">Warn</button>
-    <button mat-raised-button disabled>Disabled</button>
-    <a mat-raised-button href="https://www.google.com/" target="_blank">Link</a>
+  <div class="example-sidenav-content">
+    <div>
+      Contenido
+    </div>
   </div>
-</section>
 
-<button type="button" class="btn btn-primary">Primary</button>
+</mat-drawer-container>
 
-<router-outlet></router-outlet>
+
