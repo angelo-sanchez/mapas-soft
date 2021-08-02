@@ -7,13 +7,7 @@ import { Component } from '@angular/core';
 })
 
 export class AppComponent {
-  public title = 'mapas-soft';
-  public sidenav : boolean = false;
-  public user = {
-    'nombre' : 'Usuario',
-    'apellido' : 'Usuario'
-  }
-
+  
 
 
 }

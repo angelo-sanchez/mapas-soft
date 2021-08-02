@@ -1,0 +1,22 @@
+<div class="contenedor">
+    <form class="contenedor-formulario" [formGroup]="formulario" autocomplete="off">
+        <div class="contenedor-titulo">
+            <p class="titulo-formulario">Acceder</p>
+        </div>
+
+        <mat-form-field class="mat-form-field" appearance="outline">
+            <mat-label>Correo</mat-label>
+            <input type="email" matInput  formControlName="email" placeholder="Correo">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+            <mat-label>Contraseña</mat-label>
+            <input type="password" matInput  formControlName="password" placeholder="Contraseña">
+        </mat-form-field>
+
+        <div class="contenedor-button">
+            <p class="mensaje">No tenes cuenta? <a href="#">Registrarse</a></p>
+            <button mat-raised-button color="primary" (click)="login()">Entrar</button>
+        </div>
+    </form>
+</div>

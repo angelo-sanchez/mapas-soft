@@ -1,0 +1,22 @@
+.contenedor-error{
+    background-color: #424242;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.titulo-error{
+    font-size: 32px;
+    font-weight: 500;
+    color: rgb(255, 140, 140);
+    margin-bottom: 20px;
+}
+
+.descripcion-error {
+    font-size: 24px;
+    font-weight: 300;
+    color: #Fff;
+}
