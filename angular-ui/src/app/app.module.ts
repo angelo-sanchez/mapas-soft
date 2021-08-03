@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { ReactiveFormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http'; 
 
 // Coponentes angular-material
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -35,6 +36,7 @@ import { ErrorComponent } from './error/error.component';
     BrowserModule,
     AppRoutingModule,
     ReactiveFormsModule,
+    HttpClientModule,
 
     // Material angular
     MatInputModule,

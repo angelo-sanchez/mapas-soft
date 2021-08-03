@@ -28,7 +28,13 @@ export class LoginComponent implements OnInit {
     let email = this.formulario.controls.email.value;
     let password = this.formulario.controls.password.value;
 
-    this.loginService.login(email, password);
+    this.loginService.login(email, password).subscribe(data => {
+      console.log("status login: ");
+      console.log(data);
+    }, error => {
+      console.log('Se produjo un error al intentar iniciar sesion.');
+      console.log(error);
+    });
   }
 
 }

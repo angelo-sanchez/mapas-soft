@@ -1,3 +1,4 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 @Injectable({
@@ -6,11 +7,20 @@ import { Injectable } from '@angular/core';
 export class LoginService {
   private token : any = null;
 
-  constructor() {
-   }
+  public urlLocal : string = 'http://localhost:3000/';
+
+  constructor(
+    public httpClient : HttpClient,
+  ) {}
 
   login(email: string, password : string){
-    console.log(email + ' - ' + password);
+    let url = this.urlLocal + 'signin';
+
+    let body = {
+      'email': email,
+      'password' : password
+    }
+    return this.httpClient.post(url,body);
   }
 
   getToken(){
