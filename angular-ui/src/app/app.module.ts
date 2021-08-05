@@ -19,6 +19,11 @@ import { SidenavComponent } from './sidenav/sidenav.component';
 import { LoginComponent } from './login/login.component';
 import { DashboardComponent } from './modules/dashboard/dashboard.component';
 import { ErrorComponent } from './error/error.component';
+import { SigninComponent } from './signin/signin.component';
+
+// Servicios
+import { LoginService } from './login/login.service';
+import { LoginGuardianService } from './login/login-guardian.service';
 
 
 
@@ -30,7 +35,8 @@ import { ErrorComponent } from './error/error.component';
     SidenavComponent,
     LoginComponent,
     ErrorComponent,
-    DashboardComponent
+    DashboardComponent,
+    SigninComponent
   ],
   imports: [
     BrowserModule,
@@ -47,7 +53,7 @@ import { ErrorComponent } from './error/error.component';
     MatSidenavModule,
     BrowserAnimationsModule,
   ],
-  providers: [],
+  providers: [LoginService, LoginGuardianService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

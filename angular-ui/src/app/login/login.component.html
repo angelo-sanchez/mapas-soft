@@ -13,6 +13,9 @@
             <mat-label>Contraseña</mat-label>
             <input type="password" matInput  formControlName="password" placeholder="Contraseña">
         </mat-form-field>
+        <div>
+            <p class="errorMsg">{{ errorMsg }}</p>
+        </div>
 
         <div class="contenedor-button">
             <p class="mensaje">No tenes cuenta? <a href="#">Registrarse</a></p>

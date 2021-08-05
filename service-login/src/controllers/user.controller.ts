@@ -9,19 +9,19 @@ function createToken(user: IUser) {
   });
 }
 
-export const signUp = async (
+export const register = async (
   req: Request,
   res: Response
 ): Promise<Response> => {
   if (!req.body.email || !req.body.password) {
     return res
       .status(400)
-      .json({ msg: "Please. Send your email and password" });
+      .json({ msg: "Por favor ingrese su correo o contraseña" });
   }
 
   const user = await User.findOne({ email: req.body.email });
   if (user) {
-    return res.status(400).json({ msg: "The User already Exists" });
+    return res.status(400).json({ msg: "El usuario ya existe" });
   }
 
   const newUser = new User(req.body);
@@ -29,27 +29,38 @@ export const signUp = async (
   return res.status(201).json(newUser);
 };
 
-export const signIn = async (
+export const login = async (
   req: Request,
   res: Response
-): Promise<Response> => {
+)=> {
+  // return res.send('signin')
   if (!req.body.email || !req.body.password) {
     return res
       .status(400)
-      .json({ msg: "Please. Send your email and password" });
+      .json({ msg: "Por favor ingrese su correo o contraseña" });
   }
 
   const user = await User.findOne({ email: req.body.email });
   if (!user) {
-    return res.status(400).json({ msg: "The User does not exists" });
+    return res.status(400).json({ msg: "El usuario no existe" });
   }
 
   const isMatch = await user.comparePassword(req.body.password);
   if (isMatch) {
-    return res.status(400).json({ token: createToken(user) });
+    return res.status(200).json({ token: createToken(user) });
   }
 
   return res.status(400).json({
-    msg: "The email or password are incorrect"
+    msg: "El email o la contraseña son incorrecto"
+  });
+};
+
+export const logout = async (
+  req: Request,
+  res: Response
+) => {
+  req.logout();
+  return res.status(200).json({
+    msg: "OK"
   });
 };

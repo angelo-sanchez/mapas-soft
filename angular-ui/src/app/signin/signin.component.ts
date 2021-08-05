@@ -1,16 +1,16 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl} from '@angular/forms';
-import { LoginService } from './login.service';
+import { FormGroup, FormControl } from '@angular/forms';
+import { LoginService } from '../login/login.service';
 
 @Component({
-  selector: 'app-login',
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']
+  selector: 'app-signin',
+  templateUrl: './signin.component.html',
+  styleUrls: ['./signin.component.css']
 })
-export class LoginComponent implements OnInit {
-  public errorMsg : string = '';
+export class SigninComponent implements OnInit {
 
   public formulario : FormGroup;
+  public errorMsg : string = '';
 
   constructor(
     private loginService : LoginService,
@@ -28,12 +28,11 @@ export class LoginComponent implements OnInit {
       'password' : new FormControl(''),
     });
   }
-  
-  login(){
+
+  signin(){
     let email = this.formulario.controls.email.value;
     let password = this.formulario.controls.password.value;
-
-    this.loginService.login(email, password);
+    this.loginService.register(email,password);
   }
 
 }
