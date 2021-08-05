@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl} from '@angular/forms';
+import { FormGroup, FormControl, Validators} from '@angular/forms';
+import { Router } from '@angular/router';
 import { LoginService } from './login.service';
 
 @Component({
@@ -9,11 +10,13 @@ import { LoginService } from './login.service';
 })
 export class LoginComponent implements OnInit {
   public errorMsg : string = '';
+  public errorMail : boolean = false;
 
   public formulario : FormGroup;
 
   constructor(
     private loginService : LoginService,
+    private route : Router,
   ) { 
     this.formulario = new FormGroup({});
   }
@@ -24,16 +27,25 @@ export class LoginComponent implements OnInit {
 
   initFormulario(){
     this.formulario = new FormGroup({
-      'email': new FormControl(''),
-      'password' : new FormControl(''),
+      'email': new FormControl('',[Validators.required, Validators.email]),
+      'password' : new FormControl('',[Validators.required, Validators.minLength(4)]),
     });
   }
-  
-  login(){
-    let email = this.formulario.controls.email.value;
-    let password = this.formulario.controls.password.value;
 
-    this.loginService.login(email, password);
+  login(){
+    if(!this.formulario.invalid){
+      let email = this.formulario.controls.email.value;
+      let password = this.formulario.controls.password.value;
+      this.loginService.login(email, password).subscribe((data : any) => {
+        this.errorMsg = '';
+        this.loginService.setToken(data.token);
+        this.route.navigate(['/']);
+      }, error => {
+        console.log('Se produjo un error al iniciar sesion.');
+        console.log(error);   
+        this.errorMsg = error.error.msg;
+      });
+    }
   }
 
 }

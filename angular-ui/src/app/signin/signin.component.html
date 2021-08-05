@@ -7,17 +7,30 @@
         <mat-form-field class="mat-form-field" appearance="outline">
             <mat-label>Correo electrónico</mat-label>
             <input type="email" matInput formControlName="email" placeholder="Correo">
+            <mat-error *ngIf="formulario.get('email')?.hasError('email') && !formulario.get('email')?.hasError('required')">
+                El formato es incorrecto
+            </mat-error>
+            <mat-error *ngIf="formulario.get('email')?.hasError('required')">
+                Este campo es obligatorio
+            </mat-error>
         </mat-form-field>
     
-        <mat-form-field appearance="outline">
+        <mat-form-field appearance="outline" style="margin-top: 5px;">
             <mat-label>Contraseña</mat-label>
             <input type="password" matInput formControlName="password" placeholder="Contraseña">
+            <mat-error *ngIf="formulario.get('password')?.hasError('minlength') && !formulario.get('password')?.hasError('required')">
+                La contraseña debe tener al menos 4 caracteres
+            </mat-error>
+            <mat-error *ngIf="formulario.get('password')?.hasError('required')">
+                Este campo es obligatorio
+            </mat-error>
         </mat-form-field>
         <div>
             <p class="errorMsg">{{ errorMsg }}</p>
         </div>
     
         <div class="contenedor-button">
+            <p class="mensaje">Ya tenes cuenta? <a [routerLink]="['/login']">Acceder</a></p>
             <button mat-raised-button color="primary" (click)="signin()">Registrar</button>
         </div>
     </form>

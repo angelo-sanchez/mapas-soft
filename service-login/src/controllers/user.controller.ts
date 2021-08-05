@@ -21,7 +21,7 @@ export const register = async (
 
   const user = await User.findOne({ email: req.body.email });
   if (user) {
-    return res.status(400).json({ msg: "El usuario ya existe" });
+    return res.status(400).json({ msg: "El correo eléctronico ya existe" });
   }
 
   const newUser = new User(req.body);
@@ -42,7 +42,7 @@ export const login = async (
 
   const user = await User.findOne({ email: req.body.email });
   if (!user) {
-    return res.status(400).json({ msg: "El usuario no existe" });
+    return res.status(400).json({ msg: "El email o la contraseña son incorrecto" });
   }
 
   const isMatch = await user.comparePassword(req.body.password);
