@@ -27,6 +27,10 @@
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
+p,span{
+  cursor: default;
+}
+
 .mat-menu-content{
   background: var(--backgroundmenu)!important;
 }

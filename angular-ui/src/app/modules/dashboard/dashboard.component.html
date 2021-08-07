@@ -16,15 +16,18 @@
     </div>
     <mat-menu #menu="matMenu" class="material-menu">
       <div class="info-menu"> 
-        <div class="flexible">
+        <div class="info-usuario">
           <div class="user user-big">
             <span>{{ user.email.charAt(0).toUpperCase() }}</span>
           </div>
         </div>
-       <div class="info-user">
-        {{user.email}}
-       </div>
+
+        <div class="info-user">
+          <p class="texto nombre">{{ user.email.split('@')[0] }}</p>
+          <p class="texto correo">{{ user.email }}</p>
+        </div>
       </div>
+      <mat-divider></mat-divider>
       <!-- opciones menu -->
       <button mat-menu-item (click)="logout()"><mat-icon aria-hidden="false" aria-label="Example home icon">logout</mat-icon>Cerrar sesión</button>
     </mat-menu>

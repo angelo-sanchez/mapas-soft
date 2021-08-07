@@ -16,12 +16,13 @@
  .sidenav{
     padding: 0px!important;
     border-right: 1px solid var(--border);
-    /* border: none; */
+    border: none;
     background: var(--surface);
  }
 
 .content{
     height: calc(100% - 60px);
+    /* border-top: 1px solid var(--border); */
 }
 
 .content-user{
@@ -76,7 +77,10 @@
 
 .info-menu{
     min-width: 250px;
-    padding: 20px;
+    padding: 15px;
+    display: flex;
+    padding-bottom: 20px;
+    /* border-bottom: 1px solid var(--border); */
 }
 
 .sidenav-content{
@@ -85,17 +89,39 @@
     background: var(--background);
 }
 
-.flexible{
-    width: 100%;
+.info-usuario{
+    width: 50px;
+    height: 50px;
     display: flex;
     align-items: center;
     justify-content: center;
+    margin-right: 15px;
 }
 
 .info-user{
-    margin-top: 5px;
+    width: calc(100% - 50px)!important;
+    height: 50px;
     text-align: center;
-    padding: 10px 0;
     color: var(--low-emphasis);
     cursor: default;
+}
+
+.texto{
+    text-align: left;
+    padding: 0px;
+    margin: 0px;
+    width: 100%;
+    line-height: 25px!important;
+    height: 25px!important;
+    margin: 0px!important;
+}
+
+.nombre{
+    font-size: 16px;
+    color: var(--high-emphasis);
+}
+
+.correo{
+    font-size: 12px;
+    color: var(--low-emphasis);
 }
