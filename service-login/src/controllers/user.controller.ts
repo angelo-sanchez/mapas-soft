@@ -47,7 +47,10 @@ export const login = async (
 
   const isMatch = await user.comparePassword(req.body.password);
   if (isMatch) {
-    return res.status(200).json({ token: createToken(user) });
+    let datosUsuario = {
+      'email' : user.email
+    }
+    return res.status(200).json({ token: createToken(user), 'user':datosUsuario });
   }
 
   return res.status(400).json({

@@ -11,6 +11,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatListModule } from '@angular/material/list';
 
 // Componentes 
 import { AppRoutingModule } from './app-routing.module';
@@ -45,6 +46,7 @@ import { LoginGuardianService } from './login/login-guardian.service';
     HttpClientModule,
 
     // Material angular
+    MatListModule,
     MatInputModule,
     MatFormFieldModule,
     MatMenuModule,

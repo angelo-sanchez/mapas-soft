@@ -8,25 +8,29 @@
     </div>
     
     <div class="content-user" [matMenuTriggerFor]="menu">
-      <!-- <button mat-button >
-        Menu
-      </button> -->
-      <span> {{ user.nombre }}</span>
-      <div class="separador-10"></div>
-      <div class="user">
-        <span>{{ user.nombre.charAt(0) }}</span>
+      <!-- <span> {{ user.email.split('@')[0] }}</span> -->
+      <!-- <div class="separador-10"></div> -->
+      <div class="user user-small">
+        <span>{{ user.email.charAt(0).toUpperCase() }}</span>
       </div>
     </div>
-    <mat-menu #menu="matMenu" >
-      <!-- <div class="info-menu"> 
-        <div class="user">
-          <span>{{ user.nombre.charAt(0) }}</span>
+    <mat-menu #menu="matMenu" class="material-menu">
+      <div class="info-menu"> 
+        <div class="flexible">
+          <div class="user user-big">
+            <span>{{ user.email.charAt(0).toUpperCase() }}</span>
+          </div>
         </div>
-        {{user.nombre}} {{user.apellido}}
-      </div> -->
+       <div class="info-user">
+        {{user.email}}
+       </div>
+      </div>
+      <!-- opciones menu -->
       <button mat-menu-item (click)="logout()"><mat-icon aria-hidden="false" aria-label="Example home icon">logout</mat-icon>Cerrar sesión</button>
     </mat-menu>
   </div>
+  <!-- Fin Header -->
+
   
   <mat-drawer-container class="example-container content" autosize>
     <mat-drawer #drawer class="width-sidenav sidenav" mode="side" opened>

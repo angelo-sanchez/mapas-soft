@@ -9,14 +9,12 @@ import { LoginService } from 'src/app/login/login.service';
 export class DashboardComponent implements OnInit {
   public title = 'mapas-soft';
   public sidenav : boolean = false;
-  public user = {
-    'nombre' : 'Usuario',
-    'apellido' : 'Usuario'
-  }
+  public user : any = null;
 
   constructor(private loginService : LoginService) { }
 
   ngOnInit(): void {
+    this.user = this.loginService.getUser();
   }
 
   logout(){

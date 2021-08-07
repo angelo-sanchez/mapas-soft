@@ -2,7 +2,7 @@
     width: 100%;
     min-height: 100vh;
     padding: 40px;
-    background-color: #424242;
+    background-color: var(--background);
     color: #fff;
 
     display: flex;
@@ -11,8 +11,9 @@
 }
 
 .contenedor-formulario{
-    border: 1px solid rgb(129, 129, 129);
-    border-radius:  10px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    /* border-radius:  10px; */
     padding: 40px;
     display: flex;
     flex-direction: column;

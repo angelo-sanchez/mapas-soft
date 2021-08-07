@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 })
 export class LoginService {
   private token : any = null;
+  private user : any = null;
 
   public urlLocal : string = 'http://localhost:3000/';
 
@@ -44,6 +45,14 @@ export class LoginService {
 
   setToken(token : any){
     this.token = token;
+  }
+
+  getUser(){
+    return this.user;
+  }
+
+  setUser(user: any){
+    this.user = user;
   }
 
   isAutenticado(){
