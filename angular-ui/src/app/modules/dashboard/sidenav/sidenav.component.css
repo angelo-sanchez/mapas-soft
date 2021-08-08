@@ -1,11 +1,22 @@
+.contenedor-lista{
+    margin: 0!important;
+    padding: 0!important;
+}
+
 .elemento-lista{
     color: var(--text-surface);
     padding-left: 10px!important;
 }
 
+.elemento-lista:hover{
+    /* color: var(--primary) !important; */
+    background: var(--hovermenu);
+}
+
 .option{
     border-left: 3px solid transparent;
     padding-left: 10px!important;
+    cursor: pointer;
 }
 
 .text-option{
@@ -14,7 +25,6 @@
 }
 
 .active{
-    /* border-left: var(--primary) 3px solid !important; */
     color: var(--primary) !important;
     background: var(--hovermenu);
 }

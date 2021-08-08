@@ -14,19 +14,22 @@ import { MatInputModule } from '@angular/material/input';
 import { MatListModule } from '@angular/material/list';
 import { MatTableModule } from '@angular/material/table';
 
-// Componentes 
+// Modulos
 import { AppRoutingModule } from './app-routing.module';
+import { DashboardModule } from './modules/dashboard/dashboard.module';
+
+// Componentes 
 import { AppComponent } from './app.component';
-import { SidenavComponent } from './sidenav/sidenav.component';
-import { LoginComponent } from './login/login.component';
-import { DashboardComponent } from './modules/dashboard/dashboard.component';
-import { ErrorComponent } from './error/error.component';
-import { SigninComponent } from './signin/signin.component';
-import { MapListComponent } from './modules/dashboard/map-list/map-list.component';
+// import { SidenavComponent } from './modules/dashboard/sidenav/sidenav.component';
+import { LoginComponent } from './modules/login/login.component';
+// import { DashboardComponent } from './modules/dashboard/dashboard.component';
+import { ErrorComponent } from './modules/error/error.component';
+import { RegisterComponent } from './modules/register/register.component';
+// import { MapListComponent } from './modules/dashboard/map-list/map-list.component';
 
 // Servicios
-import { LoginService } from './login/login.service';
-import { LoginGuardianService } from './login/login-guardian.service';
+import { LoginService } from './modules/login/login.service';
+import { LoginGuardianService } from './modules/login/login-guardian.service';
 import { MapListService } from './modules/dashboard/map-list/map-list-service';
 
 
@@ -36,16 +39,17 @@ import { MapListService } from './modules/dashboard/map-list/map-list-service';
 @NgModule({
   declarations: [
     AppComponent,
-    SidenavComponent,
+    // SidenavComponent,
     LoginComponent,
     ErrorComponent,
-    DashboardComponent,
-    SigninComponent,
-    MapListComponent
+    // DashboardComponent,
+    RegisterComponent,
+    // MapListComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
+    DashboardModule,
     ReactiveFormsModule,
     HttpClientModule,
 
