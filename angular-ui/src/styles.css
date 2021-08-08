@@ -29,6 +29,7 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
 p,span{
   cursor: default;
+  font-size: 14px;
 }
 
 .mat-menu-content{
@@ -37,4 +38,27 @@ p,span{
 
 mat-selection-list{
   padding: 0px!important;
+}
+
+
+/* Iconos de listas */
+.color-icon-list{
+  color: var(--low-emphasis)!important;
+}
+
+/* Mat-table */
+.mat-table{
+  background: transparent!important;
+}
+
+table {
+  width: 100%;
+}
+
+th.mat-sort-header-sorted {
+  color: black;
+}
+
+tr.mat-header-row {
+  height: 35px!important;
 }

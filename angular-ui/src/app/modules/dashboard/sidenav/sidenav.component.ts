@@ -1,12 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-
 @Component({
   selector: 'app-sidenav',
   templateUrl: './sidenav.component.html',
   styleUrls: ['./sidenav.component.css']
 })
 export class SidenavComponent implements OnInit {
-  public lista: string[] = ['Mi unidad', 'Configuracion'];
+  public listItemSelected : string = 'Mapas';
+
+
   
   constructor() { }
 
@@ -14,3 +15,4 @@ export class SidenavComponent implements OnInit {
   }
 
 }
+

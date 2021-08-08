@@ -84,7 +84,7 @@
 }
 
 .sidenav-content{
-    padding: 40px;
+    /* padding: 40px; */
     height: calc(100vh - 60px);
     background: var(--background);
 }

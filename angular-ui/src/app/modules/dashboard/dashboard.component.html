@@ -1,10 +1,12 @@
 <div class="header">
     <div>
-      <button type="button" mat-button (click)="drawer.toggle();" style="margin-right: 10px;">
+      <!-- <button type="button" mat-button  style="margin-right: 10px;">
         <mat-icon aria-hidden="false" aria-label="Example home icon">menu</mat-icon>
-        <!-- <mat-icon *ngIf="!sidenav" aria-hidden="false" aria-label="Example home icon">clear</mat-icon> -->
+      </button> -->
+      <button mat-icon-button color="accent" (click)="drawer.toggle();" style="margin: 0 5px; cursor: pointer;">
+        <mat-icon>menu</mat-icon>
       </button>
-      <span>MAP-SOFT</span>
+      <!-- <span>MAP-SOFT</span> -->
     </div>
     
     <div class="content-user" [matMenuTriggerFor]="menu">
@@ -29,7 +31,7 @@
       </div>
       <mat-divider></mat-divider>
       <!-- opciones menu -->
-      <button mat-menu-item (click)="logout()"><mat-icon aria-hidden="false" aria-label="Example home icon">logout</mat-icon>Cerrar sesión</button>
+      <button mat-menu-item (click)="logout()"><mat-icon aria-hidden="false" aria-label="Example home icon" class="color-icon-list">logout</mat-icon>Cerrar sesión</button>
     </mat-menu>
   </div>
   <!-- Fin Header -->

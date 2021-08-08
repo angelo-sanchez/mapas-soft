@@ -25,6 +25,6 @@
 }
 
 .active{
-    color: var(--primary) !important;
+    /* color: var(--primary) !important; */
     background: var(--hovermenu);
 }

@@ -16,3 +16,23 @@ table{
 	padding-left: 70px;
 }
 
+
+.contenedor{
+	/* background: yellow; */
+	height: 100%;
+	width: 100%;
+}
+
+.contenedor-botones-acciones{
+	background: var(--surface);
+	padding: 0px 25px;
+	border-bottom: 1px solid var(--border);
+	height: 56px;
+
+	display: flex;
+	align-items: center;
+}
+
+.contenido-vista{
+	padding: 10px 25px;
+}

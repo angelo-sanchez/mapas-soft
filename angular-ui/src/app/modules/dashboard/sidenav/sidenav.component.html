@@ -1,6 +1,12 @@
 <div>
     <mat-list role="list" class="contenedor-lista">
-        <mat-list-item role="listitem" class="elemento-lista option" [routerLink]="['/mapas']">Mapas</mat-list-item>
-        <mat-list-item role="listitem" class="elemento-lista option" [routerLink]="['/configuracion']">Configuración</mat-list-item>
+        <mat-list-item role="listitem" class="elemento-lista option active" [routerLink]="['/mapas']">
+            <mat-icon mat-list-icon class="color-icon-list">folder</mat-icon> 
+            <span style="padding-left: 10px;">Mapas</span>
+        </mat-list-item>
+        <mat-list-item role="listitem" class="elemento-lista option" [routerLink]="['/configuracion']">
+            <mat-icon mat-list-icon class="color-icon-list">settings</mat-icon> 
+            <span style="padding-left: 10px;">Configuración</span>
+        </mat-list-item>
     </mat-list>
 </div>
