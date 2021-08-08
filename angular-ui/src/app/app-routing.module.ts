@@ -13,8 +13,8 @@ import { SettingComponent } from './modules/dashboard/setting/setting.component'
 
 const routes: Routes = [
   {path: '',component: DashboardComponent, canActivate : [LoginGuardianService], children : [
-      {path: 'mapas', component: MapListComponent},
-      {path: 'configuracion', component: SettingComponent}
+      {path: 'maps', component: MapListComponent},
+      {path: 'setting', component: SettingComponent}
   ]},
   {path: 'login', component: LoginComponent},
   {path: 'register', component: RegisterComponent},
