@@ -12,6 +12,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatListModule } from '@angular/material/list';
+import { MatTableModule } from '@angular/material/table';
 
 // Componentes 
 import { AppRoutingModule } from './app-routing.module';
@@ -21,10 +22,12 @@ import { LoginComponent } from './login/login.component';
 import { DashboardComponent } from './modules/dashboard/dashboard.component';
 import { ErrorComponent } from './error/error.component';
 import { SigninComponent } from './signin/signin.component';
+import { MapListComponent } from './modules/dashboard/map-list/map-list.component';
 
 // Servicios
 import { LoginService } from './login/login.service';
 import { LoginGuardianService } from './login/login-guardian.service';
+import { MapListService } from './modules/dashboard/map-list/map-list-service';
 
 
 
@@ -37,7 +40,8 @@ import { LoginGuardianService } from './login/login-guardian.service';
     LoginComponent,
     ErrorComponent,
     DashboardComponent,
-    SigninComponent
+    SigninComponent,
+    MapListComponent
   ],
   imports: [
     BrowserModule,
@@ -54,8 +58,9 @@ import { LoginGuardianService } from './login/login-guardian.service';
     MatButtonModule,
     MatSidenavModule,
     BrowserAnimationsModule,
+    MatTableModule,
   ],
-  providers: [LoginService, LoginGuardianService],
+  providers: [LoginService, LoginGuardianService, MapListService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

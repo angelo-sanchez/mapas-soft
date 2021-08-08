@@ -39,7 +39,7 @@ export class LoginComponent implements OnInit {
       this.loginService.login(email, password).subscribe((data : any) => {
         this.errorMsg = '';
         this.loginService.setToken(data.token);
-        this.loginService.setUser(data.user);
+        //this.loginService.setUser(data.user);
         this.route.navigate(['/']);
       }, error => {
         console.log('Se produjo un error al iniciar sesion.');

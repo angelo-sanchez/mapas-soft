@@ -1,0 +1,18 @@
+.mat-elevation-z4{
+	height: 30px;
+	color: black;
+	background-color: lightseagreen;
+}
+table{
+	margin: auto;
+}
+.container{
+	margin:auto;
+	padding-right: 30px;
+	padding-bottom: 5px;
+}
+.container2{
+	padding-right: 70px;
+	padding-left: 70px;
+}
+
