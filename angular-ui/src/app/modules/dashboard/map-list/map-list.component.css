@@ -36,3 +36,15 @@ table{
 .contenido-vista{
 	padding: 10px 25px;
 }
+
+.mat-column-name{
+	width: calc(100% - 400px);
+}
+
+.mat-column-date_creation{
+	width: 150px;
+}
+
+.mat-column-owner{
+	width: 250px;
+}

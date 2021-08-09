@@ -8,7 +8,7 @@ import {Observable} from 'rxjs';
   styleUrls: ['./map-list.component.css']
 })
 export class MapListComponent implements OnInit {
-	displayedColumns: string[] = ['name', 'date_creation', 'owner'];
+	displayedColumns: string[] = ['name', 'owner', 'date_creation'];
 	maps$: Observable<Maps>;
 
 	constructor(private mapListService: MapListService) {

@@ -28,7 +28,7 @@ html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
 p,span{
-  cursor: default;
+  /* cursor: default; */
   font-size: 14px;
 }
 
