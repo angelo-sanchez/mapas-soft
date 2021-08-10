@@ -13,6 +13,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatListModule } from '@angular/material/list';
 import { MatTableModule } from '@angular/material/table';
+import { MatCardModule } from '@angular/material/card';
+import { MatGridListModule } from '@angular/material/grid-list';
 
 // Modulos
 import { AppRoutingModule } from './app-routing.module';
@@ -63,6 +65,8 @@ import { MapListService } from './modules/dashboard/map-list/map-list-service';
     MatSidenavModule,
     BrowserAnimationsModule,
     MatTableModule,
+    MatCardModule,
+    MatGridListModule,
   ],
   providers: [LoginService, LoginGuardianService, MapListService],
   bootstrap: [AppComponent]

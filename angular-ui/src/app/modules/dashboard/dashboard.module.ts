@@ -12,6 +12,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatListModule } from '@angular/material/list';
 import { MatTableModule } from '@angular/material/table';
+import { MatCardModule } from '@angular/material/card';
+import { MatGridListModule } from '@angular/material/grid-list';
 
 // Componentes
 import { DashboardComponent } from './dashboard.component';
@@ -42,6 +44,8 @@ import { SettingComponent } from './setting/setting.component';
     MatSidenavModule,
     BrowserAnimationsModule,
     MatTableModule,
+    MatCardModule,
+    MatGridListModule,
   ],
   exports:[
     DashboardComponent,

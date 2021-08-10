@@ -10,9 +10,10 @@ import {Observable} from 'rxjs';
 export class MapListComponent implements OnInit {
 	displayedColumns: string[] = ['name', 'owner', 'date_creation'];
 	maps$: Observable<Maps>;
-
+	listado: Boolean;
 	constructor(private mapListService: MapListService) {
 		this.maps$ = new Observable();
+		this.listado = true;
 	}
 	ngOnInit(): void {
 		this.maps$ = this.mapListService.getMaps();
