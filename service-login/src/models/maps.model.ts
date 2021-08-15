@@ -5,6 +5,7 @@ interface IMap extends Document{
     name: string,
     createdAt: Date,
     updatedAt: Date,
+    path: string,
     owner: string
 }
 
@@ -14,6 +15,13 @@ const schema = new Schema<IMap>({
         unique: true,
         required: true,
         trim: true
+    },
+    path: {
+        type: String,
+        unique: true,
+        required: true,
+        trim: true,
+        lowercase: true
     },
     createdAt: {
         type: Date,

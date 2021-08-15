@@ -11,7 +11,15 @@ export const MapsController = {
             if (error)
                 return res.status(Status.INTERNAL_SERVER_ERROR).json(error);
             if (result.length >= 0)
-                return res.status(Status.OK).json(result);
+                return res.status(Status.OK)
+                    .json(result.map(map => {
+                        return {
+                            id: map._id,
+                            owner: map.owner,
+                            date_created: map.updatedAt,
+                            name: map.name
+                        }
+                    }));
             return res.status(Status.NO_CONTENT).json([]);
         })
     },
@@ -27,10 +35,10 @@ export const MapsController = {
             let dir = fs.readdirSync(config.workdir, { withFileTypes: true });
             dir.forEach((node) => {
                 if (node.isFile()) {
-                    let map = maps.find(map => map.name == node.name);
+                    let map = maps.find(map => map.path == (config.workdir + node.name));
                     if (map) {
+                        fs.unlinkSync(map.path);
                         map.remove();
-                        fs.unlinkSync(config.workdir + node.name);
                     }
                 }
             });
