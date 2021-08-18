@@ -7,8 +7,6 @@ import { Component, OnInit } from '@angular/core';
 export class SidenavComponent implements OnInit {
   public listItemSelected : string = 'Mapas';
 
-
-  
   constructor() { }
 
   ngOnInit(): void {

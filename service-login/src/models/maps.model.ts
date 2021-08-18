@@ -16,6 +16,7 @@ const schema = new Schema<IMap>({
         trim: true
     },
     geojson: {
+        type: Object,
         required: true,
     },
     createdAt: {

@@ -50,7 +50,7 @@ export const login = async (
     let datosUsuario = {
       'email' : user.email
     }
-    return res.status(200).json({ 'token': createToken(user)});
+    return res.status(200).json({ 'token': createToken(user), user: datosUsuario});
   }
 
   return res.status(400).json({
