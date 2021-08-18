@@ -4,8 +4,7 @@ interface IMap extends Document{
     id: string
     name: string,
     createdAt: Date,
-    updatedAt: Date,
-    path: string,
+    geojson: any,
     owner: string
 }
 
@@ -16,18 +15,10 @@ const schema = new Schema<IMap>({
         required: true,
         trim: true
     },
-    path: {
-        type: String,
-        unique: true,
+    geojson: {
         required: true,
-        trim: true,
-        lowercase: true
     },
     createdAt: {
-        type: Date,
-        default: Date.now
-    },
-    updatedAt: {
         type: Date,
         default: Date.now
     },

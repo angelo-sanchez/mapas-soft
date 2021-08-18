@@ -1,8 +1,6 @@
 import { Request, Response } from "express";
 import Map from "../models/maps.model";
 import { StatusCodes as Status } from "http-status-codes";
-import config from "../config/config";
-import fs from "fs";
 
 export const MapsController = {
     getAll: function (req: Request, res: Response) {
@@ -16,7 +14,7 @@ export const MapsController = {
                         return {
                             id: map._id,
                             owner: map.owner,
-                            date_created: map.updatedAt,
+                            date_created: map.createdAt,
                             name: map.name
                         }
                     }));
@@ -28,25 +26,45 @@ export const MapsController = {
             return res.status(Status.BAD_REQUEST).json({ message: 'At least one map id must be specified' });
 
         const ids = req.body.id;
-        const maps = await Map.find({ _id: { $in: ids } }).exec();
-        if (maps.length <= 0)
-            return res.status(Status.NOT_FOUND).json({ message: `No document found with these ids` });
+        Map.deleteMany({ _id: { $in: ids } }, (error)=>{
+            if(error){
+                console.error({error});
+                res.status(Status.INTERNAL_SERVER_ERROR).json({error});
+            }
+            return res.status(Status.OK).send();
+        });
+    },
+    addMap: async function (req: Request, res: Response) {
+        if (!req.user)
+            return res.status(Status.FORBIDDEN).json({ message: 'You must be logged in to make this action' });
+        if (!req.file)
+            return res.status(Status.BAD_REQUEST).json({ message: `You didn't attach a GeoJson file` });
         try {
-            let dir = fs.readdirSync(config.workdir, { withFileTypes: true });
-            dir.forEach((node) => {
-                if (node.isFile()) {
-                    let map = maps.find(map => map.path == (config.workdir + node.name));
-                    if (map) {
-                        fs.unlinkSync(map.path);
-                        map.remove();
-                    }
-                }
+            let file = await fetch(req.file.path, {
+                method: 'GET'
+            })
+            if (!(file.ok && file.status == Status.OK)) {
+                console.error(`El archivo no se encontró en la ruta ${req.file.path}`);
+                return res.status(Status.INTERNAL_SERVER_ERROR).json({ message: 'An error occurred while uploading file' })
+            }
+            let content = file.json();
+            if (!content)
+                return res.status(Status.BAD_REQUEST).json({ message: `The file attached is not a valid Json file` });
+            let map = new Map({
+                owner: (req.user as any).email,
+                createdAt: Date.now(),
+                name: req.body.name || req.file.originalname,
+                geojson: content
+            });
+            map = await map.save();
+            return res.status(Status.OK).json({
+                id: map._id,
+                owner: map.owner,
+                date_created: map.createdAt,
+                name: map.name
             });
         } catch (error) {
-            res.status(Status.INTERNAL_SERVER_ERROR).json(error);
+            return res.status(Status.BAD_REQUEST).json({ message: `The file attached is not a valid Json file` });
         }
-        return res.status(Status.OK).json({message: 'All the spacified maps were deleted'});
-    },
-    updateMaps: async function (req: Request, res: Response) { },
-    addMap: async function (req: Request, res: Response) { }
+    }
 }
