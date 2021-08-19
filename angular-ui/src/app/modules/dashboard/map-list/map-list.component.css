@@ -3,23 +3,10 @@
 	color: black;
 	background-color: lightseagreen;
 }
-table{
-	margin: auto;
-}
-.container{
-	margin:auto;
-	padding-right: 30px;
-	padding-bottom: 5px;
-}
-.container2{
-	padding-right: 70px;
-	padding-left: 70px;
-}
-
 
 .contenedor{
 	/* background: yellow; */
-	height: 100%;
+	height: calc(100% - 56px);
 	width: 100%;
 }
 
@@ -31,10 +18,13 @@ table{
 
 	display: flex;
 	align-items: center;
+	justify-content: space-between;
 }
 
 .contenido-vista{
-	padding: 10px 25px;
+	padding: 0px 25px;
+	max-height: 100%;
+	overflow: auto;
 }
 
 .mat-column-name{
@@ -47,4 +37,68 @@ table{
 
 .mat-column-owner{
 	width: 250px;
+}
+
+.etiqueta-ext{
+	height: 20px;
+	line-height: 20px;
+	padding: 0 5px;
+	background-color: #039be5;
+	color: #FFF;
+}
+
+.mr-10{
+	margin-right: 10px;
+}
+
+.file{
+	/* background: transparent!important; */
+	width: 100%;
+	height: 100%;
+	padding: 15px;
+}
+
+.file-content{
+	border: 1px solid var(--border);
+	border-radius: 5px;
+	width: 100%;
+	height: 100%;
+}
+
+.file-icon{
+	width: 100%;
+	height: calc(100% - 60px);
+	line-height: calc(100% - 60px);
+	/* text-align: center; */
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	
+}
+
+.file-ext{
+	width: 100%;
+	height: 30px;
+	line-height: 30px;
+	text-align: center;
+	padding: 0 5px;
+}
+
+.file-icon mat-icon{
+	font-size: 50px!important;
+	width: 50px!important;
+	height: 50px!important;
+	color: var(--border);
+}
+
+.file-name{
+	width: 100%;
+	height: 30px;
+	line-height: 30px;
+	text-align: center;
+	padding: 0 5px;
+}
+
+.material-icons{
+	/* font-size: 50px!important; */
 }

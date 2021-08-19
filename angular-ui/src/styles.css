@@ -48,7 +48,7 @@ mat-selection-list{
 
 /* Mat-table */
 .mat-table{
-  background: transparent!important;
+  background: var(--background)!important;
 }
 
 table {
@@ -60,5 +60,5 @@ th.mat-sort-header-sorted {
 }
 
 tr.mat-header-row {
-  height: 35px!important;
+  height: 45px!important;
 }

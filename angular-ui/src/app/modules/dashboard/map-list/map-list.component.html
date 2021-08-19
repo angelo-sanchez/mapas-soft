@@ -1,25 +1,33 @@
-<ng-container *ngIf="maps$ | async as mapList" >
+<ng-container *ngIf="maps$ | async as mapList">
 	<div class="contenedor-botones-acciones">
-		<button mat-mini-fab color="primary" class="example-button-row" (click)="listado = !listado">
-			<ng-container *ngIf="listado === true">
-				<mat-icon>view_module</mat-icon>
-			</ng-container>
-			<ng-container *ngIf="listado === false">
-				<mat-icon>view_list</mat-icon>
-			</ng-container>
-		</button>
+		<div>
+			<!-- alineado a izquierda -->
+			<input type="file">
+		</div>
+		<div>
+			<!-- alineado a derecha -->
+			<button mat-icon-button (click)="listado = !listado">
+				<ng-container *ngIf="listado === true">
+					<mat-icon>view_module</mat-icon>
+				</ng-container>
+				<ng-container *ngIf="listado === false">
+					<mat-icon>view_list</mat-icon>
+				</ng-container>
+			</button>
+		</div>
 	</div>
-	<ng-container *ngIf="listado === true">
+	<!-- vista por columnas -->
+	<ng-container *ngIf="listado">
 		<div class="contenedor">
 			<div class="contenido-vista">
-				<table mat-table [dataSource]="mapList" matSort matSortActive="name" matSortDisableClear matSortDirection="desc">
+				<table mat-table [dataSource]="mapList" matSort matSortActive="name" matSortDisableClear matSortDirection="desc" class="tabla-lista">
 					<div>
 						<!-- Name Column -->
 						<div>
 							<ng-container matColumnDef="name">
 								<th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>Nombre</th>
 								<td mat-cell *matCellDef="let element">
-									<span>{{element.name}}</span>
+									<span><span class="etiqueta-ext mr-10">JSON</span>{{element.name}}</span>
 								</td>
 							</ng-container>
 						</div>
@@ -42,19 +50,33 @@
 							</ng-container>
 						</div>
 					</div>
-					<tr mat-header-row *matHeaderRowDef="displayedColumns" ></tr>
-					<tr mat-row *matRowDef="let row; columns: displayedColumns;"class="container"></tr>
+					<tr mat-header-row *matHeaderRowDef="displayedColumns; sticky:true" ></tr>
+					<tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 				</table>
 			</div>
 		</div>
 	</ng-container>
-	<ng-container *ngIf="listado === false">
+
+	<!-- vista por grilla -->
+	<ng-container *ngIf="!listado">
 		<div class="contenedor">
-			<mat-grid-list cols="2" rowHeight="2:1">
-				<div class="contenido-vista">
+			<div class="contenido-vista">
+				<mat-grid-list cols="6" rowHeight="1:1">
 					<mat-grid-tile *ngFor="let item of mapList" >
-						<mat-card>
-							<div>
+						<div class="file">
+							<div class="file-content">
+								<div class="file-icon">
+									<mat-icon aria-hidden="false" aria-label="Example home icon">description</mat-icon>
+								</div>
+								<div class="file-name">
+									<!-- <span class="etiqueta-ext mr-10">JSON</span> -->
+									<span>{{item.name}}</span>
+								</div>
+								<div class="file-ext">
+									<span class="etiqueta-ext">JSON</span>
+								</div>
+							</div>
+							<!-- <div class="file-content">
 								<p>Nombre: {{item.name}}</p>
 								<div>
 									<p>Fecha de Creación: </p>
@@ -64,11 +86,11 @@
 								<div>
 									<p>Propietario: {{item.owner}}</p>
 								</div>
-							</div>
-						</mat-card>
+							</div> -->
+						</div>
 					</mat-grid-tile>
-				</div>
-			</mat-grid-list>
+				</mat-grid-list>
+			</div>
 		</div>
 	</ng-container>
 </ng-container>
