@@ -1,15 +1,12 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-
+import { environment } from '../../../environments/environment';
 @Injectable({
   providedIn: 'root'
 })
 export class LoginService {
-  private token : any = null;
-  private user : any = {email: 'nico@capo.com'};
-
-  public urlLocal : string = 'http://localhost:3000/';
+  public urlLocal : string = environment.apiUrl;
 
   constructor(
     public httpClient : HttpClient,
@@ -17,21 +14,22 @@ export class LoginService {
   ) {}
 
   login(email: string, password : string){
-    let url = this.urlLocal + 'login';
+    let url = this.urlLocal + '/login';
     let body = {email, password};
     return this.httpClient.post(url,body);
   }
 
   register(email: string, password : string){
-    let url = this.urlLocal + 'register';
+    let url = this.urlLocal + '/register';
     let body = {email, password};
     return this.httpClient.post(url,body);
   }
 
   logout(){
-    let url = this.urlLocal + 'logout';
+    let url = this.urlLocal + '/logout';
     this.httpClient.get(url).subscribe(() => {
-      this.token = null;
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
       this.route.navigate(['/login']);
     },error => {
       console.log('Se produjo un error al intentar cerrar sesión');
@@ -40,23 +38,26 @@ export class LoginService {
   }
 
   getToken(){
-    return this.token;
+    return localStorage.getItem('token');
   }
 
   setToken(token : any){
-    this.token = token;
+    localStorage.setItem('token', token);
   }
 
   getUser(){
-    return this.user;
+    let u = localStorage.getItem('user');
+    if(u)
+      return JSON.parse(u);
+    return null;
   }
 
   setUser(user: any){
-    this.user = user;
+    localStorage.setItem('user', JSON.stringify(user));
   }
 
   isAutenticado(){
-    return this.token != null;
+    return this.getToken() != null;
   }
 }
  
