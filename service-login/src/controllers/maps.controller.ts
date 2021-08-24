@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import Map from "../models/maps.model";
 import { StatusCodes as Status } from "http-status-codes";
+import fs from 'fs';
 
 export const MapsController = {
     getAll: function (req: Request, res: Response) {
@@ -14,7 +15,7 @@ export const MapsController = {
                         return {
                             id: map._id,
                             owner: map.owner,
-                            date_created: map.createdAt,
+                            date_creation: map.createdAt,
                             name: map.name
                         }
                     }));
@@ -37,34 +38,46 @@ export const MapsController = {
     addMap: async function (req: Request, res: Response) {
         if (!req.user)
             return res.status(Status.FORBIDDEN).json({ message: 'You must be logged in to make this action' });
-        if (!req.file)
-            return res.status(Status.BAD_REQUEST).json({ message: `You didn't attach a GeoJson file` });
-        try {
-            let file = await fetch(req.file.path, {
-                method: 'GET'
-            })
-            if (!(file.ok && file.status == Status.OK)) {
-                console.error(`El archivo no se encontró en la ruta ${req.file.path}`);
-                return res.status(Status.INTERNAL_SERVER_ERROR).json({ message: 'An error occurred while uploading file' })
+        if (!req.files || req.files.length <= 0)
+            return res.status(Status.BAD_REQUEST).json({ message: `You didn't attach any GeoJson file` });
+        let fileList = req.files as Express.Multer.File[];
+        let errors= [];
+        let maps = [];
+        for (const file of fileList) {
+            try {
+                let current = await Map.findOne({name: file.originalname}).exec();
+                if(current) {
+                    errors.push({message: `The file ${file.originalname} already exists`});
+                    continue;
+                }
+                let str = fs.readFileSync(file.path).toString();
+                if (!str){
+                    errors.push({ message: `The file ${file.originalname} attached is not a valid Json file` });
+                    continue;
+                }
+                let content = JSON.parse(str);
+                let map = new Map({
+                    owner: (req.user as any).email,
+                    createdAt: Date.now(),
+                    name: req.body.name || file.originalname,
+                    geojson: content
+                });
+                fs.unlink(file.path, ()=>{});
+                map = await map.save();
+                maps.push({
+                    id: map._id,
+                    owner: map.owner,
+                    date_creation: map.createdAt,
+                    name: map.name
+                });
+            } catch (error) {
+                console.error(error.message);
+                errors.push({ message: `The file ${file.originalname} attached is not a valid Json file` });
             }
-            let content = file.json();
-            if (!content)
-                return res.status(Status.BAD_REQUEST).json({ message: `The file attached is not a valid Json file` });
-            let map = new Map({
-                owner: (req.user as any).email,
-                createdAt: Date.now(),
-                name: req.body.name || req.file.originalname,
-                geojson: content
-            });
-            map = await map.save();
-            return res.status(Status.OK).json({
-                id: map._id,
-                owner: map.owner,
-                date_created: map.createdAt,
-                name: map.name
-            });
-        } catch (error) {
-            return res.status(Status.BAD_REQUEST).json({ message: `The file attached is not a valid Json file` });
         }
+        res.status(Status.OK).json({
+            errors,
+            maps
+        });
     }
 }

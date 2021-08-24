@@ -1,8 +1,8 @@
-<ng-container *ngIf="maps$ | async as mapList">
+<ng-container>
 	<div class="contenedor-botones-acciones">
 		<div>
 			<!-- alineado a izquierda -->
-			<input type="file">
+			<input type="file" multiple (input)="subirArchivo($event)">
 		</div>
 		<div>
 			<!-- alineado a derecha -->
@@ -36,7 +36,7 @@
 							<ng-container matColumnDef="date_creation">
 								<th mat-header-cell *matHeaderCellDef>Fecha de creación</th>
 								<td mat-cell *matCellDef="let element">
-									<span>{{element.date_creation}}</span>
+									<span>{{element.date_creation | date : 'dd-MM-yyyy'}}</span>
 								</td>
 							</ng-container>
 						</div>
@@ -62,7 +62,7 @@
 		<div class="contenedor">
 			<div class="contenido-vista">
 				<mat-grid-list cols="6" rowHeight="1:1">
-					<mat-grid-tile *ngFor="let item of mapList" >
+					<mat-grid-tile *ngFor="let item of mapList.data" >
 						<div class="file">
 							<div class="file-content">
 								<div class="file-icon">

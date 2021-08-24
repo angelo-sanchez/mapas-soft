@@ -1,5 +1,6 @@
 import { Router } from "express";
 import Multer from "multer";
+import passport from "passport";
 import config from "../config/config";
 import { MapsController as maps } from "../controllers/maps.controller";
 
@@ -9,8 +10,9 @@ const multer = Multer({
 });
 
 router.route("/maps")
+    .all(passport.authenticate('jwt', { session: false }))
     .get(maps.getAll)
-    .post([multer.single('file')], maps.addMap)
+    .post([multer.array('file')], maps.addMap)
     .delete(maps.deleteMaps);
 
 export default router;
