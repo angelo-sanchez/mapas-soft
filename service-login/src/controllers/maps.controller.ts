@@ -23,10 +23,11 @@ export const MapsController = {
         })
     },
     deleteMaps: async function (req: Request, res: Response) {
-        if (!req.body || !req.body.id || req.body.id.length <= 0)
+        let id: any;
+        if (!req.query || !req.query.id || (id = JSON.parse(decodeURIComponent(''+req.query.id))).length <= 0)
             return res.status(Status.BAD_REQUEST).json({ message: 'At least one map id must be specified' });
 
-        const ids = req.body.id;
+        const ids = id;
         Map.deleteMany({ _id: { $in: ids } }, (error)=>{
             if(error){
                 console.error({error});

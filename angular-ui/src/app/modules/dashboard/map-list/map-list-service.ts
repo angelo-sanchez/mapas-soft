@@ -30,8 +30,13 @@ export class MapListService {
 		});
 	}
 
-	deleteMaps() {
-		// insertar logica
+	deleteMaps(ids: string[]) {
+		let url = environment.apiUrl + '/maps?id=' + encodeURIComponent(JSON.stringify(ids));
+		return this.httpClient.delete<any>(url, {
+			headers: {
+				'Authorization': `bearer ` + this.loginService.getToken()
+			}
+		});
 	}
 }
 

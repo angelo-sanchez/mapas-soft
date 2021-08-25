@@ -51,7 +51,7 @@
 						</div>
 					</div>
 					<tr mat-header-row *matHeaderRowDef="displayedColumns; sticky:true" ></tr>
-					<tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+					<tr mat-row *matRowDef="let row; columns: displayedColumns;" (contextmenu)="onContextMenu($event, row)"></tr>
 				</table>
 			</div>
 		</div>
@@ -94,3 +94,14 @@
 		</div>
 	</ng-container>
 </ng-container>
+
+<div style="visibility: hidden; position: fixed"
+    [style.left]="contextMenuPosition.x"
+    [style.top]="contextMenuPosition.y"
+    [matMenuTriggerFor]="contextMenu">
+</div>
+<mat-menu #contextMenu="matMenu">
+	<ng-template matMenuContent>
+		<button mat-menu-item (click)="eliminar(item)">Eliminar</button>
+	</ng-template>
+</mat-menu>
