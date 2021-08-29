@@ -12,10 +12,10 @@ import { ViewChild } from '@angular/core';
 export class MapListComponent implements AfterViewInit {
 
 	
-	@ViewChild(MatMenuTrigger)
-	contextMenu!: MatMenuTrigger;
+	// @ViewChild(MatMenuTrigger)
+	// contextMenu!: MatMenuTrigger;
   
-	contextMenuPosition = { x: '0px', y: '0px' };
+	// contextMenuPosition = { x: '0px', y: '0px' };
 
 	displayedColumns: string[] = ['name', 'owner', 'date_creation'];
 	listado: boolean = true;
@@ -31,8 +31,9 @@ export class MapListComponent implements AfterViewInit {
 		);
 	}
 
-	subirArchivo(event:any){
-		const fileList = (event.target.files as FileList);
+
+	subirArchivo(files:any){
+		const fileList = (files as FileList);
 		let fd = new FormData();
 		
 		for (let i = 0; i < fileList.length; i++) {
@@ -42,41 +43,45 @@ export class MapListComponent implements AfterViewInit {
 		}
 
 		this.mapListService.insertMaps(fd).subscribe((data:any) => {
+			console.log("data");
+			console.log(data);
 			let maps = [...this.mapList.data];
 			maps.push(...data.maps);
 			maps.sort((map1, map2) => map1.name.localeCompare(map2.name));
 			this.mapList.data = maps;
 			//mostrarErrores(data.errors);
 		}, error => {
+			console.log("Se produjo un error al subir archivos")
 			console.error(error);
 		});
 	}
-	@HostListener('document:contextmenu', ['$event', 'row'])
-	onContextMenu(event: MouseEvent, map: MapData) {
-		event.preventDefault();
-		event.stopPropagation();
-		this.contextMenu.closeMenu();
-		if(!map) {
-			return;
-		}
-		this.contextMenuPosition.x = event.clientX + 'px';
-		this.contextMenuPosition.y = event.clientY + 'px';
-		this.item = map;
-		this.contextMenu.menu.focusFirstItem('mouse');
-		this.contextMenu.menu.hasBackdrop = false;
-		this.contextMenu.openMenu();
-	}
+	// @HostListener('document:contextmenu', ['$event', 'row'])
+	// onContextMenu(event: MouseEvent, map: MapData) {
+	// 	event.preventDefault();
+	// 	event.stopPropagation();
+	// 	this.contextMenu.closeMenu();
+	// 	if(!map) {
+	// 		return;
+	// 	}
+	// 	this.contextMenuPosition.x = event.clientX + 'px';
+	// 	this.contextMenuPosition.y = event.clientY + 'px';
+	// 	this.item = map;
+	// 	this.contextMenu.menu.focusFirstItem('mouse');
+	// 	this.contextMenu.menu.hasBackdrop = false;
+	// 	this.contextMenu.openMenu();
+	// }
 
-	@HostListener('document:click', ['$event'])
-	onClick(event: MouseEvent){
-		event.preventDefault();
-		event.stopPropagation();
-		this.contextMenu.closeMenu();
-	}
+	// @HostListener('document:click', ['$event'])
+	// onClick(event: MouseEvent){
+	// 	event.preventDefault();
+	// 	event.stopPropagation();
+	// 	this.contextMenu.closeMenu();
+	// }
 
 	eliminar(item: MapData|null) {
 		if(item) this.mapListService.deleteMaps([item.id]).subscribe(data => {
 			this.mapList.data = this.mapList.data.filter(map => map.id != item.id);
 		})
 	}
+
 }

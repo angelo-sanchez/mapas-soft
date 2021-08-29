@@ -22,7 +22,7 @@
 }
 
 .contenido-vista{
-	padding: 0px 25px;
+	/* padding: 0px 25px; */
 	max-height: 100%;
 	overflow: auto;
 }
@@ -101,4 +101,9 @@
 
 .material-icons{
 	/* font-size: 50px!important; */
+}
+
+.fileover {
+	border: 1px solid var(--primary);
+	background-color: #BB86FC33;
 }

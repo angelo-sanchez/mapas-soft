@@ -20,6 +20,8 @@ import { DashboardComponent } from './dashboard.component';
 import { MapListComponent } from './map-list/map-list.component';
 import { SidenavComponent } from './sidenav/sidenav.component';
 import { SettingComponent } from './setting/setting.component';
+import { DragDropComponent } from './general-component/drag-drop/drag-drop.component';
+import { DragDropDirective } from './general-component/drag-drop/drag-drop.directive';
 
 
 @NgModule({
@@ -27,7 +29,9 @@ import { SettingComponent } from './setting/setting.component';
     MapListComponent,
     DashboardComponent,
     SidenavComponent,
-    SettingComponent
+    SettingComponent,
+    DragDropComponent,
+    DragDropDirective
     
   ],
   imports: [
