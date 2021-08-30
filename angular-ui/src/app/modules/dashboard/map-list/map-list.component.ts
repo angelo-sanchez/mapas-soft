@@ -12,10 +12,10 @@ import { ViewChild } from '@angular/core';
 export class MapListComponent implements AfterViewInit {
 
 	
-	// @ViewChild(MatMenuTrigger)
-	// contextMenu!: MatMenuTrigger;
+	@ViewChild(MatMenuTrigger)
+	contextMenu!: MatMenuTrigger;
   
-	// contextMenuPosition = { x: '0px', y: '0px' };
+	contextMenuPosition = { x: '0px', y: '0px' };
 
 	displayedColumns: string[] = ['name', 'owner', 'date_creation'];
 	listado: boolean = true;
@@ -55,28 +55,27 @@ export class MapListComponent implements AfterViewInit {
 			console.error(error);
 		});
 	}
-	// @HostListener('document:contextmenu', ['$event', 'row'])
-	// onContextMenu(event: MouseEvent, map: MapData) {
-	// 	event.preventDefault();
-	// 	event.stopPropagation();
-	// 	this.contextMenu.closeMenu();
-	// 	if(!map) {
-	// 		return;
-	// 	}
-	// 	this.contextMenuPosition.x = event.clientX + 'px';
-	// 	this.contextMenuPosition.y = event.clientY + 'px';
-	// 	this.item = map;
-	// 	this.contextMenu.menu.focusFirstItem('mouse');
-	// 	this.contextMenu.menu.hasBackdrop = false;
-	// 	this.contextMenu.openMenu();
-	// }
+	@HostListener('document:contextmenu', ['$event', 'row'])
+	onContextMenu(event: MouseEvent, map: MapData) {
+		event.preventDefault();
+		event.stopPropagation();
+		this.contextMenu.closeMenu();
+		if(!map) {
+			return;
+		}
+		this.contextMenuPosition.x = event.clientX + 'px';
+		this.contextMenuPosition.y = event.clientY + 'px';
+		this.item = map;
+		this.contextMenu.menu.focusFirstItem('mouse');
+		this.contextMenu.menu.hasBackdrop = false;
+		this.contextMenu.openMenu();
+	}
 
-	// @HostListener('document:click', ['$event'])
-	// onClick(event: MouseEvent){
-	// 	event.preventDefault();
-	// 	event.stopPropagation();
-	// 	this.contextMenu.closeMenu();
-	// }
+	@HostListener('document:click', ['$event'])
+	onClick(event: MouseEvent){
+		if(this.contextMenu)
+			this.contextMenu.closeMenu();
+	}
 
 	eliminar(item: MapData|null) {
 		if(item) this.mapListService.deleteMaps([item.id]).subscribe(data => {
