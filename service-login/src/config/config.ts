@@ -7,5 +7,6 @@ export default {
     USER: process.env.MONGODB_USER,
     PASSWORD: process.env.MONGODB_PASSWORD
   },
-  workdir: process.env.WORKDIR || "/home/user/maps/"
+  workdir: process.env.WORKDIR || "/home/user/maps/",
+  command: process.env.COMMAND || "tippecanoe"
 };

@@ -1,6 +1,6 @@
 import { Document, model, Schema } from "mongoose";
 
-interface IMap extends Document{
+export interface IMap extends Document{
     id: string
     name: string,
     createdAt: Date,

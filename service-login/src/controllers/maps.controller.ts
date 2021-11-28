@@ -1,7 +1,8 @@
 import { Request, Response } from "express";
-import Map from "../models/maps.model";
-import { StatusCodes as Status } from "http-status-codes";
 import fs from 'fs';
+import { StatusCodes as Status } from "http-status-codes";
+import Map from "../models/maps.model";
+import { tippecanoe } from "./tippecanoe";
 
 export const MapsController = {
     getAll: function (req: Request, res: Response) {
@@ -63,16 +64,17 @@ export const MapsController = {
                     name: req.body.name || file.originalname,
                     geojson: content
                 });
-                fs.unlink(file.path, ()=>{});
                 map = await map.save();
+                tippecanoe.generateMbtiles(map, file.path);
                 maps.push({
                     id: map._id,
                     owner: map.owner,
                     date_creation: map.createdAt,
                     name: map.name
                 });
+                fs.unlink(file.path, ()=>{});
             } catch (error) {
-                console.error(error.message);
+                console.error((error as any).message);
                 errors.push({ message: `The file ${file.originalname} attached is not a valid Json file` });
             }
         }
