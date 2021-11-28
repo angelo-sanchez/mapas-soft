@@ -65,7 +65,7 @@ export const MapsController = {
                     geojson: content
                 });
                 map = await map.save();
-                tippecanoe.generateMbtiles(map, file.path);
+                /*tippecanoe.generateMbtiles(map, file.path);*/
                 maps.push({
                     id: map._id,
                     owner: map.owner,

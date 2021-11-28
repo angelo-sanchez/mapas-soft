@@ -26,7 +26,20 @@
 						<!-- Name Column -->
 						<div>
 							<ng-container matColumnDef="name">
-								<th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>Nombre</th>
+								<th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>
+									<ng-container *ngIf="asc">
+										<button mat-raised-button (click)="sort('nombre', 'asc')">
+											Nombre
+											<mat-icon>keyboard_arrow_down</mat-icon>
+										</button>
+									</ng-container>
+									<ng-container *ngIf="!asc">
+										<button mat-raised-button (click)="sort('nombre', 'desc')">
+											Nombre
+											<mat-icon>keyboard_arrow_up</mat-icon>
+										</button>
+									</ng-container>
+								</th>
 								<td mat-cell *matCellDef="let element">
 									<span><span class="etiqueta-ext mr-10">JSON</span>{{element.name}}</span>
 								</td>
@@ -35,7 +48,20 @@
 						<!-- Date_Creation Column -->
 						<div>
 							<ng-container matColumnDef="date_creation">
-								<th mat-header-cell *matHeaderCellDef>Fecha de creación</th>
+								<th mat-header-cell *matHeaderCellDef>
+									<ng-container *ngIf="fechaAsc">
+										<button mat-raised-button (click)="sort('fecha', 'asc')">
+											Fecha de Creación
+											<mat-icon>keyboard_arrow_down</mat-icon>
+										</button>
+									</ng-container>
+									<ng-container *ngIf="!fechaAsc">
+										<button mat-raised-button (click)="sort('fecha', 'desc')">
+											Fecha de Creación
+											<mat-icon>keyboard_arrow_up</mat-icon>
+										</button>
+									</ng-container>
+								</th>
 								<td mat-cell *matCellDef="let element">
 									<span>{{element.date_creation | date : 'dd-MM-yyyy'}}</span>
 								</td>

@@ -4,7 +4,6 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatMenuTrigger } from '@angular/material/menu';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ViewChild } from '@angular/core';
-
 @Component({
   selector: 'app-map-list',
   templateUrl: './map-list.component.html',
@@ -12,15 +11,14 @@ import { ViewChild } from '@angular/core';
 })
 export class MapListComponent implements AfterViewInit {
 
-	
 	@ViewChild(MatMenuTrigger)
 	contextMenu!: MatMenuTrigger;
-  
 	contextMenuPosition = { x: '0px', y: '0px' };
 
 	displayedColumns: string[] = ['name', 'owner', 'date_creation'];
 	listado: boolean = true;
-	
+	asc: boolean = true;
+	fechaAsc: boolean = true
 	public mapList = new MatTableDataSource<MapData>();
 	public item: MapData|null = null;
 
@@ -28,9 +26,12 @@ export class MapListComponent implements AfterViewInit {
 		private _snackBar: MatSnackBar) {
 	}
 	ngAfterViewInit(): void {
-		this.mapListService.getMaps().subscribe(maps => 
-			this.mapList.data = maps
+		this.mapListService.getMaps().subscribe(maps => {
+				this.mapList.data = maps
+				this.sort('nombre', 'asc')
+			}
 		);
+		
 	}
 
 
@@ -96,6 +97,28 @@ export class MapListComponent implements AfterViewInit {
 		if(item) this.mapListService.deleteMaps([item.id]).subscribe(data => {
 			this.mapList.data = this.mapList.data.filter(map => map.id != item.id);
 		})
+	}
+
+	sort(tipo: string, ord: string){
+		switch(tipo){
+			case 'nombre': 
+				if(ord === 'desc'){
+					this.mapList.data = this.mapList.data.sort((one, two) => (one.name > two.name ? -1 : 1))
+				}else{
+					this.mapList.data = this.mapList.data.sort((one, two) => (one.name < two.name ? -1 : 1))
+				}
+				this.asc = !this.asc;
+				break;
+			case 'fecha':
+				if(ord === 'desc'){
+					this.mapList.data = this.mapList.data.sort((one, two) => (one.date_creation > two.date_creation ? -1 : 1))
+				}else{
+					this.mapList.data = this.mapList.data.sort((one, two) => (one.date_creation < two.date_creation ? -1 : 1))
+				}
+				this.fechaAsc = !this.fechaAsc;
+				break;
+		}
+			
 	}
 
 }
