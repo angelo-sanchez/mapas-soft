@@ -1,13 +1,15 @@
 import { Request, Response } from "express";
 import fs from 'fs';
 import { StatusCodes as Status } from "http-status-codes";
+import { join, resolve } from 'path';
+import config from "../config/config";
 import Map from "../models/maps.model";
 import { tippecanoe } from "./tippecanoe";
 
 export const MapsController = {
     getAll: function (req: Request, res: Response) {
         Map.find((error, result) => {
-            console.error({ error })
+            console.error({ error });
             if (error)
                 return res.status(Status.INTERNAL_SERVER_ERROR).json(error);
             if (result.length >= 0)
@@ -18,21 +20,21 @@ export const MapsController = {
                             owner: map.owner,
                             date_creation: map.createdAt,
                             name: map.name
-                        }
+                        };
                     }));
             return res.status(Status.NO_CONTENT).json([]);
-        })
+        });
     },
     deleteMaps: async function (req: Request, res: Response) {
         let id: any;
-        if (!req.query || !req.query.id || (id = JSON.parse(decodeURIComponent(''+req.query.id))).length <= 0)
+        if (!req.query || !req.query.id || (id = JSON.parse(decodeURIComponent('' + req.query.id))).length <= 0)
             return res.status(Status.BAD_REQUEST).json({ message: 'At least one map id must be specified' });
 
         const ids = id;
-        Map.deleteMany({ _id: { $in: ids } }, (error)=>{
-            if(error){
-                console.error({error});
-                res.status(Status.INTERNAL_SERVER_ERROR).json({error});
+        Map.deleteMany({ _id: { $in: ids } }, (error) => {
+            if (error) {
+                console.error({ error });
+                res.status(Status.INTERNAL_SERVER_ERROR).json({ error });
             }
             return res.status(Status.OK).send();
         });
@@ -43,17 +45,17 @@ export const MapsController = {
         if (!req.files || req.files.length <= 0)
             return res.status(Status.BAD_REQUEST).json({ message: `You didn't attach any GeoJson file` });
         let fileList = req.files as Express.Multer.File[];
-        let errors= [];
+        let errors = [];
         let maps = [];
         for (const file of fileList) {
             try {
-                let current = await Map.findOne({name: file.originalname}).exec();
-                if(current) {
-                    errors.push({message: `The file ${file.originalname} already exists`});
+                let current = await Map.findOne({ name: file.originalname }).exec();
+                if (current) {
+                    errors.push({ message: `The file ${file.originalname} already exists` });
                     continue;
                 }
                 let str = fs.readFileSync(file.path).toString();
-                if (!str){
+                if (!str) {
                     errors.push({ message: `The file ${file.originalname} attached is not a valid Json file` });
                     continue;
                 }
@@ -65,16 +67,24 @@ export const MapsController = {
                     geojson: content
                 });
                 map = await map.save();
-                /*tippecanoe.generateMbtiles(map, file.path);*/
+                const output = resolve(join(config.workdir, "output"));
+                if (!fs.existsSync(output)) {
+                    console.log("Creando: " + output);
+                    console.log(fs.mkdirSync(output, {
+                        recursive: true
+                    }) || "...falló");
+                }
+                tippecanoe.generateMbtiles(map, file.path)
+                    .catch(err => console.error("Error al generar", err));
                 maps.push({
                     id: map._id,
                     owner: map.owner,
                     date_creation: map.createdAt,
                     name: map.name
                 });
-                fs.unlink(file.path, ()=>{});
             } catch (error) {
-                console.error((error as any).message);
+                console.error(error);
+                console.error(JSON.stringify(error));
                 errors.push({ message: `The file ${file.originalname} attached is not a valid Json file` });
             }
         }
@@ -83,4 +93,4 @@ export const MapsController = {
             maps
         });
     }
-}
+};
