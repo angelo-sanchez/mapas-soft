@@ -14,6 +14,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatTableModule } from '@angular/material/table';
 import { MatCardModule } from '@angular/material/card';
 import { MatGridListModule } from '@angular/material/grid-list';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 // Componentes
 import { DashboardComponent } from './dashboard.component';
@@ -50,6 +51,7 @@ import { DragDropDirective } from './general-component/drag-drop/drag-drop.direc
     MatTableModule,
     MatCardModule,
     MatGridListModule,
+    MatSnackBarModule,
   ],
   exports:[
     DashboardComponent,

@@ -15,6 +15,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatTableModule } from '@angular/material/table';
 import { MatCardModule } from '@angular/material/card';
 import { MatGridListModule } from '@angular/material/grid-list';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 // Modulos
 import { AppRoutingModule } from './app-routing.module';
@@ -67,6 +68,7 @@ import { MapListService } from './modules/dashboard/map-list/map-list-service';
     MatTableModule,
     MatCardModule,
     MatGridListModule,
+    MatSnackBarModule,
   ],
   providers: [LoginService, LoginGuardianService, MapListService],
   bootstrap: [AppComponent]
