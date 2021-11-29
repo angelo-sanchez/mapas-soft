@@ -28,11 +28,11 @@
 }
 
 .mat-column-name{
-	width: calc(100% - 400px);
+	width: calc(100% - 420px);
 }
 
 .mat-column-date_creation{
-	width: 150px;
+	width: 170px;
 }
 
 .mat-column-owner{
@@ -99,11 +99,11 @@
 	padding: 0 5px;
 }
 
-.material-icons{
-	/* font-size: 50px!important; */
-}
-
 .fileover {
 	border: 1px solid var(--primary);
 	background-color: #BB86FC33;
+}
+
+.icon-ordenar mat-icon{
+	font-size: 16px;
 }

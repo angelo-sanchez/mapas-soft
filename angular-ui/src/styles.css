@@ -63,3 +63,9 @@ tr.mat-header-row {
   height: 45px!important;
   /* background: var(--background)!important; */
 }
+
+.mat-snack-bar-container{
+  padding: 0px !important;
+  overflow: hidden;
+  box-shadow: 0 5px 11px 0 rgb(0 0 0 / 18%), 0 4px 15px 0 rgb(0 0 0 / 15%) !important;
+}

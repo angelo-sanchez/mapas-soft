@@ -23,6 +23,7 @@ import { SidenavComponent } from './sidenav/sidenav.component';
 import { SettingComponent } from './setting/setting.component';
 import { DragDropComponent } from './general-component/drag-drop/drag-drop.component';
 import { DragDropDirective } from './general-component/drag-drop/drag-drop.directive';
+import { UploadingFileProgressComponent } from './general-component/uploading-file-progress/uploading-file-progress.component';
 
 
 @NgModule({
@@ -32,7 +33,8 @@ import { DragDropDirective } from './general-component/drag-drop/drag-drop.direc
     SidenavComponent,
     SettingComponent,
     DragDropComponent,
-    DragDropDirective
+    DragDropDirective,
+    UploadingFileProgressComponent
     
   ],
   imports: [
@@ -56,7 +58,8 @@ import { DragDropDirective } from './general-component/drag-drop/drag-drop.direc
   exports:[
     DashboardComponent,
     MapListComponent,
-    SidenavComponent
+    SidenavComponent,
+    UploadingFileProgressComponent
   ]
 })
 export class DashboardModule { }

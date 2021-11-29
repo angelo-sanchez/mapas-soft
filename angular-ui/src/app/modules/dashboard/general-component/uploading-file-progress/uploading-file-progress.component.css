@@ -1,0 +1,57 @@
+.container{
+    margin: 0;
+    padding: 0;
+}
+
+.header{
+    background: #000;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    padding: 5px 15px;
+}
+
+.header .title{
+    width: calc(100% - 30px);
+}
+
+.header .close{
+    width: 30px;
+}
+
+.header .close mat-icon{
+    font-size: 16px;
+}
+
+.content{
+    padding: 15px;
+}
+
+.content div .contenedor-archivo{
+    padding: 5px 0;
+    display: flex;
+    justify-content: space-between;
+}
+
+.circulo-estado{
+    width: 18px!important;
+    height: 18px!important;
+    border-radius: 50%;
+    text-align: center;
+}
+
+.circulo-estado mat-icon{
+    color: #fff;
+    font-size: 14px;
+    width: 18px;
+    height: 18px;
+    line-height: 18px;
+}
+
+.done{
+    background: forestgreen;
+}
+
+.error{
+    background: red;
+}

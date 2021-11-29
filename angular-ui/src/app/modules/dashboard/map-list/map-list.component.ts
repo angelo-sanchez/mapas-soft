@@ -2,8 +2,9 @@ import { AfterViewInit, Component, HostListener, OnInit } from '@angular/core';
 import {MapData, MapListService} from '../map-list/map-list-service'
 import { MatTableDataSource } from '@angular/material/table';
 import { MatMenuTrigger } from '@angular/material/menu';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatSnackBar, MatSnackBarHorizontalPosition, MatSnackBarVerticalPosition } from '@angular/material/snack-bar';
 import { ViewChild } from '@angular/core';
+import { UploadingFileProgressComponent } from '../general-component/uploading-file-progress/uploading-file-progress.component';
 @Component({
   selector: 'app-map-list',
   templateUrl: './map-list.component.html',
@@ -22,6 +23,9 @@ export class MapListComponent implements AfterViewInit {
 	public mapList = new MatTableDataSource<MapData>();
 	public item: MapData|null = null;
 
+	horizontalPosition: MatSnackBarHorizontalPosition = 'end';
+  	verticalPosition: MatSnackBarVerticalPosition = 'bottom';
+
 	constructor(private mapListService: MapListService,
 		private _snackBar: MatSnackBar) {
 	}
@@ -34,6 +38,26 @@ export class MapListComponent implements AfterViewInit {
 		
 	}
 
+	abrirSnackBar(){
+		let files = [{
+			name : 'provincias.json',
+			done : true
+		},
+		{
+			name: 'municipios.json',
+			done : false
+		}];
+
+
+		this._snackBar.openFromComponent(UploadingFileProgressComponent,{
+			horizontalPosition: this.horizontalPosition,
+			  verticalPosition: this.verticalPosition,
+			  data : {
+				  cantidad : 2,
+				  archivos : files,
+			  }
+		});
+	}
 
 	subirArchivo(files:any){
 		const fileList = (files as FileList);
@@ -54,13 +78,44 @@ export class MapListComponent implements AfterViewInit {
 				maps.sort((map1, map2) => map1.name.localeCompare(map2.name));
 				this.mapList.data = maps;
 
-				let mensaje = 'Se subió ' + data.maps.length + ' archivo/s correctamente. ';
+				// let mensaje = 'Se subió ' + data.maps.length + ' archivo/s correctamente. ';
 
-				if(data.errors.length > 0){
-					mensaje += data.errors.length + ' archivos fallaron al intentar subir.';
+				// if(data.errors.length > 0){
+				// 	mensaje += data.errors.length + ' archivos fallaron al intentar subir.';
+				// }
+				let archivosLista : any[] = [];
+
+				// Agrego los archivos que se subieron correctamente
+				if(data.maps.length > 0){
+					data.maps.forEach((file : any) => {
+						let obj = {
+							name : file.name,
+							done : true
+						}
+						archivosLista.push(obj);
+					});
 				}
 
-				this._snackBar.open(mensaje,'Aceptar');
+				// Agrego los archivos que se subieron incorrectamente
+				if(data.errors.length > 0){
+					data.errors.forEach((file : any) => {
+						let obj = {
+							name : file.name,
+							done : false
+						}
+						archivosLista.push(obj);
+					});
+				}
+
+				this._snackBar.openFromComponent(UploadingFileProgressComponent,{
+					horizontalPosition: this.horizontalPosition,
+					  verticalPosition: this.verticalPosition,
+					  data : {
+						  cantidad : archivosLista.length,
+						  archivos : archivosLista,
+					  }
+				});
+				// this._snackBar.open(mensaje,'Aceptar');
 				//mostrarErrores(data.errors);
 			} else {
 				this._snackBar.open('Se produjo un error al subir un archivo','Aceptar');

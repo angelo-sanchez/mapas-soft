@@ -1,0 +1,21 @@
+<div class="container">
+    <div class="header">
+        <span class="title">{{ message }}</span>
+        <button mat-icon-button class="close" (click)="close()"><mat-icon>close</mat-icon></button>
+    </div>
+    <div class="content">
+        <div *ngFor="let archivo of archivos">
+            <div class="contenedor-archivo">
+                <span>{{ archivo.name }}</span>
+                <span>
+                    <div *ngIf="archivo.done" class="circulo-estado done">
+                        <mat-icon>file_download_done</mat-icon>
+                    </div>
+                    <span *ngIf="!archivo.done" class="circulo-estado error">
+                        <mat-icon>clear</mat-icon>
+                    </span>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
