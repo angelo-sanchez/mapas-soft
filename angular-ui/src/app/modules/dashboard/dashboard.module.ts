@@ -15,6 +15,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatCardModule } from '@angular/material/card';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 // Componentes
 import { DashboardComponent } from './dashboard.component';
@@ -54,6 +55,7 @@ import { UploadingFileProgressComponent } from './general-component/uploading-fi
     MatCardModule,
     MatGridListModule,
     MatSnackBarModule,
+    MatProgressSpinnerModule
   ],
   exports:[
     DashboardComponent,

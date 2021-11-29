@@ -5,10 +5,18 @@ import { MatMenuTrigger } from '@angular/material/menu';
 import { MatSnackBar, MatSnackBarHorizontalPosition, MatSnackBarVerticalPosition } from '@angular/material/snack-bar';
 import { ViewChild } from '@angular/core';
 import { UploadingFileProgressComponent } from '../general-component/uploading-file-progress/uploading-file-progress.component';
+import { animate, state, style, transition, trigger } from '@angular/animations';
 @Component({
   selector: 'app-map-list',
   templateUrl: './map-list.component.html',
-  styleUrls: ['./map-list.component.css']
+  styleUrls: ['./map-list.component.css'],
+  animations: [
+    trigger('detailExpand', [
+      state('collapsed', style({display: 'none' ,height: '0px', minHeight: '0'})),
+      state('expanded', style({height: '*', display : 'block'})),
+      transition('expanded <=> collapsed', animate('1ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
+    ]),
+  ],
 })
 export class MapListComponent implements AfterViewInit {
 
@@ -16,11 +24,13 @@ export class MapListComponent implements AfterViewInit {
 	contextMenu!: MatMenuTrigger;
 	contextMenuPosition = { x: '0px', y: '0px' };
 
-	displayedColumns: string[] = ['name', 'owner', 'date_creation'];
+	public mapList = new MatTableDataSource<MapData>();
+	displayedColumns: string[] = ['name', 'owner', 'date_creation', 'loading'];
+	public expandedElement : any;
+
 	listado: boolean = true;
 	asc: boolean = true;
 	fechaAsc: boolean = true
-	public mapList = new MatTableDataSource<MapData>();
 	public item: MapData|null = null;
 
 	horizontalPosition: MatSnackBarHorizontalPosition = 'end';
