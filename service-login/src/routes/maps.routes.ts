@@ -6,7 +6,10 @@ import { MapsController as maps } from "../controllers/maps.controller";
 
 const router = Router();
 const multer = Multer({
-    dest: config.workdir + "/input"
+    dest: config.workdir + "/input",
+    limits: {
+        fieldSize: 100*1000*1000
+    }
 });
 
 router.route("/maps")
