@@ -59,7 +59,10 @@ export class MapListComponent implements AfterViewInit {
 		});
 	}
 
-	subirArchivo(files:any){
+	subirArchivo(event:any){
+		console.log({event});
+		if(!event.files) return;
+		let files = event.files;
 		const fileList = (files as FileList);
 		let fd = new FormData();
 		

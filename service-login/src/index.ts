@@ -1,5 +1,6 @@
-import app from './app'
+import {server} from './app';
 import './database';
 
-app.listen(app.get('port'));
-console.log(`Listening on http://localhost:${app.get('port')}`);
+server.listen(process.env.PORT, () => {
+    console.log(`Listening on http://localhost:${process.env.PORT}`);
+});
