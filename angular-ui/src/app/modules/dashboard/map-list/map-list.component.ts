@@ -5,6 +5,7 @@ import { MatMenuTrigger } from '@angular/material/menu';
 import { MatSnackBar, MatSnackBarHorizontalPosition, MatSnackBarVerticalPosition } from '@angular/material/snack-bar';
 import { ViewChild } from '@angular/core';
 import { UploadingFileProgressComponent } from '../general-component/uploading-file-progress/uploading-file-progress.component';
+import { MapWsService } from '../../websocket/map-ws.service';
 @Component({
   selector: 'app-map-list',
   templateUrl: './map-list.component.html',
@@ -27,7 +28,8 @@ export class MapListComponent implements AfterViewInit {
   	verticalPosition: MatSnackBarVerticalPosition = 'bottom';
 
 	constructor(private mapListService: MapListService,
-		private _snackBar: MatSnackBar) {
+		private _snackBar: MatSnackBar,
+		private mapWsService: MapWsService, ) {
 	}
 	ngAfterViewInit(): void {
 		this.mapListService.getMaps().subscribe(maps => {
