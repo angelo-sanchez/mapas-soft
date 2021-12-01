@@ -1,35 +1,31 @@
-import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs';
-import { environment } from '../../../environments/environment';
-import { WebsocketService } from './websocket.service';
-
-export type MapMessage = {
-  id: string;
-  name: string;
-  state: string;
-  progress: string;
-  message: string;
-};
+import { Injectable, EventEmitter } from '@angular/core';
+import { Socket } from 'ngx-socket-io';
+import { WrappedSocket } from 'ngx-socket-io/src/socket-io.service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class MapWsService {
- public messages: Subject<MapMessage>;
+export class MapWsService extends Socket{
 
-  constructor(wsService: WebsocketService) {
-    this.messages = <Subject<MapMessage>>wsService.connect(environment.wsUrl).lift<MapMessage>((response: MessageEvent) => {
-      let data = JSON.parse(response.data);
-      let msg: MapMessage = { ...data };
-      return msg;
-    });
+  outEven: EventEmitter<any> = new EventEmitter();
+
+  constructor() {
+   super({
+     url:'http://localhost:3000',
+   })
+   this.listenProgress()
+   this.listenFinish()
+  }  
+
+  listenProgress = () => {
+    this.ioSocket.on('progress', (res: any) => this.outEven.emit(res))
   }
 
-  public subirMapa(mapa: any) {
-    this.messages.next(mapa);
+  listenFinish = () => {
+    this.ioSocket.on('finish', (res: any) => this.outEven.emit(res))
   }
 
-  public onData(callback: (message: MapMessage) => void): void {
-    this.messages.subscribe(data => callback(data));
+  emitEvent = (payload = {}) => {
+    this.ioSocket.emit('event', payload)
   }
 }
