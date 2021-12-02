@@ -3,15 +3,11 @@ import passport from 'passport';
 import passportMiddleware from './middlewares/passport';
 import cors from 'cors';
 import morgan from 'morgan';
-import { createServer } from 'http';
 import authRoutes from './routes/auth.routes';
 import specialRoutes from './routes/special.routes';
 import mapsRoutes from './routes/maps.routes';
 
 const app = express();
-
-// settings
-app.set('port', process.env.PORT || 3000);
 
 // middlewares
 app.use(morgan('dev'));
@@ -28,4 +24,4 @@ app.use(mapsRoutes);
 app.use(authRoutes);
 app.use(specialRoutes);
 
-export const server = createServer(app);
+export default app;

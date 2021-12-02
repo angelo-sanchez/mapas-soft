@@ -4,7 +4,6 @@ import { StatusCodes as Status } from "http-status-codes";
 import { join, resolve } from 'path';
 import config from "../config/config";
 import Map from "../models/maps.model";
-import { socket } from "../socket.io";
 import { tippecanoe } from "./tippecanoe";
 
 export const MapsController = {
@@ -75,7 +74,7 @@ export const MapsController = {
                         recursive: true
                     }) || "...falló");
                 }
-                tippecanoe.generateMbtiles(map, file.path)
+                tippecanoe.generateMbtiles(map, file.path, req.body.socketId)
                     .catch(err => console.error("Error al generar", err));
                 maps.push({
                     id: map._id,
@@ -95,24 +94,3 @@ export const MapsController = {
         });
     }
 };
-
-const addMap = (file: any) => {
-    console.log(JSON.stringify(file));
-};
-
-const informarProgreso = () => {
-    let progresoObj = {
-        id: "...",
-        coso: "..."
-    };
-    socket.emit("progreso", progresoObj);
-};
-
-const finProcesamiento = () => {
-    let obj = {
-        id: "..."
-    };
-    socket.emit("finalizado", obj);
-};
-
-socket.listen("add-map", addMap);

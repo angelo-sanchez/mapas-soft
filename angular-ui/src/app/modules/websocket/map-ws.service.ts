@@ -1,31 +1,27 @@
-import { Injectable, EventEmitter } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Socket } from 'ngx-socket-io';
-import { WrappedSocket } from 'ngx-socket-io/src/socket-io.service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class MapWsService extends Socket{
-
-  outEven: EventEmitter<any> = new EventEmitter();
-
-  constructor() {
-   super({
-     url:'http://localhost:3000',
-   })
-   this.listenProgress()
-   this.listenFinish()
-  }  
-
-  listenProgress = () => {
-    this.ioSocket.on('progress', (res: any) => this.outEven.emit(res))
+export class MapWsService {
+  constructor(private socket: Socket) {
+    socket.on("conectado", console.log);
   }
 
-  listenFinish = () => {
-    this.ioSocket.on('finish', (res: any) => this.outEven.emit(res))
+  onProgress() {
+    return this.socket.fromEvent<{
+      log: string,
+      id: string
+    }>("progress");
   }
 
-  emitEvent = (payload = {}) => {
-    this.ioSocket.emit('event', payload)
+  onFinish() {
+    return this.socket.fromEvent<{
+      log: string
+      id: string,
+      error: boolean
+  }>("finish");
   }
+
 }

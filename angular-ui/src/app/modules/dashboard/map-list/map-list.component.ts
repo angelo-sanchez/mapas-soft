@@ -37,7 +37,6 @@ export class MapListComponent implements AfterViewInit {
 				this.sort('nombre', 'asc')
 			}
 		);
-		
 	}
 
 	abrirSnackBar(){

@@ -34,10 +34,15 @@ import { RegisterComponent } from './modules/register/register.component';
 import { LoginService } from './modules/login/login.service';
 import { LoginGuardianService } from './modules/login/login-guardian.service';
 import { MapListService } from './modules/dashboard/map-list/map-list-service';
+import { SocketIoConfig, SocketIoModule } from 'ngx-socket-io';
+import { environment } from '../environments/environment';
 
-
-
-
+const wsConfig: SocketIoConfig = {
+  url: environment.wsUrl,
+  options: {
+    transports: ['websocket']
+  }
+}
 
 @NgModule({
   declarations: [
@@ -55,7 +60,7 @@ import { MapListService } from './modules/dashboard/map-list/map-list-service';
     DashboardModule,
     ReactiveFormsModule,
     HttpClientModule,
-
+    SocketIoModule.forRoot(wsConfig),
     // Material angular
     MatListModule,
     MatInputModule,
