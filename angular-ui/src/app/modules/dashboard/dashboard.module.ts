@@ -25,6 +25,8 @@ import { SettingComponent } from './setting/setting.component';
 import { DragDropComponent } from './general-component/drag-drop/drag-drop.component';
 import { DragDropDirective } from './general-component/drag-drop/drag-drop.directive';
 import { UploadingFileProgressComponent } from './general-component/uploading-file-progress/uploading-file-progress.component';
+import { ViewDetailComponent } from './view-detail/view-detail.component';
+import { MapGrillaComponent } from './map-grilla/map-grilla.component';
 
 
 @NgModule({
@@ -35,7 +37,9 @@ import { UploadingFileProgressComponent } from './general-component/uploading-fi
     SettingComponent,
     DragDropComponent,
     DragDropDirective,
-    UploadingFileProgressComponent
+    UploadingFileProgressComponent,
+    ViewDetailComponent,
+    MapGrillaComponent
     
   ],
   imports: [
@@ -61,7 +65,9 @@ import { UploadingFileProgressComponent } from './general-component/uploading-fi
     DashboardComponent,
     MapListComponent,
     SidenavComponent,
-    UploadingFileProgressComponent
+    UploadingFileProgressComponent,
+    ViewDetailComponent,
+    MapGrillaComponent
   ]
 })
 export class DashboardModule { }

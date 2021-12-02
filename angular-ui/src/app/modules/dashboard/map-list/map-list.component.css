@@ -22,7 +22,8 @@
 
 .contenido-vista{
 	/* padding: 0px 25px; */
-	max-height: 100%;
+	min-height: 100%;
+	/* background: rgb(138, 138, 133); */
 	overflow: auto;
 }
 
@@ -168,4 +169,9 @@ table {
   
   .example-element-description-attribution {
 	opacity: 0.5;
+  }
+  .flexible{
+	  display: flex;
+	  flex-wrap: nowrap;
+	  /* height: 100%; */
   }

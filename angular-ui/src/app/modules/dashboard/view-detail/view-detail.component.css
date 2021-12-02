@@ -1,0 +1,17 @@
+.contenedor-general{
+    width: 300px;
+    height: 100%;
+    background: transparent;
+    border-left: 1px solid var(--border);
+    /* padding: 15px; */
+    display: flex;
+    flex-direction: column;
+}
+
+.header{
+    padding: 15px;
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--border);
+}

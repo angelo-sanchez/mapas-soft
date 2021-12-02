@@ -1,0 +1,13 @@
+<div class="contenedor-general">
+    <div class="header">
+        <h1>Detalle</h1>
+        <div (click)="close()">
+            <mat-icon>close</mat-icon>
+        </div>
+    </div>
+    <div class="content"> 
+        <p>{{ item?.name }}</p>
+        <p>{{ item?.date_creation | date : 'dd-MM-yyyy' }}</p>
+        <p>{{ item?.owner }}</p>
+    </div>
+</div>

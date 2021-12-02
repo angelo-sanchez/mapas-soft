@@ -25,16 +25,19 @@ export class MapListComponent implements AfterViewInit {
 	contextMenuPosition = { x: '0px', y: '0px' };
 
 	public mapList = new MatTableDataSource<MapData>();
-	displayedColumns: string[] = ['name', 'owner', 'date_creation', 'loading'];
+	public displayedColumns: string[] = ['name', 'owner', 'date_creation', 'loading'];
 	public expandedElement : any;
 
-	listado: boolean = true;
-	asc: boolean = true;
-	fechaAsc: boolean = true
+	public listado: boolean = true;
+	public asc: boolean = true;
+	public fechaAsc: boolean = true
 	public item: MapData|null = null;
 
-	horizontalPosition: MatSnackBarHorizontalPosition = 'end';
-  	verticalPosition: MatSnackBarVerticalPosition = 'bottom';
+	public horizontalPosition: MatSnackBarHorizontalPosition = 'end';
+  	public verticalPosition: MatSnackBarVerticalPosition = 'bottom';
+
+	public itemSeleccionado : any;
+	public verVistaDetalle : boolean = false;
 
 	constructor(private mapListService: MapListService,
 		private _snackBar: MatSnackBar) {
@@ -185,5 +188,16 @@ export class MapListComponent implements AfterViewInit {
 		}
 			
 	}
+
+	verDetalle(item : any){
+		this.itemSeleccionado = item;
+		this.verVistaDetalle = true;
+	}
+
+	cerrarVistaDetalle(){
+		this.verVistaDetalle = false;
+		console.log('cerrando vista detalle')
+	}
+
 
 }

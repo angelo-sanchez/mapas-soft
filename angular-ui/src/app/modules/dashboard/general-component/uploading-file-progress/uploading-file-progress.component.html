@@ -9,10 +9,10 @@
                 <span>{{ archivo.name }}</span>
                 <span>
                     <div *ngIf="archivo.done" class="circulo-estado done">
-                        <mat-icon>file_download_done</mat-icon>
+                        <mat-icon>done</mat-icon>
                     </div>
                     <span *ngIf="!archivo.done" class="circulo-estado error">
-                        <mat-icon>clear</mat-icon>
+                        <mat-icon>close</mat-icon>
                     </span>
                 </span>
             </div>
