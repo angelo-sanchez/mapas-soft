@@ -2,7 +2,7 @@
 	<div class="contenedor-botones-acciones">
 		<div>
 			<!-- alineado a izquierda -->
-			<input type="file" multiple (change)="subirArchivo($event)">
+			<input type="file" multiple (change)="subirArchivo($event.target)">
 		</div>
 		<button (click)="abrirSnackBar()">open snackbar</button>
 		<div>

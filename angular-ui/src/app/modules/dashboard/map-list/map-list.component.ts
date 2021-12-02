@@ -6,6 +6,7 @@ import { MatSnackBar, MatSnackBarHorizontalPosition, MatSnackBarVerticalPosition
 import { ViewChild } from '@angular/core';
 import { UploadingFileProgressComponent } from '../general-component/uploading-file-progress/uploading-file-progress.component';
 import { animate, state, style, transition, trigger } from '@angular/animations';
+import { MapWsService } from '../../websocket/map-ws.service';
 @Component({
   selector: 'app-map-list',
   templateUrl: './map-list.component.html',
@@ -40,7 +41,8 @@ export class MapListComponent implements AfterViewInit {
 	public verVistaDetalle : boolean = false;
 
 	constructor(private mapListService: MapListService,
-		private _snackBar: MatSnackBar) {
+		private _snackBar: MatSnackBar,
+		private mapWsService: MapWsService, ) {
 	}
 	ngAfterViewInit(): void {
 		this.mapListService.getMaps().subscribe(maps => {
@@ -48,7 +50,6 @@ export class MapListComponent implements AfterViewInit {
 				this.sort('nombre', 'asc')
 			}
 		);
-		
 	}
 
 	abrirSnackBar(){
@@ -72,7 +73,10 @@ export class MapListComponent implements AfterViewInit {
 		});
 	}
 
-	subirArchivo(files:any){
+	subirArchivo(event:any){
+		console.log({event});
+		if(!event.files) return;
+		let files = event.files;
 		const fileList = (files as FileList);
 		let fd = new FormData();
 		

@@ -74,7 +74,7 @@ export const MapsController = {
                         recursive: true
                     }) || "...falló");
                 }
-                tippecanoe.generateMbtiles(map, file.path)
+                tippecanoe.generateMbtiles(map, file.path, req.body.socketId)
                     .catch(err => console.error("Error al generar", err));
                 maps.push({
                     id: map._id,

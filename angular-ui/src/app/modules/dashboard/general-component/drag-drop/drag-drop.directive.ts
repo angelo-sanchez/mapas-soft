@@ -39,7 +39,7 @@ export class DragDropDirective {
 
     let files = evt.dataTransfer.files;
     if (files.length > 0) {
-      this.fileDropped.emit(files);
+      this.fileDropped.emit(evt.dataTransfer);
     }
   }
   
