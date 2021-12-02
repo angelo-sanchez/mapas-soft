@@ -10,7 +10,7 @@ io.on("connection", (socket: Socket) => {
     isConnected = true;
     connections[socket.id] = socket;
 
-    socket.emit("conectado", {conectado: true});
+    socket.emit("conectado", {conectado: true, id: socket.id});
 
     socket.on("disconnect", (reason: any) => console.log(socket.id + " DISCONNECTED, REASON: " + reason));
 });

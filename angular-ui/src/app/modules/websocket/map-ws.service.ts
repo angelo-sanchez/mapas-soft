@@ -5,8 +5,13 @@ import { Socket } from 'ngx-socket-io';
   providedIn: 'root'
 })
 export class MapWsService {
+  public socketId: string;
   constructor(private socket: Socket) {
-    socket.on("conectado", console.log);
+    this.socketId = '';
+    socket.on("conectado", (data:any) => {
+      this.socketId = data.id;
+      console.log(data);
+    });
   }
 
   onProgress() {

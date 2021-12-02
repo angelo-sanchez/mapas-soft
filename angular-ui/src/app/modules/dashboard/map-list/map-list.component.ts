@@ -85,6 +85,7 @@ export class MapListComponent implements AfterViewInit {
 			if(!file) continue;
 			fd.append('file', file);
 		}
+		fd.append("socketId", this.mapWsService.socketId);
 
 		this.mapListService.insertMaps(fd).subscribe((data:any) => {
 			if(data){
