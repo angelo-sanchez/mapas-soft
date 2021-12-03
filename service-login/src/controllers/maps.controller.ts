@@ -27,6 +27,19 @@ export const MapsController = {
             return res.status(Status.NO_CONTENT).json([]);
         });
     },
+    download: function (req: Request, res: Response) {
+        if (!req.user)
+            return res.status(Status.FORBIDDEN).json({ message: 'You must be logged in to make this action' });
+
+        if (req.params.id) {
+            let id = req.params.id;
+            let path = resolve(join(config.workdir, 'output', id + '.mbtiles'));
+            console.log(path, id);
+            if (fs.existsSync(path))
+                return res.status(Status.OK).sendFile(path);
+            return res.status(Status.NO_CONTENT).send();
+        }
+    },
     deleteMaps: async function (req: Request, res: Response) {
         let id: any;
         if (!req.query || !req.query.id || (id = JSON.parse(decodeURIComponent('' + req.query.id))).length <= 0)
@@ -53,12 +66,12 @@ export const MapsController = {
             try {
                 let current = await Map.findOne({ name: file.originalname }).exec();
                 if (current) {
-                    errors.push({ message: `The file ${file.originalname} already exists`, name: file.originalname  });
+                    errors.push({ message: `The file ${file.originalname} already exists`, name: file.originalname });
                     continue;
                 }
                 let str = fs.readFileSync(file.path).toString();
                 if (!str) {
-                    errors.push({ message: `The file ${file.originalname} attached is not a valid Json file`, name: file.originalname  });
+                    errors.push({ message: `The file ${file.originalname} attached is not a valid Json file`, name: file.originalname });
                     continue;
                 }
                 let content = JSON.parse(str);

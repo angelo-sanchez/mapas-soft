@@ -141,5 +141,6 @@
 <mat-menu #contextMenu="matMenu">
 	<ng-template matMenuContent>
 		<button mat-menu-item (click)="eliminar(item)">Eliminar</button>
+		<button *ngIf="item && item.ext == 'mbtiles'" mat-menu-item (click)="descargar(item)" >Descargar mbtiles</button>
 	</ng-template>
 </mat-menu>

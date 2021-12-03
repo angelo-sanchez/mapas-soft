@@ -7,6 +7,8 @@ import { ViewChild } from '@angular/core';
 import { UploadingFileProgressComponent } from '../general-component/uploading-file-progress/uploading-file-progress.component';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { MapWsService } from '../../websocket/map-ws.service';
+import { environment } from '../../../../environments/environment';
+import * as fileSaver from 'file-saver';
 @Component({
 	selector: 'app-map-list',
 	templateUrl: './map-list.component.html',
@@ -33,6 +35,7 @@ export class MapListComponent implements AfterViewInit {
 	public asc: boolean = true;
 	public fechaAsc: boolean = true;
 	public item: MapData | null = null;
+	public urlBackend: string = environment.apiUrl;
 
 	public horizontalPosition: MatSnackBarHorizontalPosition = 'end';
 	public verticalPosition: MatSnackBarVerticalPosition = 'bottom';
@@ -95,7 +98,7 @@ export class MapListComponent implements AfterViewInit {
 		mapa.estado = "PROCESANDO";
 		if (!mapa.log)
 			mapa.log = [data.log];
-		else if(!mapa.log.includes(data.log))
+		else if (!mapa.log.includes(data.log))
 			mapa.log.push(data.log);
 		console.log(maps);
 		this.mapList.data = maps;
@@ -125,9 +128,9 @@ export class MapListComponent implements AfterViewInit {
 		mapa.estado = data.error ? "ERROR" : "LISTO";
 		if (!mapa.log)
 			mapa.log = [data.log];
-		else if(!mapa.log.includes(data.log))
+		else if (!mapa.log.includes(data.log))
 			mapa.log.push(data.log);
-		if(data.ext) mapa.ext = data.ext;
+		if (data.ext) mapa.ext = data.ext;
 		console.log(maps);
 		this.mapList.data = maps;
 	}
@@ -223,6 +226,23 @@ export class MapListComponent implements AfterViewInit {
 	onClick(event: MouseEvent) {
 		if (this.contextMenu)
 			this.contextMenu.closeMenu();
+	}
+
+	descargar(item: MapData | null) {
+		if (item) {
+			this.mapListService.download(item).subscribe(data => {
+				if (!data) {
+					console.error("Error al descargar el archivo");
+					return
+				}
+
+				let blob = new Blob([data], { type: "application/octet-stream" });
+
+				fileSaver.saveAs(blob, item.name + '.mbtiles');
+			}, error => console.error);
+		} else {
+			console.log("no hay item");
+		}
 	}
 
 	eliminar(item: MapData | null) {

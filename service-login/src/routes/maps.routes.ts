@@ -8,7 +8,7 @@ const router = Router();
 const multer = Multer({
     dest: config.workdir + "/input",
     limits: {
-        fileSize: 100*1000*1000
+        fileSize: 100 * 1000 * 1000
     }
 });
 
@@ -17,5 +17,9 @@ router.route("/maps")
     .get(maps.getAll)
     .post([multer.array('file')], maps.addMap)
     .delete(maps.deleteMaps);
+
+router.route("/maps/download/:id")
+    .all(passport.authenticate('jwt', { session: false }))
+    .get(maps.download);
 
 export default router;

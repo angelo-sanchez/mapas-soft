@@ -30,6 +30,17 @@ export class MapListService {
 		});
 	}
 
+	download(item: MapData) {
+		let url = environment.apiUrl + "/maps/download/" + item.id;
+		return this.httpClient.get(url, {
+			responseType: 'blob',
+			headers: {
+				'Authorization': `bearer ` + this.loginService.getToken(),
+				'Accept': "application/octet-stream"
+			}
+		});
+	}
+
 	deleteMaps(ids: string[]) {
 		let url = environment.apiUrl + '/maps?id=' + encodeURIComponent(JSON.stringify(ids));
 		return this.httpClient.delete<any>(url, {
