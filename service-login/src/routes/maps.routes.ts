@@ -8,7 +8,7 @@ const router = Router();
 const multer = Multer({
     dest: config.workdir + "/input",
     limits: {
-        fieldSize: 100*1000*1000
+        fileSize: 100*1000*1000
     }
 });
 

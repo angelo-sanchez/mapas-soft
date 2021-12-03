@@ -8,7 +8,7 @@ export class MapWsService {
   public socketId: string;
   constructor(private socket: Socket) {
     this.socketId = '';
-    socket.on("conectado", (data:any) => {
+    socket.on("conectado", (data: any) => {
       this.socketId = data.id;
       console.log(data);
     });
@@ -17,16 +17,15 @@ export class MapWsService {
   onProgress() {
     return this.socket.fromEvent<{
       log: string,
-      id: string
+      id: string;
     }>("progress");
   }
 
   onFinish() {
     return this.socket.fromEvent<{
-      log: string
+      log: string;
       id: string,
-      error: boolean
-  }>("finish");
+      error: boolean;
+    }>("finish");
   }
-
 }

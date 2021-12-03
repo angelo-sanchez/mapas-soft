@@ -175,3 +175,15 @@ table {
 	  flex-wrap: nowrap;
 	  /* height: 100%; */
   }
+
+.amarillo {
+	background-color: #f57f17;
+}
+
+.azul {
+	background-color: #311b92;
+}
+
+.celeste {
+	background-color: #006064;
+}

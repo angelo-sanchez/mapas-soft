@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, HostListener, OnInit } from '@angular/core';
-import {MapData, MapListService} from '../map-list/map-list-service'
+import { MapData, MapListService } from '../map-list/map-list-service';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatMenuTrigger } from '@angular/material/menu';
 import { MatSnackBar, MatSnackBarHorizontalPosition, MatSnackBarVerticalPosition } from '@angular/material/snack-bar';
@@ -8,16 +8,16 @@ import { UploadingFileProgressComponent } from '../general-component/uploading-f
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { MapWsService } from '../../websocket/map-ws.service';
 @Component({
-  selector: 'app-map-list',
-  templateUrl: './map-list.component.html',
-  styleUrls: ['./map-list.component.css'],
-  animations: [
-    trigger('detailExpand', [
-      state('collapsed', style({display: 'none' ,height: '0px', minHeight: '0'})),
-      state('expanded', style({height: '*', display : 'block'})),
-      transition('expanded <=> collapsed', animate('1ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
-    ]),
-  ],
+	selector: 'app-map-list',
+	templateUrl: './map-list.component.html',
+	styleUrls: ['./map-list.component.css'],
+	animations: [
+		trigger('detailExpand', [
+			state('collapsed', style({ display: 'none', height: '0px', minHeight: '0' })),
+			state('expanded', style({ height: '*', display: 'block' })),
+			transition('expanded <=> collapsed', animate('1ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
+		]),
+	],
 })
 export class MapListComponent implements AfterViewInit {
 
@@ -27,68 +27,127 @@ export class MapListComponent implements AfterViewInit {
 
 	public mapList = new MatTableDataSource<MapData>();
 	public displayedColumns: string[] = ['name', 'owner', 'date_creation', 'loading'];
-	public expandedElement : any;
+	public expandedElement: any;
 
 	public listado: boolean = true;
 	public asc: boolean = true;
-	public fechaAsc: boolean = true
-	public item: MapData|null = null;
+	public fechaAsc: boolean = true;
+	public item: MapData | null = null;
 
 	public horizontalPosition: MatSnackBarHorizontalPosition = 'end';
-  	public verticalPosition: MatSnackBarVerticalPosition = 'bottom';
+	public verticalPosition: MatSnackBarVerticalPosition = 'bottom';
 
-	public itemSeleccionado : any;
-	public verVistaDetalle : boolean = false;
+	public itemSeleccionado: any;
+	public verVistaDetalle: boolean = false;
 
 	constructor(private mapListService: MapListService,
 		private _snackBar: MatSnackBar,
-		private mapWsService: MapWsService, ) {
+		private mapWsService: MapWsService,) {
 	}
 	ngAfterViewInit(): void {
 		this.mapListService.getMaps().subscribe(maps => {
-				this.mapList.data = maps
-				this.sort('nombre', 'asc')
-			}
-		);
-	}
-
-	abrirSnackBar(){
-		let files = [{
-			name : 'provincias.json',
-			done : true
-		},
-		{
-			name: 'municipios.json',
-			done : false
-		}];
-
-
-		this._snackBar.openFromComponent(UploadingFileProgressComponent,{
-			horizontalPosition: this.horizontalPosition,
-			  verticalPosition: this.verticalPosition,
-			  data : {
-				  cantidad : 2,
-				  archivos : files,
-			  }
+			this.mapList.data = maps;
+			this.sort('nombre', 'asc');
+			this.mapWsService.onProgress().subscribe((data) => this.mostrarLog(data));
+			this.mapWsService.onFinish().subscribe((data) => this.finalizar(data));
 		});
 	}
 
-	subirArchivo(event:any){
-		console.log({event});
-		if(!event.files) return;
+	abrirSnackBar() {
+		let files = [{
+			name: 'provincias.json',
+			done: true
+		},
+		{
+			name: 'municipios.json',
+			done: false
+		}];
+
+
+		this._snackBar.openFromComponent(UploadingFileProgressComponent, {
+			horizontalPosition: this.horizontalPosition,
+			verticalPosition: this.verticalPosition,
+			data: {
+				cantidad: 2,
+				archivos: files,
+			}
+		});
+	}
+
+	private mostrarLog(data: any) {
+		if (!data) {
+			console.log("NO HAY DATA");
+			return;
+		}
+		console.log(data);
+		if (!this.mapList) {
+			console.log("MAPLIST ES NULL");
+			return;
+		}
+		let maps = this.mapList.data;
+		let idx = maps.findIndex(map => map.id == data.id);
+		if (idx < 0) {
+			console.log("No se encontró el mapa con id: " + data.id);
+			return;
+		}
+		let mapa = maps[idx];
+
+		mapa.estado = "PROCESANDO";
+		if (!mapa.log)
+			mapa.log = [data.log];
+		else if(!mapa.log.includes(data.log))
+			mapa.log.push(data.log);
+		console.log(maps);
+		this.mapList.data = maps;
+	}
+
+	private finalizar(data: any) {
+		if (!data) {
+			console.log("NO HAY DATA");
+			return;
+		}
+		console.log(data);
+		if (!this.mapList) {
+			console.log("MAPLIST ES NULL");
+			return;
+		}
+
+		let maps = this.mapList.data;
+		let idx = maps.findIndex(map => map.id == data.id);
+		if (idx < 0) {
+			console.log("No se encontró el mapa con id: " + data.id);
+			return;
+		}
+		let mapa = maps[idx];
+
+		console.log(mapa);
+
+		mapa.estado = data.error ? "ERROR" : "LISTO";
+		if (!mapa.log)
+			mapa.log = [data.log];
+		else if(!mapa.log.includes(data.log))
+			mapa.log.push(data.log);
+		if(data.ext) mapa.ext = data.ext;
+		console.log(maps);
+		this.mapList.data = maps;
+	}
+
+	subirArchivo(event: any) {
+		console.log({ event });
+		if (!event.files) return;
 		let files = event.files;
 		const fileList = (files as FileList);
 		let fd = new FormData();
-		
+
 		for (let i = 0; i < fileList.length; i++) {
 			const file = fileList.item(i);
-			if(!file) continue;
+			if (!file) continue;
 			fd.append('file', file);
 		}
 		fd.append("socketId", this.mapWsService.socketId);
 
-		this.mapListService.insertMaps(fd).subscribe((data:any) => {
-			if(data){
+		this.mapListService.insertMaps(fd).subscribe((data: any) => {
+			if (data) {
 				console.log('Mapas');
 				console.log(data);
 				let maps = [...this.mapList.data];
@@ -101,47 +160,47 @@ export class MapListComponent implements AfterViewInit {
 				// if(data.errors.length > 0){
 				// 	mensaje += data.errors.length + ' archivos fallaron al intentar subir.';
 				// }
-				let archivosLista : any[] = [];
+				let archivosLista: any[] = [];
 
 				// Agrego los archivos que se subieron correctamente
-				if(data.maps.length > 0){
-					data.maps.forEach((file : any) => {
+				if (data.maps.length > 0) {
+					data.maps.forEach((file: any) => {
 						let obj = {
-							name : file.name,
-							done : true
-						}
+							name: file.name,
+							done: true
+						};
 						archivosLista.push(obj);
 					});
 				}
 
 				// Agrego los archivos que se subieron incorrectamente
-				if(data.errors.length > 0){
-					data.errors.forEach((file : any) => {
+				if (data.errors.length > 0) {
+					data.errors.forEach((file: any) => {
 						let obj = {
-							name : file.name,
-							done : false
-						}
+							name: file.name,
+							done: false
+						};
 						archivosLista.push(obj);
 					});
 				}
 
-				this._snackBar.openFromComponent(UploadingFileProgressComponent,{
+				this._snackBar.openFromComponent(UploadingFileProgressComponent, {
 					horizontalPosition: this.horizontalPosition,
-					  verticalPosition: this.verticalPosition,
-					  data : {
-						  cantidad : archivosLista.length,
-						  archivos : archivosLista,
-					  }
+					verticalPosition: this.verticalPosition,
+					data: {
+						cantidad: archivosLista.length,
+						archivos: archivosLista,
+					}
 				});
 				// this._snackBar.open(mensaje,'Aceptar');
 				//mostrarErrores(data.errors);
 			} else {
-				this._snackBar.open('Se produjo un error al subir un archivo','Aceptar');
+				this._snackBar.open('Se produjo un error al subir un archivo', 'Aceptar');
 			}
 		}, error => {
-			console.log("Se produjo un error al subir archivos")
+			console.log("Se produjo un error al subir archivos");
 			console.error(error);
-			this._snackBar.open('Se subió correctamente el archivo','Aceptar');
+			this._snackBar.open('Error al subir el archivo', 'Aceptar');
 		});
 	}
 	@HostListener('document:contextmenu', ['$event', 'row'])
@@ -149,7 +208,7 @@ export class MapListComponent implements AfterViewInit {
 		event.preventDefault();
 		event.stopPropagation();
 		this.contextMenu.closeMenu();
-		if(!map) {
+		if (!map) {
 			return;
 		}
 		this.contextMenuPosition.x = event.clientX + 'px';
@@ -161,47 +220,47 @@ export class MapListComponent implements AfterViewInit {
 	}
 
 	@HostListener('document:click', ['$event'])
-	onClick(event: MouseEvent){
-		if(this.contextMenu)
+	onClick(event: MouseEvent) {
+		if (this.contextMenu)
 			this.contextMenu.closeMenu();
 	}
 
-	eliminar(item: MapData|null) {
-		if(item) this.mapListService.deleteMaps([item.id]).subscribe(data => {
+	eliminar(item: MapData | null) {
+		if (item) this.mapListService.deleteMaps([item.id]).subscribe(data => {
 			this.mapList.data = this.mapList.data.filter(map => map.id != item.id);
-		})
+		});
 	}
 
-	sort(tipo: string, ord: string){
-		switch(tipo){
-			case 'nombre': 
-				if(ord === 'desc'){
-					this.mapList.data = this.mapList.data.sort((one, two) => (one.name > two.name ? -1 : 1))
-				}else{
-					this.mapList.data = this.mapList.data.sort((one, two) => (one.name < two.name ? -1 : 1))
+	sort(tipo: string, ord: string) {
+		switch (tipo) {
+			case 'nombre':
+				if (ord === 'desc') {
+					this.mapList.data = this.mapList.data.sort((one, two) => (one.name > two.name ? -1 : 1));
+				} else {
+					this.mapList.data = this.mapList.data.sort((one, two) => (one.name < two.name ? -1 : 1));
 				}
 				this.asc = !this.asc;
 				break;
 			case 'fecha':
-				if(ord === 'desc'){
-					this.mapList.data = this.mapList.data.sort((one, two) => (one.date_creation > two.date_creation ? -1 : 1))
-				}else{
-					this.mapList.data = this.mapList.data.sort((one, two) => (one.date_creation < two.date_creation ? -1 : 1))
+				if (ord === 'desc') {
+					this.mapList.data = this.mapList.data.sort((one, two) => (one.date_creation > two.date_creation ? -1 : 1));
+				} else {
+					this.mapList.data = this.mapList.data.sort((one, two) => (one.date_creation < two.date_creation ? -1 : 1));
 				}
 				this.fechaAsc = !this.fechaAsc;
 				break;
 		}
-			
+
 	}
 
-	verDetalle(item : any){
+	verDetalle(item: any) {
 		this.itemSeleccionado = item;
 		this.verVistaDetalle = true;
 	}
 
-	cerrarVistaDetalle(){
+	cerrarVistaDetalle() {
 		this.verVistaDetalle = false;
-		console.log('cerrando vista detalle')
+		console.log('cerrando vista detalle');
 	}
 
 

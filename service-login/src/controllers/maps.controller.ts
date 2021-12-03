@@ -19,7 +19,9 @@ export const MapsController = {
                             id: map._id,
                             owner: map.owner,
                             date_creation: map.createdAt,
-                            name: map.name
+                            name: map.name,
+                            ext: map.ext || map.name.substring(map.name.lastIndexOf(".") + 1),
+                            log: map.log || []
                         };
                     }));
             return res.status(Status.NO_CONTENT).json([]);
@@ -43,7 +45,7 @@ export const MapsController = {
         if (!req.user)
             return res.status(Status.FORBIDDEN).json({ message: 'You must be logged in to make this action' });
         if (!req.files || req.files.length <= 0)
-            return res.status(Status.BAD_REQUEST).json({ message: `You didn't attach any GeoJson file` });
+            return res.status(Status.BAD_REQUEST).json({ message: `You didn't attach any Json file` });
         let fileList = req.files as Express.Multer.File[];
         let errors = [];
         let maps = [];
@@ -51,12 +53,12 @@ export const MapsController = {
             try {
                 let current = await Map.findOne({ name: file.originalname }).exec();
                 if (current) {
-                    errors.push({ message: `The file ${file.originalname} already exists` });
+                    errors.push({ message: `The file ${file.originalname} already exists`, name: file.originalname  });
                     continue;
                 }
                 let str = fs.readFileSync(file.path).toString();
                 if (!str) {
-                    errors.push({ message: `The file ${file.originalname} attached is not a valid Json file` });
+                    errors.push({ message: `The file ${file.originalname} attached is not a valid Json file`, name: file.originalname  });
                     continue;
                 }
                 let content = JSON.parse(str);
@@ -64,7 +66,8 @@ export const MapsController = {
                     owner: (req.user as any).email,
                     createdAt: Date.now(),
                     name: req.body.name || file.originalname,
-                    geojson: content
+                    ext: file.originalname.substring(file.originalname.lastIndexOf(".") + 1),
+                    log: []
                 });
                 map = await map.save();
                 const output = resolve(join(config.workdir, "output"));
@@ -80,12 +83,14 @@ export const MapsController = {
                     id: map._id,
                     owner: map.owner,
                     date_creation: map.createdAt,
-                    name: map.name
+                    name: map.name,
+                    ext: map.ext,
+                    log: []
                 });
             } catch (error) {
                 console.error(error);
                 console.error(JSON.stringify(error));
-                errors.push({ message: `The file ${file.originalname} attached is not a valid Json file` });
+                errors.push({ message: `The file ${file.originalname} attached is not a valid Json file`, name: file.originalname });
             }
         }
         res.status(Status.OK).json({

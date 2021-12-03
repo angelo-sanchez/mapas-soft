@@ -4,8 +4,9 @@ export interface IMap extends Document{
     id: string
     name: string,
     createdAt: Date,
-    geojson: any,
-    owner: string
+    owner: string,
+    ext: string,
+    log: string[]
 }
 
 const schema = new Schema<IMap>({
@@ -15,10 +16,6 @@ const schema = new Schema<IMap>({
         required: true,
         trim: true
     },
-    geojson: {
-        type: Object,
-        required: true,
-    },
     createdAt: {
         type: Date,
         default: Date.now
@@ -27,6 +24,13 @@ const schema = new Schema<IMap>({
         type: String,
         required: true,
         trim: true
+    },
+    ext: {
+        type: String
+    },
+    log: {
+        type: [String],
+        default: []
     }
 })
 
