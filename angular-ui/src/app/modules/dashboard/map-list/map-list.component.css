@@ -11,6 +11,8 @@
 .contenedor-lista{
 	width: 100%;
 	height: calc(100% - 56px);
+	overflow: auto;
+	/* padding-bottom: 20px; */
 }
 
 .contenedor-botones-acciones{
@@ -59,11 +61,19 @@
 	margin-right: 10px;
 }
 
-.file{
-	/* background: transparent!important; */
+.grilla{
 	width: 100%;
 	height: 100%;
+	display: flex;
+	flex-direction: wrap;
+}
+
+.file{
+	/* background: transparent!important; */
+	width: 175px;
+	height: 175px;
 	padding: 15px;
+	cursor: pointer;
 }
 
 .file-content{
@@ -190,4 +200,11 @@ table {
 
 .celeste {
 	background-color: #006064;
+}
+
+.button-add{
+	padding: 3px 15px;
+	cursor: pointer;
+	border-radius: 7px;
+	background: var(--text-primary);
 }

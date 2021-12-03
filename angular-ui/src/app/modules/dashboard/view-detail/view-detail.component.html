@@ -1,6 +1,6 @@
 <div class="contenedor-general">
     <div class="header">
-        <h1>Detalle</h1>
+        <h1 class="header-titulo">Detalle</h1>
         <div (click)="close()" style="cursor: pointer">
             <mat-icon>close</mat-icon>
         </div>
@@ -17,6 +17,12 @@
         <div>
             <p class="title">Propietario</p>
             <p>{{ item?.owner }}</p>
+        </div>
+        <div>
+            <p class="title">Logs</p>
+            <div class="contenedor-visor">
+                <p *ngFor="let log of item?.log">{{ log }}</p>
+            </div>
         </div>
     </div>
 </div>

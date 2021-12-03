@@ -1,12 +1,18 @@
 <ng-container>
 	<div class="contenedor-botones-acciones">
-		<div>
+		<div style="display: flex; justify-content: center; align-items: center">
 			<!-- alineado a izquierda -->
-			<input type="file" multiple (change)="subirArchivo($event.target)">
+			<label class="button-add mat-elevation-z2" title="Subir archivos">
+				<!-- <button mat-raised-button><mat-icon>add</mat-icon>Nuevo</button> -->
+				<span><mat-icon>upload_file</mat-icon></span>
+				<input type="file" multiple (change)="subirArchivo($event.target)" style="width: 0px; height: 0px">
+			</label>
 		</div>
 		<!-- <button (click)="abrirSnackBar()">open snackbar</button> -->
 		<div>
 			<!-- alineado a derecha -->
+			<button mat-icon-button *ngIf="!listado && asc" style="margin-right: 10px;" (click)="sort('nombre','asc')"><mat-icon>sort_by_alpha</mat-icon></button>
+			<button mat-icon-button *ngIf="!listado && !asc" style="margin-right: 10px;" (click)="sort('nombre','desc')"><mat-icon>sort_by_alpha</mat-icon></button>
 			<button mat-icon-button (click)="listado = !listado">
 				<ng-container *ngIf="listado === true">
 					<mat-icon>view_module</mat-icon>
@@ -108,8 +114,8 @@
 		<div class="flexible">
 			<form appDragDrop (fileDropped)="subirArchivo($event)" class="contenedor">
 				<div class="contenido-vista">
-					<mat-grid-list cols="6" rowHeight="1:1">
-						<mat-grid-tile *ngFor="let item of mapList.data" (contextmenu)="onContextMenu($event, item)">
+					<div class="grilla">
+						<div *ngFor="let item of mapList.data" (contextmenu)="onContextMenu($event, item)">
 							<div class="file" (click)="verDetalle(item)">
 								<div class="file-content">
 									<div class="file-icon">
@@ -123,8 +129,8 @@
 									</div>
 								</div>
 							</div>
-						</mat-grid-tile>
-					</mat-grid-list>
+						</div>
+					</div>
 				</div>
 			</form>
 			<app-view-detail *ngIf="verVistaDetalle" [item]="itemSeleccionado" (cerrar)="cerrarVistaDetalle()"></app-view-detail>
