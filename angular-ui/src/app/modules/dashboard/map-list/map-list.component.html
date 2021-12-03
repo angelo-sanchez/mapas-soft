@@ -116,10 +116,10 @@
 										<mat-icon aria-hidden="false" aria-label="Example home icon">description</mat-icon>
 									</div>
 									<div class="file-name">
-										<span>{{item.name}}</span>
+										<span>{{item.name.substring(0, item.name.lastIndexOf("."))}}</span>
 									</div>
 									<div class="file-ext">
-										<span class="etiqueta-ext">JSON</span>
+										<span class="etiqueta-ext" [ngClass]="{amarillo: item.ext == 'mbtiles', azul: item.ext == 'json', celeste: item.ext == 'geojson'}">{{item.ext | uppercase}}</span>
 									</div>
 								</div>
 							</div>

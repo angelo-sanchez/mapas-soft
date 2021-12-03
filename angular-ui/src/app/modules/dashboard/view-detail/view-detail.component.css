@@ -15,3 +15,13 @@
     align-items: center;
     border-bottom: 1px solid var(--border);
 }
+
+.content{
+    padding: 15px;
+}
+
+.title{
+    font-size: 0.7rem;
+    color: var(--text-background);
+    margin: 0px;
+}

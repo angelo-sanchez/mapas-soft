@@ -1,13 +1,22 @@
 <div class="contenedor-general">
     <div class="header">
         <h1>Detalle</h1>
-        <div (click)="close()">
+        <div (click)="close()" style="cursor: pointer">
             <mat-icon>close</mat-icon>
         </div>
     </div>
     <div class="content"> 
-        <p>{{ item?.name }}</p>
-        <p>{{ item?.date_creation | date : 'dd-MM-yyyy' }}</p>
-        <p>{{ item?.owner }}</p>
+        <div>
+            <p class="title">Nombre</p>
+            <p>{{ item?.name }}</p>
+        </div>
+        <div>
+            <p class="title">Fecha</p>
+            <p>{{ item?.date_creation | date : 'dd-MM-yyyy' }}</p>
+        </div>
+        <div>
+            <p class="title">Propietario</p>
+            <p>{{ item?.owner }}</p>
+        </div>
     </div>
 </div>
