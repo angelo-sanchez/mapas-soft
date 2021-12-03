@@ -38,7 +38,7 @@ export class LoginComponent implements OnInit {
       let password = this.formulario.controls.password.value;
       this.loginService.login(email, password).subscribe((data : any) => {
         this.errorMsg = '';
-        this.loginService.setToken(data.token);
+        this.loginService.setToken(data.token, data.validity, data.emmited);
         this.loginService.setUser(data.user);
         this.route.navigate(['/maps']);
       }, error => {

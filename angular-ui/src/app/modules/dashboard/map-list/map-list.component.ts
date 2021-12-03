@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, HostListener, OnInit } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, HostListener, OnInit } from '@angular/core';
 import { MapData, MapListService } from '../map-list/map-list-service';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatMenuTrigger } from '@angular/material/menu';
@@ -25,6 +25,11 @@ export class MapListComponent implements AfterViewInit {
 
 	@ViewChild(MatMenuTrigger)
 	contextMenu!: MatMenuTrigger;
+
+	@ViewChild("fileUpload", {
+		static: true
+	}) fileInput!: ElementRef<HTMLInputElement>;
+
 	contextMenuPosition = { x: '0px', y: '0px' };
 
 	public mapList = new MatTableDataSource<MapData>();
@@ -54,6 +59,8 @@ export class MapListComponent implements AfterViewInit {
 			this.mapWsService.onProgress().subscribe((data) => this.mostrarLog(data));
 			this.mapWsService.onFinish().subscribe((data) => this.finalizar(data));
 		});
+		console.log(this.fileInput);
+		
 	}
 
 	abrirSnackBar() {
@@ -205,6 +212,7 @@ export class MapListComponent implements AfterViewInit {
 			console.error(error);
 			this._snackBar.open('Error al subir el archivo', 'Aceptar');
 		});
+		if(this.fileInput && this.fileInput.nativeElement) this.fileInput.nativeElement.value = '';
 	}
 	@HostListener('document:contextmenu', ['$event', 'row'])
 	onContextMenu(event: MouseEvent, map: MapData) {

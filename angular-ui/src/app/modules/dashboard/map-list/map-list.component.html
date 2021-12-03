@@ -5,7 +5,7 @@
 			<label class="button-add mat-elevation-z2" title="Subir archivos">
 				<!-- <button mat-raised-button><mat-icon>add</mat-icon>Nuevo</button> -->
 				<span><mat-icon>upload_file</mat-icon></span>
-				<input type="file" multiple (change)="subirArchivo($event.target)" style="width: 0px; height: 0px">
+				<input #fileUpload type="file" multiple (change)="subirArchivo($event.target)" style="width: 0px; height: 0px">
 			</label>
 		</div>
 		<!-- <button (click)="abrirSnackBar()">open snackbar</button> -->

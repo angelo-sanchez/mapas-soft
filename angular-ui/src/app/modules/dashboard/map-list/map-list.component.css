@@ -206,5 +206,5 @@ table {
 	padding: 3px 15px;
 	cursor: pointer;
 	border-radius: 7px;
-	background: var(--text-primary);
+	background: var(--backgroundmenu);
 }

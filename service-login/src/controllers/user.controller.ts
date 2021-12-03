@@ -3,9 +3,11 @@ import User, { IUser } from "../models/user";
 import jwt from "jsonwebtoken";
 import config from "../config/config";
 
+
+const tokenLifespan = 86400;
 function createToken(user: IUser) {
   return jwt.sign({ id: user.id, email: user.email }, config.jwtSecret, {
-    expiresIn: 86400
+    expiresIn: tokenLifespan
   });
 }
 
@@ -50,7 +52,7 @@ export const login = async (
     let datosUsuario = {
       'email' : user.email
     }
-    return res.status(200).json({ 'token': createToken(user), user: datosUsuario});
+    return res.status(200).json({ 'token': createToken(user), user: datosUsuario, emmited: Date.now(), validity: tokenLifespan});
   }
 
   return res.status(400).json({
