@@ -20,7 +20,7 @@
 	<!-- <app-drag-drop></app-drag-drop> -->
 	<!-- vista por columnas -->
 	<ng-container *ngIf="listado">
-		<form appDragDrop (fileDropped)="subirArchivo($event)" class="contenedor">
+		<form appDragDrop (fileDropped)="subirArchivo($event)" class="contenedor-lista">
 			<div class="contenido-vista">
 				<table mat-table [dataSource]="mapList"  multiTemplateDataRows matSort matSortActive="name" matSortDisableClear matSortDirection="desc" class="tabla-lista">
 					<div>

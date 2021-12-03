@@ -5,8 +5,12 @@
 }
 
 .contenedor{
-	height: calc(100% - 56px);
+	height: 100%;
 	width: 100%;
+}
+.contenedor-lista{
+	width: 100%;
+	height: calc(100% - 56px);
 }
 
 .contenedor-botones-acciones{
@@ -173,7 +177,7 @@ table {
   .flexible{
 	  display: flex;
 	  flex-wrap: nowrap;
-	  /* height: 100%; */
+	  height: calc(100% - 56px);
   }
 
 .amarillo {
