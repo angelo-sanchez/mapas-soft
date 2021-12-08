@@ -34,6 +34,7 @@ p,span{
 
 .mat-menu-content{
   background: var(--backgroundmenu)!important;
+  min-width: 200px;
 }
 
 mat-selection-list{

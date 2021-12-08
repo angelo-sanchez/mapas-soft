@@ -50,7 +50,7 @@ export class MapListComponent implements AfterViewInit {
 
 	constructor(private mapListService: MapListService,
 		private _snackBar: MatSnackBar,
-		private mapWsService: MapWsService,) {
+		private mapWsService: MapWsService) {
 	}
 	ngAfterViewInit(): void {
 		this.mapListService.getMaps().subscribe(maps => {
@@ -291,5 +291,7 @@ export class MapListComponent implements AfterViewInit {
 		console.log('cerrando vista detalle');
 	}
 
+	openBottomSheet(): void {
 
+	  }
 }

@@ -8,7 +8,7 @@
 				<input #fileUpload type="file" multiple (change)="subirArchivo($event.target)" style="width: 0px; height: 0px">
 			</label>
 		</div>
-		<!-- <button (click)="abrirSnackBar()">open snackbar</button> -->
+		<button (click)="openBottomSheet()">open bottonsheet</button>
 		<div>
 			<!-- alineado a derecha -->
 			<button mat-icon-button *ngIf="!listado && asc" style="margin-right: 10px;" (click)="sort('nombre','asc')"><mat-icon>sort_by_alpha</mat-icon></button>
@@ -139,14 +139,14 @@
 	</ng-container>
 </ng-container>
 
-<div style="visibility: hidden; position: fixed"
+<div style="visibility: hidden; position: fixed;"
     [style.left]="contextMenuPosition.x"
     [style.top]="contextMenuPosition.y"
     [matMenuTriggerFor]="contextMenu">
 </div>
 <mat-menu #contextMenu="matMenu">
 	<ng-template matMenuContent>
-		<button mat-menu-item (click)="eliminar(item)">Eliminar</button>
-		<button *ngIf="item && item.ext == 'mbtiles'" mat-menu-item (click)="descargar(item)" >Descargar mbtiles</button>
+		<button *ngIf="item && item.ext == 'mbtiles'" mat-menu-item (click)="descargar(item)" ><mat-icon>file_download</mat-icon>Descargar</button>
+		<button mat-menu-item (click)="eliminar(item)"><mat-icon>delete</mat-icon>Eliminar</button>
 	</ng-template>
 </mat-menu>
