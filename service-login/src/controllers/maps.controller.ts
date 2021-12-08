@@ -65,6 +65,7 @@ export const MapsController = {
         }
 
         let error: string[] = [];
+        let success: string[] = [];
         for (const id of ids) {
             const map = await Map.findById(id);
             if (!map) {
@@ -74,10 +75,15 @@ export const MapsController = {
             let path = resolve(join(config.workdir, 'output', `${id}.${map.ext}`));
             try {
                 map.delete();
-                fs.rmSync(path);
             } catch (err) {
                 console.error({ error: err });
                 error.push(`Map with id: ${id} couldn't be removed, reason: ${err}`);
+            }
+            success.push(id)
+            try {
+                fs.rmSync(path);
+            } catch (error){
+                console.error({error});
             }
         }
 
@@ -86,7 +92,7 @@ export const MapsController = {
             return res.status(Status.INTERNAL_SERVER_ERROR).json({ error });
         }
 
-        return res.status(Status.OK).send();
+        return res.status(Status.OK).json({success});
     },
     addMap: async function (req: Request, res: Response) {
         if (!req.user)
@@ -96,6 +102,9 @@ export const MapsController = {
         let fileList = req.files as Express.Multer.File[];
         let errors = [];
         let maps = [];
+        let opciones = JSON.parse(req.body.opciones);
+        let procesar = [];
+        console.log(opciones);
         for (const file of fileList) {
             let filename = req.body.name || file.originalname;
             try {
@@ -125,9 +134,11 @@ export const MapsController = {
                         recursive: true
                     }) || "...falló");
                 }
-                let optionsStr = req.body.options.find((v: any) => v.filename == filename).options;
-                tippecanoe.generateMbtiles(map, file.path, optionsStr, req.body.socketId)
+                let optionsStr = opciones.find((v: any) => v.filename == filename).options;
+                procesar.push(()=>{
+                    tippecanoe.generateMbtiles(map, file.path, optionsStr, req.body.socketId)
                     .catch(err => console.error("Error al generar", err));
+                })
                 maps.push({
                     id: map._id,
                     owner: map.owner,
@@ -146,5 +157,6 @@ export const MapsController = {
             errors,
             maps
         });
+        procesar.forEach(v => v());
     }
 };

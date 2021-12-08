@@ -95,7 +95,7 @@ export class MapListComponent implements AfterViewInit {
 			console.log("NO HAY DATA");
 			return;
 		}
-		console.log(data);
+		// console.log(data);
 		if (!this.mapList) {
 			console.log("MAPLIST ES NULL");
 			return;
@@ -113,7 +113,7 @@ export class MapListComponent implements AfterViewInit {
 			mapa.log = [data.log];
 		else if (!mapa.log.includes(data.log))
 			mapa.log.push(data.log);
-		console.log(maps);
+		// console.log(maps);
 		this.mapList.data = maps;
 	}
 
@@ -122,7 +122,7 @@ export class MapListComponent implements AfterViewInit {
 			console.log("NO HAY DATA");
 			return;
 		}
-		console.log(data);
+		// console.log(data);
 		if (!this.mapList) {
 			console.log("MAPLIST ES NULL");
 			return;
@@ -136,7 +136,7 @@ export class MapListComponent implements AfterViewInit {
 		}
 		let mapa = maps[idx];
 
-		console.log(mapa);
+		// console.log(mapa);
 
 		mapa.estado = data.error ? "ERROR" : "LISTO";
 		if (!mapa.log)
@@ -144,7 +144,7 @@ export class MapListComponent implements AfterViewInit {
 		else if (!mapa.log.includes(data.log))
 			mapa.log.push(data.log);
 		if (data.ext) mapa.ext = data.ext;
-		console.log(maps);
+		// console.log(maps);
 		this.mapList.data = maps;
 	}
 
@@ -153,19 +153,26 @@ export class MapListComponent implements AfterViewInit {
 		if (!event.files) return;
 		let files = event.files;
 		const fileList = (files as FileList);
+		const filenames:string[] = [];
 		let fd = new FormData();
 
 		for (let i = 0; i < fileList.length; i++) {
 			const file = fileList.item(i);
 			if (!file) continue;
 			fd.append('file', file);
+			filenames.push(file.name);
 		}
 		fd.append("socketId", this.mapWsService.socketId);
 		
 		let dialogRef = this.dialog.open(UploadFileOptionsComponent,{
-			width: '250px',
+			width: '500px',
+			data: {
+				filenames
+			}
 		});
+		if(this.fileInput && this.fileInput.nativeElement) this.fileInput.nativeElement.value = '';
 		dialogRef.afterClosed().subscribe(result => {
+			if(!result) return;
 			fd.append('opciones', result);
 			this.mapListService.insertMaps(fd).subscribe((data: any) => {
 				if (data) {
@@ -223,7 +230,6 @@ export class MapListComponent implements AfterViewInit {
 				console.error(error);
 				this._snackBar.open('Error al subir el archivo', 'Aceptar');
 			});
-			if(this.fileInput && this.fileInput.nativeElement) this.fileInput.nativeElement.value = '';
 		});
 	}
 

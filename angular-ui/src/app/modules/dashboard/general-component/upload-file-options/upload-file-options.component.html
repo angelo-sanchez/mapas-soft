@@ -1,9 +1,9 @@
 <div class="contenedor-general">
     <form [formGroup]="formulario" autocomplete="off">
         <p>Agregar opciones a tippecanoe.</p>
-        <mat-form-field class="mat-form-field" appearance="outline">
-            <mat-label>Opciones para tippecanoe</mat-label>
-            <input type="text" matInput formControlName="opciones" placeholder="Inserte opciones">
+        <mat-form-field *ngFor="let filename of files" class="mat-form-field" appearance="fill" color="accent" style="display: block;">
+            <mat-label style="font-size: 17px;">Opciones para {{filename}}</mat-label>
+            <input type="text" autocomplete="off" matInput [formControlName]="filename" [name]="filename" placeholder="Inserte opciones (ignorando la opción -o)">
         </mat-form-field>
     </form>
     <div class="contenedor-button">

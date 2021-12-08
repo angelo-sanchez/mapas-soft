@@ -21,7 +21,7 @@
         <div>
             <p class="title">Logs</p>
             <div class="contenedor-visor">
-                <p *ngFor="let log of item?.log">{{ log }}</p>
+                <p class="log" *ngFor="let log of item?.log" [innerHtml]="log"></p>
             </div>
         </div>
     </div>

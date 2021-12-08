@@ -9,22 +9,23 @@ import fs from 'fs';
 const PROGRESS = "progress";
 const FINISH = "finish";
 
-const showProgress = (command: string, map: IMap, inputPath: string, socketId?: string) => {
+const showProgress = (command: string, map: IMap, inputPath: string, options?: string, socketId?: string) => {
     let args = command.split(" ");
     const program = type() == "Windows_NT" ? "powershell" : "sh";
     let process = spawn(program, args);
     let id = map.id;
-    let logs = ["Iniciando procesamiento del mapa..."];
+    let log = `Iniciando procesamiento del mapa con el comando "tippecanoe ${options}"`;
+    let logs = [log];
     sockets.emit(PROGRESS, {
-        log: 'Iniciando procesamiento del mapa...',
+        log,
         id
     }, socketId);
 
     process.stdout.on('data', (data) => {
-        let log = '' + data;
-        logs.push(log);
+        let log = ('' + data).split("\n");
+        logs.push(...log);
         sockets.emit(PROGRESS, {
-            log,
+            log: log.join("<br>"),
             id
         }, socketId);
     });
@@ -32,10 +33,10 @@ const showProgress = (command: string, map: IMap, inputPath: string, socketId?: 
     process.stderr.on('data', (data) => {
         error = error || `${data}`.match(/(Warning|Error)/gi) != null;
         error && console.error("...Ocurrio un error...");
-        let log = '' + data;
-        logs.push(log);
+        let log = ('' + data).split("\n");
+        logs.push(...log);
         sockets.emit(PROGRESS, {
-            log,
+            log: log.join("<br>"),
             id
         }, socketId);
     });
@@ -63,7 +64,8 @@ const limpiar = (options?: string): string => {
     if (!options) return "-zg";
     let opts = options.replace(/tippecanoe /gi, "")
         .replace(/-o (\"[\w\/\-. ]+\"|\"?[\w\/\-.]+\"?)/g, "")
-        .replace(/\s{2,}/g, " ");
+        .replace(/\s{2,}/g, " ")
+        .trim();
 
     return opts;
 };
@@ -77,6 +79,8 @@ export const tippecanoe = {
         let prog = path.resolve(config.tippecanoe.command);
         let opts = limpiar(options);
         const command = `${prog} ${config.workdir} ${config.tippecanoe.dir} ${outputPath} ${input} ${opts}`;
-        showProgress(command, map, inputPath, socketId);
+        setTimeout(() => {
+            showProgress(command, map, inputPath, opts, socketId);
+        }, 500);
     },
 };
