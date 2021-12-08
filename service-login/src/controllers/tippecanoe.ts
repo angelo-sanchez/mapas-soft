@@ -4,12 +4,12 @@ import config from '../config/config';
 import { IMap } from '../models/maps.model';
 import { type } from "os";
 import { sockets } from '../websocket/websocket.handler';
-
+import fs from 'fs';
 
 const PROGRESS = "progress";
 const FINISH = "finish";
-// TO-DO: Todos estos console logs, pueden ser llamados a WebSocket con los resultados.
-const showProgress = (command: string, map: IMap, socketId?: string) => {
+
+const showProgress = (command: string, map: IMap, inputPath: string, socketId?: string) => {
     let args = command.split(" ");
     const program = type() == "Windows_NT" ? "powershell" : "sh";
     let process = spawn(program, args);
@@ -51,21 +51,32 @@ const showProgress = (command: string, map: IMap, socketId?: string) => {
                 ext: error ? null : 'mbtiles'
             }, socketId);
 
-            if(!error)
+            if (!error)
                 map.ext = 'mbtiles';
             map.log = logs;
             map.save();
+            fs.rmSync(path.resolve(inputPath));
         });
 };
 
+const limpiar = (options?: string): string => {
+    if (!options) return "-zg";
+    let opts = options.replace(/tippecanoe /gi, "")
+        .replace(/-o (\"[\w\/\-. ]+\"|\"?[\w\/\-.]+\"?)/g, "")
+        .replace(/\s{2,}/g, " ");
+
+    return opts;
+};
+
 export const tippecanoe = {
-    generateMbtiles: async (map: IMap, inputPath: string, socketId?: string) => {
+    generateMbtiles: async (map: IMap, inputPath: string, options?: string, socketId?: string) => {
         const outputFolder = path.join(config.tippecanoe.dir, 'output').replace(/\\/g, '/');
         const filename = map.id + '.mbtiles';
         const input = inputPath.replace(config.workdir, config.tippecanoe.dir).replace(/\\/g, "/");
         const outputPath = path.join(outputFolder, filename).replace(/\\/g, "/");
         let prog = path.resolve(config.tippecanoe.command);
-        const command = `${prog} ${config.workdir} ${config.tippecanoe.dir} ${outputPath} ${input}`;
-        showProgress(command, map, socketId);
+        let opts = limpiar(options);
+        const command = `${prog} ${config.workdir} ${config.tippecanoe.dir} ${outputPath} ${input} ${opts}`;
+        showProgress(command, map, inputPath, socketId);
     },
 };

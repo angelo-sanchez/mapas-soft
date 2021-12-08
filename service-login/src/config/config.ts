@@ -1,5 +1,5 @@
 import { config } from "dotenv";
-import { type } from "os";
+import { type as osType } from "os";
 config();
 export default {
   jwtSecret: process.env.JWT_SECRET || 'somesecrettoken',
@@ -10,7 +10,7 @@ export default {
   },
   workdir: process.env.WORKDIR || "/home/user/maps",
   tippecanoe: {
-    command: (type() == "Windows_NT") ? "assets/script.ps1" : "assets/script.sh",
+    command: (osType() == "Windows_NT") ? "assets/script.ps1" : "assets/script.sh",
     dir: process.env.TIPPECANOE_DIR || "/home/user/maps"
   }
 };

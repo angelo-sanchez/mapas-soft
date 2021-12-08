@@ -6,6 +6,15 @@ import config from "../config/config";
 import Map from "../models/maps.model";
 import { tippecanoe } from "./tippecanoe";
 
+const getName = (name: string) => {
+    return name.substring(0, name.lastIndexOf("."));
+};
+
+const getExtension = (name: string) => {
+    let idx = name.lastIndexOf(".");
+    return name.substring(idx + 1);
+};
+
 export const MapsController = {
     getAll: function (req: Request, res: Response) {
         Map.find((error, result) => {
@@ -20,7 +29,7 @@ export const MapsController = {
                             owner: map.owner,
                             date_creation: map.createdAt,
                             name: map.name,
-                            ext: map.ext || map.name.substring(map.name.lastIndexOf(".") + 1),
+                            ext: map.ext,
                             log: map.log || []
                         };
                     }));
@@ -41,18 +50,43 @@ export const MapsController = {
         }
     },
     deleteMaps: async function (req: Request, res: Response) {
-        let id: any;
-        if (!req.query || !req.query.id || (id = JSON.parse(decodeURIComponent('' + req.query.id))).length <= 0)
-            return res.status(Status.BAD_REQUEST).json({ message: 'At least one map id must be specified' });
-
-        const ids = id;
-        Map.deleteMany({ _id: { $in: ids } }, (error) => {
-            if (error) {
-                console.error({ error });
-                res.status(Status.INTERNAL_SERVER_ERROR).json({ error });
+        let ids: any[] = [];
+        let hasQuery = false;
+        if (req.query && req.query.id) {
+            hasQuery = true;
+            try {
+                ids = JSON.parse(decodeURIComponent('' + req.query.id));
+            } catch (error) {
+                return res.status(Status.BAD_REQUEST).json({ message: `Cannot find map id's in ${req.query.id}` });
             }
-            return res.status(Status.OK).send();
-        });
+        }
+        if (!hasQuery || ids.length <= 0) {
+            return res.status(Status.BAD_REQUEST).json({ message: 'At least one map id must be specified' });
+        }
+
+        let error: string[] = [];
+        for (const id of ids) {
+            const map = await Map.findById(id);
+            if (!map) {
+                error.push(`Map with id: ${id} not found`);
+                continue;
+            }
+            let path = resolve(join(config.workdir, 'output', `${id}.${map.ext}`));
+            try {
+                map.delete();
+                fs.rmSync(path);
+            } catch (err) {
+                console.error({ error: err });
+                error.push(`Map with id: ${id} couldn't be removed, reason: ${err}`);
+            }
+        }
+
+        if (error.length > 0) {
+            console.error({ error });
+            return res.status(Status.INTERNAL_SERVER_ERROR).json({ error });
+        }
+
+        return res.status(Status.OK).send();
     },
     addMap: async function (req: Request, res: Response) {
         if (!req.user)
@@ -63,23 +97,24 @@ export const MapsController = {
         let errors = [];
         let maps = [];
         for (const file of fileList) {
+            let filename = req.body.name || file.originalname;
             try {
-                let current = await Map.findOne({ name: file.originalname }).exec();
+                let current = await Map.findOne({ name: filename }).exec();
                 if (current) {
-                    errors.push({ message: `The file ${file.originalname} already exists`, name: file.originalname });
+                    errors.push({ message: `The file ${filename} already exists`, name: filename });
                     continue;
                 }
                 let str = fs.readFileSync(file.path).toString();
                 if (!str) {
-                    errors.push({ message: `The file ${file.originalname} attached is not a valid Json file`, name: file.originalname });
+                    errors.push({ message: `The file ${filename} attached is not a valid Json file`, name: filename });
                     continue;
                 }
                 let content = JSON.parse(str);
                 let map = new Map({
                     owner: (req.user as any).email,
                     createdAt: Date.now(),
-                    name: req.body.name || file.originalname,
-                    ext: file.originalname.substring(file.originalname.lastIndexOf(".") + 1),
+                    name: getName(filename),
+                    ext: getExtension(filename),
                     log: []
                 });
                 map = await map.save();
@@ -90,7 +125,8 @@ export const MapsController = {
                         recursive: true
                     }) || "...falló");
                 }
-                tippecanoe.generateMbtiles(map, file.path, req.body.socketId)
+                let optionsStr = req.body.options.find((v: any) => v.filename == filename).options;
+                tippecanoe.generateMbtiles(map, file.path, optionsStr, req.body.socketId)
                     .catch(err => console.error("Error al generar", err));
                 maps.push({
                     id: map._id,
@@ -103,7 +139,7 @@ export const MapsController = {
             } catch (error) {
                 console.error(error);
                 console.error(JSON.stringify(error));
-                errors.push({ message: `The file ${file.originalname} attached is not a valid Json file`, name: file.originalname });
+                errors.push({ message: `The file ${filename} attached is not a valid Json file`, name: filename });
             }
         }
         res.status(Status.OK).json({
