@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { ReactiveFormsModule } from '@angular/forms';
 
 // Coponentes angular-material
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -27,6 +28,7 @@ import { DragDropDirective } from './general-component/drag-drop/drag-drop.direc
 import { UploadingFileProgressComponent } from './general-component/uploading-file-progress/uploading-file-progress.component';
 import { ViewDetailComponent } from './view-detail/view-detail.component';
 import { MapGrillaComponent } from './map-grilla/map-grilla.component';
+import { UploadFileOptionsComponent } from './general-component/upload-file-options/upload-file-options.component';
 
 
 @NgModule({
@@ -39,12 +41,14 @@ import { MapGrillaComponent } from './map-grilla/map-grilla.component';
     DragDropDirective,
     UploadingFileProgressComponent,
     ViewDetailComponent,
-    MapGrillaComponent
+    MapGrillaComponent,
+    UploadFileOptionsComponent
     
   ],
   imports: [
     CommonModule,
     RouterModule,
+    ReactiveFormsModule,
 
     // Material angular
     MatListModule,
@@ -59,7 +63,7 @@ import { MapGrillaComponent } from './map-grilla/map-grilla.component';
     MatCardModule,
     MatGridListModule,
     MatSnackBarModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
   ],
   exports:[
     DashboardComponent,
@@ -67,7 +71,8 @@ import { MapGrillaComponent } from './map-grilla/map-grilla.component';
     SidenavComponent,
     UploadingFileProgressComponent,
     ViewDetailComponent,
-    MapGrillaComponent
+    MapGrillaComponent,
+    UploadFileOptionsComponent
   ]
 })
 export class DashboardModule { }

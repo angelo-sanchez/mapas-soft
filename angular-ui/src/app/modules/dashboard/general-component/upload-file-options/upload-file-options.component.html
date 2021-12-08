@@ -1,0 +1,12 @@
+<div class="contenedor-general">
+    <form [formGroup]="formulario" autocomplete="off">
+        <p>Agregar opciones a tippecanoe.</p>
+        <mat-form-field class="mat-form-field" appearance="outline">
+            <mat-label>Opciones para tippecanoe</mat-label>
+            <input type="text" matInput formControlName="opciones" placeholder="Inserte opciones">
+        </mat-form-field>
+    </form>
+    <div class="contenedor-button">
+        <button mat-raised-button color="primary" (click)="enviar()">Aceptar</button>
+    </div>
+</div>

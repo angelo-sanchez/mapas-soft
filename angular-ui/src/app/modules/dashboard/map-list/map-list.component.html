@@ -8,7 +8,7 @@
 				<input #fileUpload type="file" multiple (change)="subirArchivo($event.target)" style="width: 0px; height: 0px">
 			</label>
 		</div>
-		<button (click)="openBottomSheet()">open bottonsheet</button>
+		<!-- <button (click)="openBottomSheet()">open bottonsheet</button> -->
 		<div>
 			<!-- alineado a derecha -->
 			<button mat-icon-button *ngIf="!listado && asc" style="margin-right: 10px;" (click)="sort('nombre','asc')"><mat-icon>sort_by_alpha</mat-icon></button>

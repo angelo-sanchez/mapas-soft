@@ -16,6 +16,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatCardModule } from '@angular/material/card';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatDialogModule } from '@angular/material/dialog';
 
 
 // Modulos
@@ -24,12 +25,9 @@ import { DashboardModule } from './modules/dashboard/dashboard.module';
 
 // Componentes 
 import { AppComponent } from './app.component';
-// import { SidenavComponent } from './modules/dashboard/sidenav/sidenav.component';
 import { LoginComponent } from './modules/login/login.component';
-// import { DashboardComponent } from './modules/dashboard/dashboard.component';
 import { ErrorComponent } from './modules/error/error.component';
 import { RegisterComponent } from './modules/register/register.component';
-// import { MapListComponent } from './modules/dashboard/map-list/map-list.component';
 
 // Servicios
 import { LoginService } from './modules/login/login.service';
@@ -75,6 +73,7 @@ const wsConfig: SocketIoConfig = {
     MatCardModule,
     MatGridListModule,
     MatSnackBarModule,
+    MatDialogModule,
   ],
   providers: [LoginService, LoginGuardianService, MapListService],
   bootstrap: [AppComponent]

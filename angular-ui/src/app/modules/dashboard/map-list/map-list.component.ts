@@ -9,6 +9,8 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
 import { MapWsService } from '../../websocket/map-ws.service';
 import { environment } from '../../../../environments/environment';
 import * as fileSaver from 'file-saver';
+import {MatDialog} from '@angular/material/dialog';
+import { UploadFileOptionsComponent } from '../general-component/upload-file-options/upload-file-options.component';
 @Component({
 	selector: 'app-map-list',
 	templateUrl: './map-list.component.html',
@@ -48,9 +50,13 @@ export class MapListComponent implements AfterViewInit {
 	public itemSeleccionado: any;
 	public verVistaDetalle: boolean = false;
 
+	public fileOptions : string = "";
+
 	constructor(private mapListService: MapListService,
 		private _snackBar: MatSnackBar,
-		private mapWsService: MapWsService) {
+		private mapWsService: MapWsService,
+		public dialog: MatDialog
+		) {
 	}
 	ngAfterViewInit(): void {
 		this.mapListService.getMaps().subscribe(maps => {
@@ -155,65 +161,82 @@ export class MapListComponent implements AfterViewInit {
 			fd.append('file', file);
 		}
 		fd.append("socketId", this.mapWsService.socketId);
-
-		this.mapListService.insertMaps(fd).subscribe((data: any) => {
-			if (data) {
-				console.log('Mapas');
-				console.log(data);
-				let maps = [...this.mapList.data];
-				maps.push(...data.maps);
-				maps.sort((map1, map2) => map1.name.localeCompare(map2.name));
-				this.mapList.data = maps;
-
-				// let mensaje = 'Se subió ' + data.maps.length + ' archivo/s correctamente. ';
-
-				// if(data.errors.length > 0){
-				// 	mensaje += data.errors.length + ' archivos fallaron al intentar subir.';
-				// }
-				let archivosLista: any[] = [];
-
-				// Agrego los archivos que se subieron correctamente
-				if (data.maps.length > 0) {
-					data.maps.forEach((file: any) => {
-						let obj = {
-							name: file.name,
-							done: true
-						};
-						archivosLista.push(obj);
-					});
-				}
-
-				// Agrego los archivos que se subieron incorrectamente
-				if (data.errors.length > 0) {
-					data.errors.forEach((file: any) => {
-						let obj = {
-							name: file.name,
-							done: false
-						};
-						archivosLista.push(obj);
-					});
-				}
-
-				this._snackBar.openFromComponent(UploadingFileProgressComponent, {
-					horizontalPosition: this.horizontalPosition,
-					verticalPosition: this.verticalPosition,
-					data: {
-						cantidad: archivosLista.length,
-						archivos: archivosLista,
-					}
-				});
-				// this._snackBar.open(mensaje,'Aceptar');
-				//mostrarErrores(data.errors);
-			} else {
-				this._snackBar.open('Se produjo un error al subir un archivo', 'Aceptar');
-			}
-		}, error => {
-			console.log("Se produjo un error al subir archivos");
-			console.error(error);
-			this._snackBar.open('Error al subir el archivo', 'Aceptar');
+		
+		let dialogRef = this.dialog.open(UploadFileOptionsComponent,{
+			width: '250px',
 		});
-		if(this.fileInput && this.fileInput.nativeElement) this.fileInput.nativeElement.value = '';
+		dialogRef.afterClosed().subscribe(result => {
+			fd.append('opciones', result);
+			this.mapListService.insertMaps(fd).subscribe((data: any) => {
+				if (data) {
+					console.log('Mapas');
+					console.log(data);
+					let maps = [...this.mapList.data];
+					maps.push(...data.maps);
+					maps.sort((map1, map2) => map1.name.localeCompare(map2.name));
+					this.mapList.data = maps;
+	
+					// let mensaje = 'Se subió ' + data.maps.length + ' archivo/s correctamente. ';
+	
+					// if(data.errors.length > 0){
+					// 	mensaje += data.errors.length + ' archivos fallaron al intentar subir.';
+					// }
+					let archivosLista: any[] = [];
+	
+					// Agrego los archivos que se subieron correctamente
+					if (data.maps.length > 0) {
+						data.maps.forEach((file: any) => {
+							let obj = {
+								name: file.name,
+								done: true
+							};
+							archivosLista.push(obj);
+						});
+					}
+	
+					// Agrego los archivos que se subieron incorrectamente
+					if (data.errors.length > 0) {
+						data.errors.forEach((file: any) => {
+							let obj = {
+								name: file.name,
+								done: false
+							};
+							archivosLista.push(obj);
+						});
+					}
+	
+					this._snackBar.openFromComponent(UploadingFileProgressComponent, {
+						horizontalPosition: this.horizontalPosition,
+						verticalPosition: this.verticalPosition,
+						data: {
+							cantidad: archivosLista.length,
+							archivos: archivosLista,
+						}
+					});
+					// this._snackBar.open(mensaje,'Aceptar');
+					//mostrarErrores(data.errors);
+				} else {
+					this._snackBar.open('Se produjo un error al subir un archivo', 'Aceptar');
+				}
+			}, error => {
+				console.log("Se produjo un error al subir archivos");
+				console.error(error);
+				this._snackBar.open('Error al subir el archivo', 'Aceptar');
+			});
+			if(this.fileInput && this.fileInput.nativeElement) this.fileInput.nativeElement.value = '';
+		});
 	}
+
+	abrirModalOpcionesArchivos(): void {
+		let dialogRef = this.dialog.open(UploadFileOptionsComponent,{
+			width: '250px',
+		});
+		dialogRef.afterClosed().subscribe(result => {
+			console.log(result);
+			this.fileOptions = result;
+		});
+	}
+
 	@HostListener('document:contextmenu', ['$event', 'row'])
 	onContextMenu(event: MouseEvent, map: MapData) {
 		event.preventDefault();
@@ -291,7 +314,5 @@ export class MapListComponent implements AfterViewInit {
 		console.log('cerrando vista detalle');
 	}
 
-	openBottomSheet(): void {
-
-	  }
+	
 }
