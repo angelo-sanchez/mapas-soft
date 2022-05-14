@@ -7,7 +7,7 @@ import { LoginService } from '../../login/login.service';
 @Injectable({
 	providedIn: 'root'
 })
-export class MapListService {
+export class MapsSectionService {
 	constructor(private httpClient: HttpClient,
 		private loginService: LoginService) {
 	}

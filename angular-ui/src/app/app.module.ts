@@ -32,7 +32,7 @@ import { RegisterComponent } from './modules/register/register.component';
 // Servicios
 import { LoginService } from './modules/login/login.service';
 import { LoginGuardianService } from './modules/login/login-guardian.service';
-import { MapListService } from './modules/dashboard/map-list/map-list-service';
+import { MapsSectionService } from './modules/dashboard/maps-section/maps-section-service';
 import { SocketIoConfig, SocketIoModule } from 'ngx-socket-io';
 import { environment } from '../environments/environment';
 
@@ -75,7 +75,7 @@ const wsConfig: SocketIoConfig = {
     MatSnackBarModule,
     MatDialogModule,
   ],
-  providers: [LoginService, LoginGuardianService, MapListService],
+  providers: [LoginService, LoginGuardianService, MapsSectionService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

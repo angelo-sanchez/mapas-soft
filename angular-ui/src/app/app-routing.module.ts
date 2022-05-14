@@ -6,14 +6,14 @@ import { RegisterComponent } from './modules/register/register.component';
 import { ErrorComponent } from './modules/error/error.component';
 import { DashboardComponent } from './modules/dashboard/dashboard.component';
 import { LoginGuardianService } from './modules/login/login-guardian.service';
-import { MapListComponent } from './modules/dashboard/map-list/map-list.component';
+import { MapsSectionComponent } from './modules/dashboard/maps-section/maps-section.component';
 import { SettingComponent } from './modules/dashboard/setting/setting.component';
 
 
 
 const routes: Routes = [
   {path: '',component: DashboardComponent, canActivate : [LoginGuardianService], children : [
-      {path: 'maps', component: MapListComponent},
+      {path: 'maps', component: MapsSectionComponent},
       {path: 'setting', component: SettingComponent}
   ]},
   {path: 'login', component: LoginComponent},

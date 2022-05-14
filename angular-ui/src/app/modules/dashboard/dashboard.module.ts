@@ -20,20 +20,20 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 // Componentes
 import { DashboardComponent } from './dashboard.component';
-import { MapListComponent } from './map-list/map-list.component';
+import { MapsSectionComponent } from './maps-section/maps-section.component';
+import { MapsSectionModule } from './maps-section/maps-section.module';
 import { SidenavComponent } from './sidenav/sidenav.component';
 import { SettingComponent } from './setting/setting.component';
 import { DragDropComponent } from './general-component/drag-drop/drag-drop.component';
 import { DragDropDirective } from './general-component/drag-drop/drag-drop.directive';
 import { UploadingFileProgressComponent } from './general-component/uploading-file-progress/uploading-file-progress.component';
 import { ViewDetailComponent } from './view-detail/view-detail.component';
-import { MapGrillaComponent } from './map-grilla/map-grilla.component';
-import { UploadFileOptionsComponent } from './general-component/upload-file-options/upload-file-options.component';
+import { UploadFileOptionsComponent } from './general-component/upload-file-options/upload-file-options.component'; 
 
 
 @NgModule({
   declarations: [
-    MapListComponent,
+    MapsSectionComponent,
     DashboardComponent,
     SidenavComponent,
     SettingComponent,
@@ -41,15 +41,12 @@ import { UploadFileOptionsComponent } from './general-component/upload-file-opti
     DragDropDirective,
     UploadingFileProgressComponent,
     ViewDetailComponent,
-    MapGrillaComponent,
-    UploadFileOptionsComponent
-    
+    UploadFileOptionsComponent ,
   ],
   imports: [
     CommonModule,
     RouterModule,
     ReactiveFormsModule,
-
     // Material angular
     MatListModule,
     MatInputModule,
@@ -64,15 +61,15 @@ import { UploadFileOptionsComponent } from './general-component/upload-file-opti
     MatGridListModule,
     MatSnackBarModule,
     MatProgressSpinnerModule,
+    MapsSectionModule
   ],
   exports:[
     DashboardComponent,
-    MapListComponent,
+    MapsSectionComponent,
     SidenavComponent,
     UploadingFileProgressComponent,
     ViewDetailComponent,
-    MapGrillaComponent,
-    UploadFileOptionsComponent
+    UploadFileOptionsComponent,
   ]
 })
 export class DashboardModule { }

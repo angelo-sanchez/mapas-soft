@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, ElementRef, HostListener, OnInit } from '@angular/core';
-import { MapData, MapListService } from '../map-list/map-list-service';
+import { MapData, MapsSectionService } from './maps-section-service';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatMenuTrigger } from '@angular/material/menu';
 import { MatSnackBar, MatSnackBarHorizontalPosition, MatSnackBarVerticalPosition } from '@angular/material/snack-bar';
@@ -11,10 +11,11 @@ import { environment } from '../../../../environments/environment';
 import * as fileSaver from 'file-saver';
 import {MatDialog} from '@angular/material/dialog';
 import { UploadFileOptionsComponent } from '../general-component/upload-file-options/upload-file-options.component';
+
 @Component({
-	selector: 'app-map-list',
-	templateUrl: './map-list.component.html',
-	styleUrls: ['./map-list.component.css'],
+	selector: 'app-maps-section',
+	templateUrl: './maps-section.component.html',
+	styleUrls: ['./maps-section.component.css'],
 	animations: [
 		trigger('detailExpand', [
 			state('collapsed', style({ display: 'none', height: '0px', minHeight: '0' })),
@@ -23,7 +24,8 @@ import { UploadFileOptionsComponent } from '../general-component/upload-file-opt
 		]),
 	],
 })
-export class MapListComponent implements AfterViewInit {
+
+export class MapsSectionComponent implements AfterViewInit {
 
 	@ViewChild(MatMenuTrigger)
 	contextMenu!: MatMenuTrigger;
@@ -52,14 +54,14 @@ export class MapListComponent implements AfterViewInit {
 
 	public fileOptions : string = "";
 
-	constructor(private mapListService: MapListService,
+	constructor(private mapSectionService: MapsSectionService,
 		private _snackBar: MatSnackBar,
 		private mapWsService: MapWsService,
 		public dialog: MatDialog
 		) {
 	}
 	ngAfterViewInit(): void {
-		this.mapListService.getMaps().subscribe(maps => {
+		this.mapSectionService.getMaps().subscribe(maps => {
 			this.mapList.data = maps;
 			this.sort('nombre', 'asc');
 			this.mapWsService.onProgress().subscribe((data) => this.mostrarLog(data));
@@ -174,7 +176,7 @@ export class MapListComponent implements AfterViewInit {
 		dialogRef.afterClosed().subscribe(result => {
 			if(!result) return;
 			fd.append('opciones', result);
-			this.mapListService.insertMaps(fd).subscribe((data: any) => {
+			this.mapSectionService.insertMaps(fd).subscribe((data: any) => {
 				if (data) {
 					console.log('Mapas');
 					console.log(data);
@@ -267,7 +269,7 @@ export class MapListComponent implements AfterViewInit {
 
 	descargar(item: MapData | null) {
 		if (item) {
-			this.mapListService.download(item).subscribe(data => {
+			this.mapSectionService.download(item).subscribe(data => {
 				if (!data) {
 					console.error("Error al descargar el archivo");
 					return
@@ -283,7 +285,7 @@ export class MapListComponent implements AfterViewInit {
 	}
 
 	eliminar(item: MapData | null) {
-		if (item) this.mapListService.deleteMaps([item.id]).subscribe(data => {
+		if (item) this.mapSectionService.deleteMaps([item.id]).subscribe(data => {
 			this.mapList.data = this.mapList.data.filter(map => map.id != item.id);
 		});
 	}
