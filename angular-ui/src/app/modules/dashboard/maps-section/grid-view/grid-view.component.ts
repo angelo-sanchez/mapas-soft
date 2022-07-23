@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { MatTableDataSource } from '@angular/material/table';
+import { MapData } from '../maps-section-service';
 
 @Component({
   selector: 'app-grid-view',
@@ -7,9 +9,12 @@ import { Component, OnInit } from '@angular/core';
 })
 export class GridViewComponent implements OnInit {
 
+  @Input() public maps : MatTableDataSource<MapData> = new MatTableDataSource<MapData>(); 
+
   constructor() { }
 
   ngOnInit(): void {
+
   }
 
 }

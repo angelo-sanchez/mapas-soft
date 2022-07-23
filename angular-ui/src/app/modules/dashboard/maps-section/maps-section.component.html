@@ -1,145 +1,41 @@
 <ng-container>
 	<div class="contenedor-botones-acciones">
-		<div style="display: flex; justify-content: center; align-items: center">
-			<!-- alineado a izquierda -->
+		<!-- <div style="display: flex; justify-content: center; align-items: center">
+
 			<label class="button-add mat-elevation-z2" title="Subir archivos">
-				<!-- <button mat-raised-button><mat-icon>add</mat-icon>Nuevo</button> -->
 				<span><mat-icon>upload_file</mat-icon></span>
 				<input #fileUpload type="file" multiple (change)="subirArchivo($event.target)" style="width: 0px; height: 0px">
 			</label>
-		</div>
-		<!-- <button (click)="openBottomSheet()">open bottonsheet</button> -->
+		</div> -->
 		<div>
-			<!-- alineado a derecha -->
-			<button mat-icon-button *ngIf="!listado && asc" style="margin-right: 10px;" (click)="sort('nombre','asc')"><mat-icon>sort_by_alpha</mat-icon></button>
-			<button mat-icon-button *ngIf="!listado && !asc" style="margin-right: 10px;" (click)="sort('nombre','desc')"><mat-icon>sort_by_alpha</mat-icon></button>
-			<button mat-icon-button (click)="listado = !listado">
-				<ng-container *ngIf="listado === true">
+			<!-- <button mat-icon-button *ngIf="!isListView && asc" style="margin-right: 10px;" (click)="sort('nombre','asc')"><mat-icon>sort_by_alpha</mat-icon></button>
+			<button mat-icon-button *ngIf="!isListView && !asc" style="margin-right: 10px;" (click)="sort('nombre','desc')"><mat-icon>sort_by_alpha</mat-icon></button> -->
+			<button mat-icon-button (click)="isListView = !isListView">
+				<ng-container *ngIf="isListView">
 					<mat-icon>view_module</mat-icon>
 				</ng-container>
-				<ng-container *ngIf="listado === false">
+				<ng-container *ngIf="!isListView">
 					<mat-icon>view_list</mat-icon>
 				</ng-container>
 			</button>
 		</div>
 	</div>
-	<!-- <app-drag-drop></app-drag-drop> -->
-	<!-- vista por columnas -->
-	<ng-container *ngIf="listado">
-		<form appDragDrop (fileDropped)="subirArchivo($event)" class="contenedor-lista">
-			<div class="contenido-vista">
-				<table mat-table [dataSource]="mapList"  multiTemplateDataRows matSort matSortActive="name" matSortDisableClear matSortDirection="desc" class="tabla-lista">
-					<div>
-						<!-- Name Column -->
-						<div>
-							<ng-container matColumnDef="name">
-								<th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>
-									Nombre
-									<ng-container *ngIf="asc">
-										<button mat-icon-button (click)="sort('nombre', 'asc')" class="icon-ordenar"><mat-icon>north</mat-icon></button>
-									</ng-container>
-									<ng-container *ngIf="!asc">
-										<button mat-icon-button (click)="sort('nombre', 'desc')" class="icon-ordenar"><mat-icon>south</mat-icon></button>
-									</ng-container>
-								</th>
-								<td mat-cell *matCellDef="let element">
-									<span><span class="etiqueta-ext mr-10" [ngClass]="{amarillo: element.ext == 'mbtiles', azul: element.ext == 'json', celeste: element.ext == 'geojson'}">{{element.ext | uppercase}}</span>{{element.name}}</span>
-								</td>
-							</ng-container>
-						</div>
-						<!-- Date_Creation Column -->
-						<div>
-							<ng-container matColumnDef="date_creation">
-								<th mat-header-cell *matHeaderCellDef>
-									Fecha de Creación
-									<ng-container *ngIf="fechaAsc">
-										<button mat-icon-button class="icon-ordenar" (click)="sort('fecha', 'asc')"><mat-icon>north</mat-icon></button>
-									</ng-container>
-									<ng-container *ngIf="!fechaAsc">
-										<button mat-icon-button class="icon-ordenar" (click)="sort('fecha', 'desc')"><mat-icon>south</mat-icon></button>
-									</ng-container>
-								</th>
-								<td mat-cell *matCellDef="let element">
-									<span>{{element.date_creation | date : 'dd-MM-yyyy'}}</span>
-								</td>
-							</ng-container>
-						</div>
-						<!-- Owner Column -->
-						<div>
-							<ng-container matColumnDef="owner">
-								<th mat-header-cell *matHeaderCellDef>Propietario</th>
-								<td mat-cell *matCellDef="let element">
-									<span>{{element.owner}}</span>
-								</td>
-							</ng-container>
-						</div>
 
-						<div>
-							<ng-container matColumnDef="loading">
-								<th mat-header-cell *matHeaderCellDef></th>
-								<td mat-cell *matCellDef="let element">
-									<mat-spinner *ngIf="element.estado == 'PROCESANDO'" [diameter]="30"></mat-spinner>
-								</td>
-							</ng-container>
-						</div>
-					</div>
+	<!-- contenedor de vistas -->
+	<form appDragDrop (fileDropped)="subirArchivo($event)" class="contenedor-lista">
+		<div class="view-container">
+			<!-- vista lista -->
+			<app-list-view *ngIf="isListView" [maps]="mapList">
+			</app-list-view>
 
-					<ng-container matColumnDef="expandedDetail">
-						<td mat-cell *matCellDef="let element" [attr.colspan]="displayedColumns.length">
-						  <div *ngIf="element.log" [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
-							<div class="contenido-expanded">
-								<p class="log" style="font-family: monospace;" *ngFor="let log of element.log" [innerHtml]="log"></p>
-							</div>
-						  </div>
-						</td>
-					</ng-container>
-
-					
-
-					<tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-					<tr mat-row *matRowDef="let element; columns: displayedColumns;"
-						class="example-element-row"
-						[class.example-expanded-row]="expandedElement === element"
-						(contextmenu)="onContextMenu($event, element)"
-						(click)="expandedElement = expandedElement === element ? null : element">
-					</tr>
-					<tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
-				</table>
-			</div>
-		</form>
-	</ng-container>
-
-	<!-- vista por grilla -->
-	<ng-container *ngIf="!listado">
-		<div class="flexible">
-			<form appDragDrop (fileDropped)="subirArchivo($event)" class="contenedor">
-				<div class="contenido-vista">
-					<div class="grilla">
-						<div *ngFor="let item of mapList.data" (contextmenu)="onContextMenu($event, item)">
-							<div class="file" (click)="verDetalle(item)">
-								<div class="file-content">
-									<div class="file-icon">
-										<mat-icon aria-hidden="false" aria-label="Example home icon">description</mat-icon>
-									</div>
-									<div class="file-name">
-										<span>{{item.name}}</span>
-									</div>
-									<div class="file-ext">
-										<span class="etiqueta-ext" [ngClass]="{amarillo: item.ext == 'mbtiles', azul: item.ext == 'json', celeste: item.ext == 'geojson'}">{{item.ext | uppercase}}</span>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</form>
-			<app-view-detail *ngIf="verVistaDetalle" [item]="itemSeleccionado" (cerrar)="cerrarVistaDetalle()"></app-view-detail>
+			<!-- vista grilla -->
+			<app-grid-view *ngIf="!isListView" [maps]="mapList">
+			</app-grid-view>
 		</div>
-		
-	</ng-container>
+	</form>
 </ng-container>
 
-<div style="visibility: hidden; position: fixed;"
+<!-- <div style="visibility: hidden; position: fixed;"
     [style.left]="contextMenuPosition.x"
     [style.top]="contextMenuPosition.y"
     [matMenuTriggerFor]="contextMenu">
@@ -149,4 +45,4 @@
 		<button *ngIf="item && item.ext == 'mbtiles'" mat-menu-item (click)="descargar(item)" ><mat-icon>file_download</mat-icon>Descargar</button>
 		<button mat-menu-item (click)="eliminar(item)"><mat-icon>delete</mat-icon>Eliminar</button>
 	</ng-template>
-</mat-menu>
+</mat-menu> -->

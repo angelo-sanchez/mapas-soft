@@ -8,7 +8,6 @@ import { UploadingFileProgressComponent } from '../general-component/uploading-f
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { MapWsService } from '../../websocket/map-ws.service';
 import { environment } from '../../../../environments/environment';
-import * as fileSaver from 'file-saver';
 import {MatDialog} from '@angular/material/dialog';
 import { UploadFileOptionsComponent } from '../general-component/upload-file-options/upload-file-options.component';
 
@@ -28,26 +27,31 @@ import { UploadFileOptionsComponent } from '../general-component/upload-file-opt
 export class MapsSectionComponent implements AfterViewInit {
 
 	@ViewChild(MatMenuTrigger)
-	contextMenu!: MatMenuTrigger;
+	contextMenu!: MatMenuTrigger; // ya se pasaron
 
 	@ViewChild("fileUpload", {
 		static: true
 	}) fileInput!: ElementRef<HTMLInputElement>;
 
-	contextMenuPosition = { x: '0px', y: '0px' };
+	
 
-	public mapList = new MatTableDataSource<MapData>();
-	public displayedColumns: string[] = ['name', 'owner', 'date_creation', 'loading'];
-	public expandedElement: any;
+	public mapList : MatTableDataSource<MapData> = new MatTableDataSource<MapData>();
+	public displayedColumns: string[] = ['name', 'owner', 'date_creation', 'loading']; // ya se pasaron
+	public expandedElement: any; // ya se pasaron
 
-	public listado: boolean = true;
-	public asc: boolean = true;
-	public fechaAsc: boolean = true;
-	public item: MapData | null = null;
+	public isListView: boolean = true;
+
+	// hay que migrar
+	public asc: boolean = true; // ya se pasaron
+	public fechaAsc: boolean = true; // ya se pasaron
+	
 	public urlBackend: string = environment.apiUrl;
-
-	public horizontalPosition: MatSnackBarHorizontalPosition = 'end';
-	public verticalPosition: MatSnackBarVerticalPosition = 'bottom';
+	
+	
+	public item: MapData | null = null; // ya se pasaron
+	public contextMenuPosition = { x: '0px', y: '0px' }; // ya se pasaron
+	public horizontalPosition: MatSnackBarHorizontalPosition = 'end'; // ya se pasaron
+	public verticalPosition: MatSnackBarVerticalPosition = 'bottom'; // ya se pasaron
 
 	public itemSeleccionado: any;
 	public verVistaDetalle: boolean = false;
@@ -60,95 +64,106 @@ export class MapsSectionComponent implements AfterViewInit {
 		public dialog: MatDialog
 		) {
 	}
+
+	ngOnInit(){
+		// obtener el listado de mapas del usuario
+		this.getMaps();
+	}
+
 	ngAfterViewInit(): void {
-		this.mapSectionService.getMaps().subscribe(maps => {
-			this.mapList.data = maps;
-			this.sort('nombre', 'asc');
-			this.mapWsService.onProgress().subscribe((data) => this.mostrarLog(data));
-			this.mapWsService.onFinish().subscribe((data) => this.finalizar(data));
-		});
+		
 		console.log(this.fileInput);
 		
 	}
 
-	abrirSnackBar() {
-		let files = [{
-			name: 'provincias.json',
-			done: true
-		},
-		{
-			name: 'municipios.json',
-			done: false
-		}];
+	getMaps(){
+		this.mapSectionService.getMaps().subscribe(maps => {
+			console.log(maps);
+			this.mapList = new MatTableDataSource<MapData>(maps);
 
-
-		this._snackBar.openFromComponent(UploadingFileProgressComponent, {
-			horizontalPosition: this.horizontalPosition,
-			verticalPosition: this.verticalPosition,
-			data: {
-				cantidad: 2,
-				archivos: files,
-			}
+			// this.mapWsService.onProgress().subscribe((data) => this.mostrarLog(data));
+			// this.mapWsService.onFinish().subscribe((data) => this.finalizar(data));
 		});
 	}
 
-	private mostrarLog(data: any) {
-		if (!data) {
-			console.log("NO HAY DATA");
-			return;
-		}
-		// console.log(data);
-		if (!this.mapList) {
-			console.log("MAPLIST ES NULL");
-			return;
-		}
-		let maps = this.mapList.data;
-		let idx = maps.findIndex(map => map.id == data.id);
-		if (idx < 0) {
-			console.log("No se encontró el mapa con id: " + data.id);
-			return;
-		}
-		let mapa = maps[idx];
+	// abrirSnackBar() {
+	// 	let files = [{
+	// 		name: 'provincias.json',
+	// 		done: true
+	// 	},
+	// 	{
+	// 		name: 'municipios.json',
+	// 		done: false
+	// 	}];
 
-		mapa.estado = "PROCESANDO";
-		if (!mapa.log)
-			mapa.log = [data.log];
-		else if (!mapa.log.includes(data.log))
-			mapa.log.push(data.log);
-		// console.log(maps);
-		this.mapList.data = maps;
-	}
 
-	private finalizar(data: any) {
-		if (!data) {
-			console.log("NO HAY DATA");
-			return;
-		}
-		// console.log(data);
-		if (!this.mapList) {
-			console.log("MAPLIST ES NULL");
-			return;
-		}
+	// 	this._snackBar.openFromComponent(UploadingFileProgressComponent, {
+	// 		horizontalPosition: this.horizontalPosition,
+	// 		verticalPosition: this.verticalPosition,
+	// 		data: {
+	// 			cantidad: 2,
+	// 			archivos: files,
+	// 		}
+	// 	});
+	// }
 
-		let maps = this.mapList.data;
-		let idx = maps.findIndex(map => map.id == data.id);
-		if (idx < 0) {
-			console.log("No se encontró el mapa con id: " + data.id);
-			return;
-		}
-		let mapa = maps[idx];
+	// private mostrarLog(data: any) {
+	// 	if (!data) {
+	// 		console.log("NO HAY DATA");
+	// 		return;
+	// 	}
+	// 	// console.log(data);
+	// 	if (!this.mapList) {
+	// 		console.log("MAPLIST ES NULL");
+	// 		return;
+	// 	}
+	// 	let maps = this.mapList.data;
+	// 	let idx = maps.findIndex(map => map.id == data.id);
+	// 	if (idx < 0) {
+	// 		console.log("No se encontró el mapa con id: " + data.id);
+	// 		return;
+	// 	}
+	// 	let mapa = maps[idx];
 
-		// console.log(mapa);
+	// 	mapa.estado = "PROCESANDO";
+	// 	if (!mapa.log)
+	// 		mapa.log = [data.log];
+	// 	else if (!mapa.log.includes(data.log))
+	// 		mapa.log.push(data.log);
+	// 	// console.log(maps);
+	// 	this.mapList.data = maps;
+	// }
 
-		mapa.estado = data.error ? "ERROR" : "LISTO";
-		if (!mapa.log)
-			mapa.log = [data.log];
-		else if (!mapa.log.includes(data.log))
-			mapa.log.push(data.log);
-		if (data.ext) mapa.ext = data.ext;
-		// console.log(maps);
-		this.mapList.data = maps;
-	}
+	// private finalizar(data: any) {
+	// 	if (!data) {
+	// 		console.log("NO HAY DATA");
+	// 		return;
+	// 	}
+	// 	// console.log(data);
+	// 	if (!this.mapList) {
+	// 		console.log("MAPLIST ES NULL");
+	// 		return;
+	// 	}
+
+	// 	let maps = this.mapList.data;
+	// 	let idx = maps.findIndex(map => map.id == data.id);
+	// 	if (idx < 0) {
+	// 		console.log("No se encontró el mapa con id: " + data.id);
+	// 		return;
+	// 	}
+	// 	let mapa = maps[idx];
+
+	// 	// console.log(mapa);
+
+	// 	mapa.estado = data.error ? "ERROR" : "LISTO";
+	// 	if (!mapa.log)
+	// 		mapa.log = [data.log];
+	// 	else if (!mapa.log.includes(data.log))
+	// 		mapa.log.push(data.log);
+	// 	if (data.ext) mapa.ext = data.ext;
+	// 	// console.log(maps);
+	// 	this.mapList.data = maps;
+	// }
 
 	subirArchivo(event: any) {
 		console.log({ event });
@@ -235,16 +250,17 @@ export class MapsSectionComponent implements AfterViewInit {
 		});
 	}
 
-	abrirModalOpcionesArchivos(): void {
-		let dialogRef = this.dialog.open(UploadFileOptionsComponent,{
-			width: '250px',
-		});
-		dialogRef.afterClosed().subscribe(result => {
-			console.log(result);
-			this.fileOptions = result;
-		});
-	}
+	// abrirModalOpcionesArchivos(): void {
+	// 	let dialogRef = this.dialog.open(UploadFileOptionsComponent,{
+	// 		width: '250px',
+	// 	});
+	// 	dialogRef.afterClosed().subscribe(result => {
+	// 		console.log(result);
+	// 		this.fileOptions = result;
+	// 	});
+	// }
 
+	// en list-view
 	@HostListener('document:contextmenu', ['$event', 'row'])
 	onContextMenu(event: MouseEvent, map: MapData) {
 		event.preventDefault();
@@ -261,66 +277,46 @@ export class MapsSectionComponent implements AfterViewInit {
 		this.contextMenu.openMenu();
 	}
 
+	// en list-view
 	@HostListener('document:click', ['$event'])
 	onClick(event: MouseEvent) {
 		if (this.contextMenu)
 			this.contextMenu.closeMenu();
 	}
 
-	descargar(item: MapData | null) {
-		if (item) {
-			this.mapSectionService.download(item).subscribe(data => {
-				if (!data) {
-					console.error("Error al descargar el archivo");
-					return
-				}
+	
 
-				let blob = new Blob([data], { type: "application/octet-stream" });
+	// sort(tipo: string, ord: string) {
+	// 	switch (tipo) {
+	// 		case 'nombre':
+	// 			if (ord === 'desc') {
+	// 				this.mapList.data = this.mapList.data.sort((one, two) => (one.name > two.name ? -1 : 1));
+	// 			} else {
+	// 				this.mapList.data = this.mapList.data.sort((one, two) => (one.name < two.name ? -1 : 1));
+	// 			}
+	// 			this.asc = !this.asc;
+	// 			break;
+	// 		case 'fecha':
+	// 			if (ord === 'desc') {
+	// 				this.mapList.data = this.mapList.data.sort((one, two) => (one.date_creation > two.date_creation ? -1 : 1));
+	// 			} else {
+	// 				this.mapList.data = this.mapList.data.sort((one, two) => (one.date_creation < two.date_creation ? -1 : 1));
+	// 			}
+	// 			this.fechaAsc = !this.fechaAsc;
+	// 			break;
+	// 	}
 
-				fileSaver.saveAs(blob, item.name + '.mbtiles');
-			}, error => console.error);
-		} else {
-			console.log("no hay item");
-		}
-	}
+	// }
 
-	eliminar(item: MapData | null) {
-		if (item) this.mapSectionService.deleteMaps([item.id]).subscribe(data => {
-			this.mapList.data = this.mapList.data.filter(map => map.id != item.id);
-		});
-	}
+	// verDetalle(item: any) {
+	// 	this.itemSeleccionado = item;
+	// 	this.verVistaDetalle = true;
+	// }
 
-	sort(tipo: string, ord: string) {
-		switch (tipo) {
-			case 'nombre':
-				if (ord === 'desc') {
-					this.mapList.data = this.mapList.data.sort((one, two) => (one.name > two.name ? -1 : 1));
-				} else {
-					this.mapList.data = this.mapList.data.sort((one, two) => (one.name < two.name ? -1 : 1));
-				}
-				this.asc = !this.asc;
-				break;
-			case 'fecha':
-				if (ord === 'desc') {
-					this.mapList.data = this.mapList.data.sort((one, two) => (one.date_creation > two.date_creation ? -1 : 1));
-				} else {
-					this.mapList.data = this.mapList.data.sort((one, two) => (one.date_creation < two.date_creation ? -1 : 1));
-				}
-				this.fechaAsc = !this.fechaAsc;
-				break;
-		}
-
-	}
-
-	verDetalle(item: any) {
-		this.itemSeleccionado = item;
-		this.verVistaDetalle = true;
-	}
-
-	cerrarVistaDetalle() {
-		this.verVistaDetalle = false;
-		console.log('cerrando vista detalle');
-	}
+	// cerrarVistaDetalle() {
+	// 	this.verVistaDetalle = false;
+	// 	console.log('cerrando vista detalle');
+	// }
 
 	
 }

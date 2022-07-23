@@ -47,6 +47,7 @@ import { UploadFileOptionsComponent } from './general-component/upload-file-opti
     CommonModule,
     RouterModule,
     ReactiveFormsModule,
+    MapsSectionModule,
     // Material angular
     MatListModule,
     MatInputModule,
@@ -61,7 +62,7 @@ import { UploadFileOptionsComponent } from './general-component/upload-file-opti
     MatGridListModule,
     MatSnackBarModule,
     MatProgressSpinnerModule,
-    MapsSectionModule
+    
   ],
   exports:[
     DashboardComponent,
