@@ -22,4 +22,12 @@ router.route("/maps/download/:id")
     .all(passport.authenticate('jwt', { session: false }))
     .get(maps.download);
 
+router.route("/maps/:id/preview")
+    .all(passport.authenticate('jwt', { session: false }))
+    .get(maps.preview);
+
+router.route("/maps/:id/close")
+    .all(passport.authenticate('jwt', { session: false }))
+    .get(maps.closePreview);
+
 export default router;

@@ -12,5 +12,9 @@ export default {
   tippecanoe: {
     command: (osType() == "Windows_NT") ? "assets/script.ps1" : "assets/script.sh",
     dir: process.env.TIPPECANOE_DIR || "/home/user/maps"
+  },
+  tileserver: {
+    dir: process.env.TILESERVER_DIR || "/home/user/maps/output", // Sería el lugar donde tippecanoe guarda los mbtiles ($WORKDIR/output)
+    baseUrl: process.env.TILESERVER_URL || "http://localhost:8080"
   }
 };

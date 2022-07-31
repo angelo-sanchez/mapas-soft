@@ -22,7 +22,7 @@ const showProgress = (command: string, map: IMap, inputPath: string, options?: s
     }, socketId);
 
     process.stdout.on('data', (data) => {
-        let log = ('' + data).split("\n");
+        let log = ('' + data).split(/\r?\n/);
         logs.push(...log);
         sockets.emit(PROGRESS, {
             log: log.join("<br>"),
@@ -33,7 +33,7 @@ const showProgress = (command: string, map: IMap, inputPath: string, options?: s
     process.stderr.on('data', (data) => {
         error = error || `${data}`.match(/(Warning|Error)/gi) != null;
         error && console.error("...Ocurrio un error...");
-        let log = ('' + data).split("\n");
+        let log = ('' + data).split(/\r?\n/);
         logs.push(...log);
         sockets.emit(PROGRESS, {
             log: log.join("<br>"),

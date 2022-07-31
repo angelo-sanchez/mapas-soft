@@ -33,14 +33,9 @@
 						<!-- Name Column -->
 						<div>
 							<ng-container matColumnDef="name">
-								<th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>
+								<th mat-header-cell *matHeaderCellDef mat-sort-header disableClear (click)="sort('nombre', asc ? 'asc' : 'desc')">
 									Nombre
-									<ng-container *ngIf="asc">
-										<button mat-icon-button (click)="sort('nombre', 'asc')" class="icon-ordenar"><mat-icon>north</mat-icon></button>
-									</ng-container>
-									<ng-container *ngIf="!asc">
-										<button mat-icon-button (click)="sort('nombre', 'desc')" class="icon-ordenar"><mat-icon>south</mat-icon></button>
-									</ng-container>
+										<button mat-icon-button class="icon-ordenar"><mat-icon>{{asc ? 'north' : 'south'}}</mat-icon></button>
 								</th>
 								<td mat-cell *matCellDef="let element">
 									<span><span class="etiqueta-ext mr-10" [ngClass]="{amarillo: element.ext == 'mbtiles', azul: element.ext == 'json', celeste: element.ext == 'geojson'}">{{element.ext | uppercase}}</span>{{element.name}}</span>
@@ -87,8 +82,17 @@
 					<ng-container matColumnDef="expandedDetail">
 						<td mat-cell *matCellDef="let element" [attr.colspan]="displayedColumns.length">
 						  <div *ngIf="element.log" [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
-							<div class="contenido-expanded">
-								<p class="log" style="font-family: monospace;" *ngFor="let log of element.log" [innerHtml]="log"></p>
+							<div class="row">
+								<div [ngClass]="{'col-6': element.urlPreview, 'col-12': !element.urlPreview}">
+									<div class="contenido-expanded">
+										<p class="log" style="font-family: monospace;" *ngFor="let log of element.log" [innerHtml]="log"></p>
+									</div>
+								</div>
+								<ng-container *ngIf="element.urlPreview">
+									<div class="col-6">
+										<iframe referrerpolicy="unsafe-url" width="100" height="100" style="width: -webkit-fill-available;height: 50vh;" [src]="element.urlPreview" frameborder="0"></iframe>
+									</div>
+								</ng-container>
 							</div>
 						  </div>
 						</td>
@@ -101,7 +105,7 @@
 						class="example-element-row"
 						[class.example-expanded-row]="expandedElement === element"
 						(contextmenu)="onContextMenu($event, element)"
-						(click)="expandedElement = expandedElement === element ? null : element">
+						(click)="expandedElement = expandedElement === element ? null : element; loadPreview(element)">
 					</tr>
 					<tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
 				</table>

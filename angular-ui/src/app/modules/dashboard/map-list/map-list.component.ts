@@ -6,10 +6,11 @@ import { MatSnackBar, MatSnackBarHorizontalPosition, MatSnackBarVerticalPosition
 import { ViewChild } from '@angular/core';
 import { UploadingFileProgressComponent } from '../general-component/uploading-file-progress/uploading-file-progress.component';
 import { animate, state, style, transition, trigger } from '@angular/animations';
+import { DomSanitizer } from '@angular/platform-browser';
+import { MatDialog } from '@angular/material/dialog';
 import { MapWsService } from '../../websocket/map-ws.service';
 import { environment } from '../../../../environments/environment';
 import * as fileSaver from 'file-saver';
-import {MatDialog} from '@angular/material/dialog';
 import { UploadFileOptionsComponent } from '../general-component/upload-file-options/upload-file-options.component';
 @Component({
 	selector: 'app-map-list',
@@ -50,13 +51,14 @@ export class MapListComponent implements AfterViewInit {
 	public itemSeleccionado: any;
 	public verVistaDetalle: boolean = false;
 
-	public fileOptions : string = "";
+	public fileOptions: string = "";
 
 	constructor(private mapListService: MapListService,
 		private _snackBar: MatSnackBar,
 		private mapWsService: MapWsService,
+		private sanitizer: DomSanitizer,
 		public dialog: MatDialog
-		) {
+	) {
 	}
 	ngAfterViewInit(): void {
 		this.mapListService.getMaps().subscribe(maps => {
@@ -66,7 +68,7 @@ export class MapListComponent implements AfterViewInit {
 			this.mapWsService.onFinish().subscribe((data) => this.finalizar(data));
 		});
 		console.log(this.fileInput);
-		
+
 	}
 
 	abrirSnackBar() {
@@ -153,7 +155,7 @@ export class MapListComponent implements AfterViewInit {
 		if (!event.files) return;
 		let files = event.files;
 		const fileList = (files as FileList);
-		const filenames:string[] = [];
+		const filenames: string[] = [];
 		let fd = new FormData();
 
 		for (let i = 0; i < fileList.length; i++) {
@@ -163,16 +165,16 @@ export class MapListComponent implements AfterViewInit {
 			filenames.push(file.name);
 		}
 		fd.append("socketId", this.mapWsService.socketId);
-		
-		let dialogRef = this.dialog.open(UploadFileOptionsComponent,{
+
+		let dialogRef = this.dialog.open(UploadFileOptionsComponent, {
 			width: '500px',
 			data: {
 				filenames
 			}
 		});
-		if(this.fileInput && this.fileInput.nativeElement) this.fileInput.nativeElement.value = '';
+		if (this.fileInput && this.fileInput.nativeElement) this.fileInput.nativeElement.value = '';
 		dialogRef.afterClosed().subscribe(result => {
-			if(!result) return;
+			if (!result) return;
 			fd.append('opciones', result);
 			this.mapListService.insertMaps(fd).subscribe((data: any) => {
 				if (data) {
@@ -182,14 +184,14 @@ export class MapListComponent implements AfterViewInit {
 					maps.push(...data.maps);
 					maps.sort((map1, map2) => map1.name.localeCompare(map2.name));
 					this.mapList.data = maps;
-	
+
 					// let mensaje = 'Se subió ' + data.maps.length + ' archivo/s correctamente. ';
-	
+
 					// if(data.errors.length > 0){
 					// 	mensaje += data.errors.length + ' archivos fallaron al intentar subir.';
 					// }
 					let archivosLista: any[] = [];
-	
+
 					// Agrego los archivos que se subieron correctamente
 					if (data.maps.length > 0) {
 						data.maps.forEach((file: any) => {
@@ -200,7 +202,7 @@ export class MapListComponent implements AfterViewInit {
 							archivosLista.push(obj);
 						});
 					}
-	
+
 					// Agrego los archivos que se subieron incorrectamente
 					if (data.errors.length > 0) {
 						data.errors.forEach((file: any) => {
@@ -211,7 +213,7 @@ export class MapListComponent implements AfterViewInit {
 							archivosLista.push(obj);
 						});
 					}
-	
+
 					this._snackBar.openFromComponent(UploadingFileProgressComponent, {
 						horizontalPosition: this.horizontalPosition,
 						verticalPosition: this.verticalPosition,
@@ -234,7 +236,7 @@ export class MapListComponent implements AfterViewInit {
 	}
 
 	abrirModalOpcionesArchivos(): void {
-		let dialogRef = this.dialog.open(UploadFileOptionsComponent,{
+		let dialogRef = this.dialog.open(UploadFileOptionsComponent, {
 			width: '250px',
 		});
 		dialogRef.afterClosed().subscribe(result => {
@@ -265,18 +267,35 @@ export class MapListComponent implements AfterViewInit {
 			this.contextMenu.closeMenu();
 	}
 
+	async loadPreview(map: any) {
+		if (!this.expandedElement) {
+			await this.mapListService.closePreview(map.id).toPromise();
+			map.urlPreview = '';
+			return;
+		}
+		this.mapListService.preview(map.id).subscribe((response: any) => {
+			console.log("preview", response);
+			if (response && response.status == "STARTED") {
+				let url = response.url;
+				if (!environment.production)
+					url = this.sanitizer.bypassSecurityTrustResourceUrl(url);
+				map.urlPreview = url;
+			} else map.urlPreview = '';
+		}, error => console.error(error));
+	}
+
 	descargar(item: MapData | null) {
 		if (item) {
 			this.mapListService.download(item).subscribe(data => {
 				if (!data) {
 					console.error("Error al descargar el archivo");
-					return
+					return;
 				}
 
 				let blob = new Blob([data], { type: "application/octet-stream" });
 
 				fileSaver.saveAs(blob, item.name + '.mbtiles');
-			}, error => console.error);
+			}, error => console.error(error));
 		} else {
 			console.log("no hay item");
 		}
@@ -320,5 +339,5 @@ export class MapListComponent implements AfterViewInit {
 		console.log('cerrando vista detalle');
 	}
 
-	
+
 }

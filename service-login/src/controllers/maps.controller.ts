@@ -4,6 +4,7 @@ import { StatusCodes as Status } from "http-status-codes";
 import { join, resolve } from 'path';
 import config from "../config/config";
 import Map from "../models/maps.model";
+import { tileserver } from "./tileserver";
 import { tippecanoe } from "./tippecanoe";
 
 const getName = (name: string) => {
@@ -79,11 +80,11 @@ export const MapsController = {
                 console.error({ error: err });
                 error.push(`Map with id: ${id} couldn't be removed, reason: ${err}`);
             }
-            success.push(id)
+            success.push(id);
             try {
                 fs.rmSync(path);
-            } catch (error){
-                console.error({error});
+            } catch (error) {
+                console.error({ error });
             }
         }
 
@@ -92,7 +93,7 @@ export const MapsController = {
             return res.status(Status.INTERNAL_SERVER_ERROR).json({ error });
         }
 
-        return res.status(Status.OK).json({success});
+        return res.status(Status.OK).json({ success });
     },
     addMap: async function (req: Request, res: Response) {
         if (!req.user)
@@ -135,10 +136,10 @@ export const MapsController = {
                     }) || "...falló");
                 }
                 let optionsStr = opciones.find((v: any) => v.filename == filename).options;
-                procesar.push(()=>{
+                procesar.push(() => {
                     tippecanoe.generateMbtiles(map, file.path, optionsStr, req.body.socketId)
-                    .catch(err => console.error("Error al generar", err));
-                })
+                        .catch(err => console.error("Error al generar", err));
+                });
                 maps.push({
                     id: map._id,
                     owner: map.owner,
@@ -158,5 +159,37 @@ export const MapsController = {
             maps
         });
         procesar.forEach(v => v());
+    },
+
+    preview: async function (req: Request, res: Response) {
+        if (!req.user)
+            return res.status(Status.FORBIDDEN).json({ message: 'You must be logged in to make this action' });
+        if (!req.params.id)
+            return res.status(Status.BAD_REQUEST).json({ message: 'Map ID must be provided' });
+        const id = req.params.id;
+        try {
+            const name = await tileserver.start(id);
+
+            return res.status(Status.OK).json({
+                id,
+                name,
+                status: "STARTED",
+                url: `${config.tileserver.baseUrl}/data/${id}/`,
+            });
+        } catch (error) {
+            console.error(error);
+            return res.status(Status.GATEWAY_TIMEOUT).send(error);
+        }
+    },
+
+    closePreview: async function (req: Request, res: Response) {
+        if (!req.user)
+            return res.status(Status.FORBIDDEN).json({ message: 'You must be logged in to make this action' });
+        if (!req.params.id)
+            return res.status(Status.BAD_REQUEST).json({ message: 'Map ID must be provided' });
+        const id = req.params.id;
+        const name = await tileserver.stop();
+
+        return res.status(Status.OK).json({ id, name, status: "STOPPED" });
     }
 };
