@@ -22,7 +22,7 @@ export class MapsSectionService {
 	}
 
 	insertMaps(datos: FormData) {
-		let url = environment.apiUrl + '/maps'
+		let url = environment.apiUrl + '/maps';
 		return this.httpClient.post<any>(url, datos, {
 			headers: {
 				'Authorization': `bearer ` + this.loginService.getToken()
@@ -46,6 +46,22 @@ export class MapsSectionService {
 		return this.httpClient.delete<any>(url, {
 			headers: {
 				'Authorization': `bearer ` + this.loginService.getToken()
+			}
+		});
+	}
+
+	preview(id: string) {
+		return this.httpClient.get(`${environment.apiUrl}/maps/${id}/preview`, {
+			headers: {
+				'Authorization': `bearer ${this.loginService.getToken()}`
+			}
+		});
+	}
+
+	closePreview(id: string) {
+		return this.httpClient.get(`${environment.apiUrl}/maps/${id}/close`, {
+			headers: {
+				'Authorization': `bearer ${this.loginService.getToken()}`
 			}
 		});
 	}
