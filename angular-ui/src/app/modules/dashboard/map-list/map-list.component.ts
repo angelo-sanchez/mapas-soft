@@ -6,7 +6,7 @@ import { MatSnackBar, MatSnackBarHorizontalPosition, MatSnackBarVerticalPosition
 import { ViewChild } from '@angular/core';
 import { UploadingFileProgressComponent } from '../general-component/uploading-file-progress/uploading-file-progress.component';
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import { DomSanitizer } from '@angular/platform-browser';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { MatDialog } from '@angular/material/dialog';
 import { MapWsService } from '../../websocket/map-ws.service';
 import { environment } from '../../../../environments/environment';
@@ -277,7 +277,7 @@ export class MapListComponent implements AfterViewInit {
 			console.log("preview", response);
 			if (response && response.status == "STARTED") {
 				let url = response.url;
-				if (!environment.production)
+				if (environment.tileserverTrustedUrls.find((v) => url.startsWith(v)))
 					url = this.sanitizer.bypassSecurityTrustResourceUrl(url);
 				map.urlPreview = url;
 			} else map.urlPreview = '';
