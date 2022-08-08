@@ -104,3 +104,4 @@ dist
 .tern-port
 
 service-login/package-lock\.json
+angular-ui/package-lock\.json
