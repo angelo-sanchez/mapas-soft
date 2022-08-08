@@ -64,6 +64,7 @@ export const logout = async (
   req: Request,
   res: Response
 ) => {
+  // @ts-ignore
   req.logout();
   return res.status(200).json({
     msg: "OK"
