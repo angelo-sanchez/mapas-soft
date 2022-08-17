@@ -10,11 +10,7 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { MatDialog } from '@angular/material/dialog';
 import { MapWsService } from '../../websocket/map-ws.service';
 import { environment } from '../../../../environments/environment';
-<<<<<<< HEAD:angular-ui/src/app/modules/dashboard/maps-section/maps-section.component.ts
-import {MatDialog} from '@angular/material/dialog';
-=======
 import * as fileSaver from 'file-saver';
->>>>>>> Tileserver - Mostrar iframe con el mapa seleccionado:angular-ui/src/app/modules/dashboard/map-list/map-list.component.ts
 import { UploadFileOptionsComponent } from '../general-component/upload-file-options/upload-file-options.component';
 
 @Component({
@@ -257,7 +253,6 @@ export class MapsSectionComponent implements AfterViewInit {
 		});
 	}
 
-<<<<<<< HEAD:angular-ui/src/app/modules/dashboard/maps-section/maps-section.component.ts
 	// abrirModalOpcionesArchivos(): void {
 	// 	let dialogRef = this.dialog.open(UploadFileOptionsComponent,{
 	// 		width: '250px',
@@ -269,7 +264,6 @@ export class MapsSectionComponent implements AfterViewInit {
 	// }
 
 	// en list-view
-=======
 	abrirModalOpcionesArchivos(): void {
 		let dialogRef = this.dialog.open(UploadFileOptionsComponent, {
 			width: '250px',
@@ -280,7 +274,6 @@ export class MapsSectionComponent implements AfterViewInit {
 		});
 	}
 
->>>>>>> Tileserver - Mostrar iframe con el mapa seleccionado:angular-ui/src/app/modules/dashboard/map-list/map-list.component.ts
 	@HostListener('document:contextmenu', ['$event', 'row'])
 	onContextMenu(event: MouseEvent, map: MapData) {
 		event.preventDefault();
@@ -304,16 +297,13 @@ export class MapsSectionComponent implements AfterViewInit {
 			this.contextMenu.closeMenu();
 	}
 
-<<<<<<< HEAD:angular-ui/src/app/modules/dashboard/maps-section/maps-section.component.ts
-	
-=======
 	async loadPreview(map: any) {
 		if (!this.expandedElement) {
-			await this.mapListService.closePreview(map.id).toPromise();
+			await this.mapSectionService.closePreview(map.id).toPromise();
 			map.urlPreview = '';
 			return;
 		}
-		this.mapListService.preview(map.id).subscribe((response: any) => {
+		this.mapSectionService.preview(map.id).subscribe((response: any) => {
 			console.log("preview", response);
 			if (response && response.status == "STARTED") {
 				let url = response.url;
@@ -326,7 +316,7 @@ export class MapsSectionComponent implements AfterViewInit {
 
 	descargar(item: MapData | null) {
 		if (item) {
-			this.mapListService.download(item).subscribe(data => {
+			this.mapSectionService.download(item).subscribe(data => {
 				if (!data) {
 					console.error("Error al descargar el archivo");
 					return;
@@ -342,7 +332,7 @@ export class MapsSectionComponent implements AfterViewInit {
 	}
 
 	eliminar(item: MapData | null) {
-		if (item) this.mapListService.deleteMaps([item.id]).subscribe(data => {
+		if (item) this.mapSectionService.deleteMaps([item.id]).subscribe(data => {
 			this.mapList.data = this.mapList.data.filter(map => map.id != item.id);
 		});
 	}
@@ -373,7 +363,6 @@ export class MapsSectionComponent implements AfterViewInit {
 		this.itemSeleccionado = item;
 		this.verVistaDetalle = true;
 	}
->>>>>>> Tileserver - Mostrar iframe con el mapa seleccionado:angular-ui/src/app/modules/dashboard/map-list/map-list.component.ts
 
 	// sort(tipo: string, ord: string) {
 	// 	switch (tipo) {
