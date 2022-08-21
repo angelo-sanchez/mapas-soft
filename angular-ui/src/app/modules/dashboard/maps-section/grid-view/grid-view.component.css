@@ -3,3 +3,43 @@
     height: 100%;
     overflow: auto;
 }
+
+.container-file{
+    display: inline-block;
+    width: 110px;
+    height: 110px;
+    margin: 5px 5px;
+    padding: 5px;
+    cursor: pointer;
+    /* border: 1px solid grey; */
+}
+
+.container-file:hover{
+    background-color: #2e2e2e;
+}
+
+.container-file.active{
+    background-color: yellow;
+}
+
+.file{
+    background-color: black;
+    width: 100%;
+    height: 70px; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.name-file{
+    width: 100%;
+    height: 30px;
+    overflow: hidden;
+}
+
+.name-file p{
+    width: 100px;
+    text-align: center;
+    text-overflow: ellipsis;
+    line-height: 30px;
+}

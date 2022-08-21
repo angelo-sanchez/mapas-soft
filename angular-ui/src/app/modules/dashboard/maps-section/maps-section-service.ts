@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { LoginService } from '../../login/login.service';
+import { MapData, Maps } from '../../models/map-data.model';
 
 @Injectable({
 	providedIn: 'root'
@@ -67,13 +68,4 @@ export class MapsSectionService {
 	}
 }
 
-export type MapData = {
-	id: string;
-	name: string;
-	date_creation: string;
-	owner: string;
-	estado: string;
-	log: string[];
-	ext: string;
-};
-export type Maps = MapData[];
+

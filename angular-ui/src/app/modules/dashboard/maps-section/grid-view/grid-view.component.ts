@@ -1,6 +1,6 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { MatTableDataSource } from '@angular/material/table';
-import { MapData } from '../maps-section-service';
+import { Component, HostListener, Input, OnInit } from '@angular/core';
+import { MapData } from '../../../models/map-data.model';
+import { SelectedMapManagerService } from '../selected-map-manager.service';
 
 @Component({
   selector: 'app-grid-view',
@@ -9,9 +9,24 @@ import { MapData } from '../maps-section-service';
 })
 export class GridViewComponent implements OnInit {
 
-  @Input() public maps : MatTableDataSource<MapData> = new MatTableDataSource<MapData>(); 
+  @Input() public maps : MapData[] = []; 
 
-  constructor() { }
+  constructor(
+    private selectedMapManager : SelectedMapManagerService
+  ) { }
+
+  @HostListener('click', ['$event', 'row'])
+    onClick(event: MouseEvent, map: MapData) {
+      if(!map){ return; }
+
+      if(event.shiftKey){
+        this.selectedMapManager.selectWithShiftCase(this.maps,map);
+      } else if(event.ctrlKey){
+        this.selectedMapManager.selectWithCtrlCase(map);
+      } else {
+        this.selectedMapManager.selectWithClickCase(map);
+      }
+    }
 
   ngOnInit(): void {
 

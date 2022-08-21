@@ -3,7 +3,7 @@ import { Component, ElementRef, HostListener, Input, OnInit, ViewChild } from '@
 import { MatMenuTrigger } from '@angular/material/menu';
 import { MatSnackBarHorizontalPosition, MatSnackBarVerticalPosition } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
-import { MapData } from '../maps-section-service';
+import { MapData } from '../../../models/map-data.model';
 import { MapsSectionService } from '../maps-section-service'; 
 import * as fileSaver from 'file-saver';
 

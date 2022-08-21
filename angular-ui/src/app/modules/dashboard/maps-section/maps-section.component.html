@@ -25,12 +25,10 @@
 	<form appDragDrop (fileDropped)="subirArchivo($event)" class="contenedor-lista">
 		<div class="view-container">
 			<!-- vista lista -->
-			<app-list-view *ngIf="isListView" [maps]="mapList">
-			</app-list-view>
+			<app-list-view *ngIf="isListView" [maps]="mapList"></app-list-view>
 
 			<!-- vista grilla -->
-			<app-grid-view *ngIf="!isListView" [maps]="mapList">
-			</app-grid-view>
+			<app-grid-view *ngIf="!isListView" [maps]="listaMapas"></app-grid-view>
 		</div>
 	</form>
 </ng-container>
