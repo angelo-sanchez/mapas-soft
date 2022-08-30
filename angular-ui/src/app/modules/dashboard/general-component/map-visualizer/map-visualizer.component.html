@@ -1,0 +1,8 @@
+<ng-container *ngIf="urlPreview else loading">
+    <div class="margen">
+        <iframe referrerpolicy="unsafe-url" width="1250" height="1000" style="width: -webkit-fill-available;height: 70vh;" [src]="this.data.map.urlPreview" frameborder="0"></iframe>
+    </div>
+</ng-container>
+<ng-template #loading>
+    <mat-spinner></mat-spinner>
+</ng-template>
