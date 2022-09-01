@@ -1,15 +1,6 @@
 <ng-container>
 	<div class="contenedor-botones-acciones">
-		<!-- <div style="display: flex; justify-content: center; align-items: center">
-
-			<label class="button-add mat-elevation-z2" title="Subir archivos">
-				<span><mat-icon>upload_file</mat-icon></span>
-				<input #fileUpload type="file" multiple (change)="subirArchivo($event.target)" style="width: 0px; height: 0px">
-			</label>
-		</div> -->
 		<div>
-			<!-- <button mat-icon-button *ngIf="!isListView && asc" style="margin-right: 10px;" (click)="sort('nombre','asc')"><mat-icon>sort_by_alpha</mat-icon></button>
-			<button mat-icon-button *ngIf="!isListView && !asc" style="margin-right: 10px;" (click)="sort('nombre','desc')"><mat-icon>sort_by_alpha</mat-icon></button> -->
 			<button mat-icon-button (click)="isListView = !isListView">
 				<ng-container *ngIf="isListView">
 					<mat-icon>view_module</mat-icon>
@@ -28,19 +19,28 @@
 			<app-list-view *ngIf="isListView" [maps]="mapList"></app-list-view>
 
 			<!-- vista grilla -->
-			<app-grid-view *ngIf="!isListView" [maps]="listaMapas"></app-grid-view>
+			<app-grid-view *ngIf="!isListView" 
+				[maps]="maps"
+				(onClickEvent)="onClick($event)"
+				(contextMenuEvent)="onContextMenu($event)"
+				(dblClickEvent)="openMap($event)">
+			</app-grid-view>
 		</div>
 	</form>
 </ng-container>
 
-<!-- <div style="visibility: hidden; position: fixed;"
-    [style.left]="contextMenuPosition.x"
-    [style.top]="contextMenuPosition.y"
-    [matMenuTriggerFor]="contextMenu">
+<!-- menu contextual -->
+<div style="visibility: hidden; position: fixed;" [style.left]="contextMenuPosition.x"
+    [style.top]="contextMenuPosition.y" [matMenuTriggerFor]="contextMenu">
 </div>
+
 <mat-menu #contextMenu="matMenu">
-	<ng-template matMenuContent>
-		<button *ngIf="item && item.ext == 'mbtiles'" mat-menu-item (click)="descargar(item)" ><mat-icon>file_download</mat-icon>Descargar</button>
-		<button mat-menu-item (click)="eliminar(item)"><mat-icon>delete</mat-icon>Eliminar</button>
-	</ng-template>
-</mat-menu> -->
+    <ng-template matMenuContent>
+        <button *ngIf="item && item.ext == 'mbtiles'" mat-menu-item (click)="download()">
+            <mat-icon>file_download</mat-icon>Descargar
+        </button>
+        <button mat-menu-item (click)="remove()">
+            <mat-icon>delete</mat-icon>Eliminar
+        </button>
+    </ng-template>
+</mat-menu>

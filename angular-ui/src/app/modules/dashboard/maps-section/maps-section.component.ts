@@ -1,16 +1,21 @@
-import { AfterViewInit, Component, ElementRef, HostListener, OnInit } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit } from '@angular/core';
+import { ViewChild } from '@angular/core';
+
+import { MapsService } from '../../services/maps.service';
+import { MapWsService } from '../../websocket/map-ws.service';
 import { MapsSectionService } from './maps-section-service';
-import { MapData } from '../../models/map-data.model'; 
+import { SelectedMapManagerService } from './selected-map-manager.service';
+import { UploadFileOptionsComponent } from '../general-component/upload-file-options/upload-file-options.component';
+import { UploadingFileProgressComponent } from '../general-component/uploading-file-progress/uploading-file-progress.component';
+
+import { MapData } from '../../models/map-data.model';
+
 import { MatTableDataSource } from '@angular/material/table';
 import { MatMenuTrigger } from '@angular/material/menu';
 import { MatSnackBar, MatSnackBarHorizontalPosition, MatSnackBarVerticalPosition } from '@angular/material/snack-bar';
-import { ViewChild } from '@angular/core';
-import { UploadingFileProgressComponent } from '../general-component/uploading-file-progress/uploading-file-progress.component';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import { MapWsService } from '../../websocket/map-ws.service';
-import { environment } from '../../../../environments/environment';
-import {MatDialog} from '@angular/material/dialog';
-import { UploadFileOptionsComponent } from '../general-component/upload-file-options/upload-file-options.component';
+import { MapVisualizerComponent } from '../general-component/map-visualizer/map-visualizer.component';
 
 @Component({
 	selector: 'app-maps-section',
@@ -25,87 +30,110 @@ import { UploadFileOptionsComponent } from '../general-component/upload-file-opt
 	],
 })
 
-export class MapsSectionComponent implements AfterViewInit {
+export class MapsSectionComponent implements OnInit, AfterViewInit {
 
-	@ViewChild(MatMenuTrigger)
-	contextMenu!: MatMenuTrigger; // ya se pasaron
+	@ViewChild("fileUpload", { static: true }) fileInput!: ElementRef<HTMLInputElement>;
 
-	@ViewChild("fileUpload", {
-		static: true
-	}) fileInput!: ElementRef<HTMLInputElement>;
+	// Lista que contiene los mapas del usuario
+	public maps: MapData[] = [];
 
-	
-	public listaMapas : any;
-	public mapList : MatTableDataSource<MapData> = new MatTableDataSource<MapData>();
-	public displayedColumns: string[] = ['name', 'owner', 'date_creation', 'loading']; // ya se pasaron
-	public expandedElement: any; // ya se pasaron
+	// Lista que contiene los mapas seleccionados por el usuario
+	public selectedMaps: Set<string> = new Set<string>("");
 
+	// Solo para componente: view-list
+	public mapList: MatTableDataSource<MapData> = new MatTableDataSource<MapData>();
+
+	// Boolean que controla si se reenderiza list-view o grid-view
 	public isListView: boolean = false;
 
-	// hay que migrar
-	public asc: boolean = true; // ya se pasaron
-	public fechaAsc: boolean = true; // ya se pasaron
-	
-	public urlBackend: string = environment.apiUrl;
-	
-	
-	public item: MapData | null = null; // ya se pasaron
-	public contextMenuPosition = { x: '0px', y: '0px' }; // ya se pasaron
-	public horizontalPosition: MatSnackBarHorizontalPosition = 'end'; // ya se pasaron
-	public verticalPosition: MatSnackBarVerticalPosition = 'bottom'; // ya se pasaron
+	// Conjunto de variable para la ejecucion del menu de opciones (menu-contextual)
+	@ViewChild(MatMenuTrigger) contextMenu!: MatMenuTrigger;
+	public item: MapData | null = null;
+	public contextMenuPosition = { x: '0px', y: '0px' };
+	public horizontalPosition: MatSnackBarHorizontalPosition = 'end';
+	public verticalPosition: MatSnackBarVerticalPosition = 'bottom';
+
 
 	public itemSeleccionado: any;
 	public verVistaDetalle: boolean = false;
 
-	public fileOptions : string = "";
+	public fileOptions: string = "";
 
-	constructor(private mapSectionService: MapsSectionService,
+	constructor(private mapsSectionService: MapsSectionService,
+		private selectedMapManagerService: SelectedMapManagerService,
 		private _snackBar: MatSnackBar,
 		private mapWsService: MapWsService,
-		public dialog: MatDialog
-		) {
-	}
+		private mapsService: MapsService,
+		private dialog: MatDialog
+	) { }
 
-	ngOnInit(){
-		// obtener el listado de mapas del usuario
-		this.getMaps();
-	}
-
-	ngAfterViewInit(): void {	
-		console.log(this.fileInput);		
-	}
-
-	getMaps(){
-		this.mapSectionService.getMaps().subscribe(maps => {
-			console.log(maps);		
-			this.mapList = new MatTableDataSource<MapData>(maps);
-			this.listaMapas = maps;
-
-			this.mapWsService.onProgress().subscribe((data) => this.mostrarLog(data));
-			this.mapWsService.onFinish().subscribe((data) => this.finalizar(data));
+	ngOnInit() {
+		// Obtener el listado de mapas del usuario
+		this.mapsService.mapSubscription().subscribe((data: MapData[]) => {
+			this.maps = data;
+			this.mapList = new MatTableDataSource<MapData>(data);
+			console.log(this.maps);
 		});
+		this.mapsService.getMaps();
+
+		// Obtener los mapas seleccionados por el usuario
+		this.selectedMapManagerService.getSelectedMaps().subscribe((data: Set<string>) => {
+			this.selectedMaps = data;
+		});
+
+		this.mapWsService.onProgress().subscribe((data) => this.mostrarLog(data));
+		this.mapWsService.onFinish().subscribe((data) => this.finalizar(data));
 	}
 
-	// abrirSnackBar() {
-	// 	let files = [{
-	// 		name: 'provincias.json',
-	// 		done: true
-	// 	},
-	// 	{
-	// 		name: 'municipios.json',
-	// 		done: false
-	// 	}];
 
+	ngAfterViewInit(): void {
+		console.log(this.fileInput);
+	}
 
-	// 	this._snackBar.openFromComponent(UploadingFileProgressComponent, {
-	// 		horizontalPosition: this.horizontalPosition,
-	// 		verticalPosition: this.verticalPosition,
-	// 		data: {
-	// 			cantidad: 2,
-	// 			archivos: files,
-	// 		}
-	// 	});
-	// }
+	// -----------------------------
+	// Metodos que ejecutan acciones de hostlistener
+
+	onClick(data: any) {
+		let event: MouseEvent = data.event;
+		let map: MapData = data.map;
+
+		let id = "";
+		if (map) { id = map.id }
+
+		if (this.contextMenu || this.contextMenu != undefined) { this.contextMenu.closeMenu(); }
+
+		if (event.shiftKey) {
+			let mapsIds: string[] = [];
+			this.maps.forEach(m => { mapsIds.push(m.id) });
+			this.selectedMapManagerService.selectWithShiftCase(mapsIds, id);
+		} else if (event.ctrlKey) {
+			this.selectedMapManagerService.selectWithCtrlCase(id);
+		} else {
+			this.selectedMapManagerService.selectWithClickCase(id);
+		}
+	}
+
+	onContextMenu(data: any) {
+		let event: MouseEvent = data.event;
+		let map: MapData = data.map;
+
+		let id = "";
+		if (map) { id = map.id }
+
+		if (this.selectedMapManagerService.isSelectedMapsEmpty()) {
+			this.selectedMapManagerService.selectWithClickCase(id);
+		}
+
+		this.contextMenu.closeMenu();
+		this.contextMenuPosition.x = event.clientX + 'px';
+		this.contextMenuPosition.y = event.clientY + 'px';
+		this.item = map;
+		this.contextMenu.menu.focusFirstItem('mouse');
+		this.contextMenu.menu.hasBackdrop = false;
+		this.contextMenu.openMenu();
+	}
+
+	// -----------------------------
 
 	private mostrarLog(data: any) {
 		if (!data) {
@@ -170,7 +198,7 @@ export class MapsSectionComponent implements AfterViewInit {
 		if (!event.files) return;
 		let files = event.files;
 		const fileList = (files as FileList);
-		const filenames:string[] = [];
+		const filenames: string[] = [];
 		let fd = new FormData();
 
 		for (let i = 0; i < fileList.length; i++) {
@@ -180,33 +208,28 @@ export class MapsSectionComponent implements AfterViewInit {
 			filenames.push(file.name);
 		}
 		fd.append("socketId", this.mapWsService.socketId);
-		
-		let dialogRef = this.dialog.open(UploadFileOptionsComponent,{
+
+		let dialogRef = this.dialog.open(UploadFileOptionsComponent, {
 			width: '500px',
 			data: {
 				filenames
 			}
 		});
-		if(this.fileInput && this.fileInput.nativeElement) this.fileInput.nativeElement.value = '';
+		if (this.fileInput && this.fileInput.nativeElement) this.fileInput.nativeElement.value = '';
 		dialogRef.afterClosed().subscribe(result => {
-			if(!result) return;
+			if (!result) return;
 			fd.append('opciones', result);
-			this.mapSectionService.insertMaps(fd).subscribe((data: any) => {
+			this.mapsService.insertMaps(fd).subscribe((data: any) => {
 				if (data) {
-					console.log('Mapas');
-					console.log(data);
-					let maps = [...this.mapList.data];
-					maps.push(...data.maps);
-					maps.sort((map1, map2) => map1.name.localeCompare(map2.name));
-					this.mapList.data = maps;
-	
+					this.mapsService.getMaps();
+
 					// let mensaje = 'Se subió ' + data.maps.length + ' archivo/s correctamente. ';
-	
+
 					// if(data.errors.length > 0){
 					// 	mensaje += data.errors.length + ' archivos fallaron al intentar subir.';
 					// }
 					let archivosLista: any[] = [];
-	
+
 					// Agrego los archivos que se subieron correctamente
 					if (data.maps.length > 0) {
 						data.maps.forEach((file: any) => {
@@ -217,7 +240,7 @@ export class MapsSectionComponent implements AfterViewInit {
 							archivosLista.push(obj);
 						});
 					}
-	
+
 					// Agrego los archivos que se subieron incorrectamente
 					if (data.errors.length > 0) {
 						data.errors.forEach((file: any) => {
@@ -228,7 +251,7 @@ export class MapsSectionComponent implements AfterViewInit {
 							archivosLista.push(obj);
 						});
 					}
-	
+
 					this._snackBar.openFromComponent(UploadingFileProgressComponent, {
 						horizontalPosition: this.horizontalPosition,
 						verticalPosition: this.verticalPosition,
@@ -242,7 +265,7 @@ export class MapsSectionComponent implements AfterViewInit {
 				} else {
 					this._snackBar.open('Se produjo un error al subir un archivo', 'Aceptar');
 				}
-			}, (error : any) => {
+			}, (error: any) => {
 				console.log("Se produjo un error al subir archivos");
 				console.error(error);
 				this._snackBar.open('Error al subir el archivo', 'Aceptar');
@@ -250,73 +273,36 @@ export class MapsSectionComponent implements AfterViewInit {
 		});
 	}
 
-	// abrirModalOpcionesArchivos(): void {
-	// 	let dialogRef = this.dialog.open(UploadFileOptionsComponent,{
-	// 		width: '250px',
-	// 	});
-	// 	dialogRef.afterClosed().subscribe(result => {
-	// 		console.log(result);
-	// 		this.fileOptions = result;
-	// 	});
-	// }
+	openMap(map: MapData) {
+		if (map) {
+			const data = { 'map': map };
+			const detailDialogConfig: MatDialogConfig = { data }
+			let modal = this.dialog.open(MapVisualizerComponent, detailDialogConfig);
 
-	// en list-view
-	@HostListener('document:contextmenu', ['$event', 'row'])
-	onContextMenu(event: MouseEvent, map: MapData) {
-		event.preventDefault();
-		event.stopPropagation();
-		this.contextMenu.closeMenu();
-		if (!map) {
-			return;
+			modal.afterClosed().subscribe((closed: any) => {
+				if (closed) {
+					this.mapsService.closePreview(data.map.id)
+				}
+			});
 		}
-		this.contextMenuPosition.x = event.clientX + 'px';
-		this.contextMenuPosition.y = event.clientY + 'px';
-		this.item = map;
-		this.contextMenu.menu.focusFirstItem('mouse');
-		this.contextMenu.menu.hasBackdrop = false;
-		this.contextMenu.openMenu();
 	}
 
-	// en list-view
-	@HostListener('document:click', ['$event'])
-	onClick(event: MouseEvent) {
-		if (this.contextMenu)
-			this.contextMenu.closeMenu();
+	// -----------------------------
+	// Metodos para opciones del menu contextual
+
+	// Descarga un mapa (file)
+	download() {
+		let mapsIds: string[] = [];
+		this.selectedMaps.forEach((id: string) => { mapsIds.push(id) });
+		this.mapsSectionService.download(mapsIds);
 	}
 
-	
+	// Elimina un mapa (file)
+	async remove() {
+		let mapsIds: string[] = [];
+		this.selectedMaps.forEach((id: string) => { mapsIds.push(id) });
+		this.mapsSectionService.remove(mapsIds);
+		this.mapsService.getMaps();
+	}
 
-	// sort(tipo: string, ord: string) {
-	// 	switch (tipo) {
-	// 		case 'nombre':
-	// 			if (ord === 'desc') {
-	// 				this.mapList.data = this.mapList.data.sort((one, two) => (one.name > two.name ? -1 : 1));
-	// 			} else {
-	// 				this.mapList.data = this.mapList.data.sort((one, two) => (one.name < two.name ? -1 : 1));
-	// 			}
-	// 			this.asc = !this.asc;
-	// 			break;
-	// 		case 'fecha':
-	// 			if (ord === 'desc') {
-	// 				this.mapList.data = this.mapList.data.sort((one, two) => (one.date_creation > two.date_creation ? -1 : 1));
-	// 			} else {
-	// 				this.mapList.data = this.mapList.data.sort((one, two) => (one.date_creation < two.date_creation ? -1 : 1));
-	// 			}
-	// 			this.fechaAsc = !this.fechaAsc;
-	// 			break;
-	// 	}
-
-	// }
-
-	// verDetalle(item: any) {
-	// 	this.itemSeleccionado = item;
-	// 	this.verVistaDetalle = true;
-	// }
-
-	// cerrarVistaDetalle() {
-	// 	this.verVistaDetalle = false;
-	// 	console.log('cerrando vista detalle');
-	// }
-
-	
 }

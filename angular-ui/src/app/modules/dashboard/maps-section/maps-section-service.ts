@@ -1,71 +1,49 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { environment } from '../../../../environments/environment';
-import { LoginService } from '../../login/login.service';
-import { MapData, Maps } from '../../models/map-data.model';
+import { SelectedMapManagerService } from './selected-map-manager.service';
+import * as fileSaver from 'file-saver';
+import { MapsService } from '../../services/maps.service';
+
 
 @Injectable({
 	providedIn: 'root'
 })
 export class MapsSectionService {
-	constructor(private httpClient: HttpClient,
-		private loginService: LoginService) {
+
+	constructor(private selectedMapsManager: SelectedMapManagerService,
+		private mapsService : MapsService) {
 	}
 
-	getMaps(): Observable<Maps> {
-		let url = environment.apiUrl + "/maps";
-		return this.httpClient.get<Maps>(url, {
-			headers: {
-				'Authorization': `bearer ` + this.loginService.getToken()
-			}
-		});
+	// Elimina los mapas seleccionados
+	remove(selectedMaps: string[]) {
+		if (selectedMaps.length > 0) {
+			this.mapsService.deleteMaps(selectedMaps).subscribe((data) => {
+				if (data.success) {
+					this.selectedMapsManager.resetSelectedMap();
+					this.mapsService.getMaps();
+				}
+			}, (error) => {
+				console.log("Se produjo un error al intentar eliminar mapas");
+				console.log(error);
+			});
+		}
 	}
 
-	insertMaps(datos: FormData) {
-		let url = environment.apiUrl + '/maps';
-		return this.httpClient.post<any>(url, datos, {
-			headers: {
-				'Authorization': `bearer ` + this.loginService.getToken()
-			}
-		});
-	}
-
-	download(item: MapData) {
-		let url = environment.apiUrl + "/maps/download/" + item.id;
-		return this.httpClient.get(url, {
-			responseType: 'blob',
-			headers: {
-				'Authorization': `bearer ` + this.loginService.getToken(),
-				'Accept': "application/octet-stream"
-			}
-		});
-	}
-
-	deleteMaps(ids: string[]) {
-		let url = environment.apiUrl + '/maps?id=' + encodeURIComponent(JSON.stringify(ids));
-		return this.httpClient.delete<any>(url, {
-			headers: {
-				'Authorization': `bearer ` + this.loginService.getToken()
-			}
-		});
-	}
-
-	preview(id: string) {
-		return this.httpClient.get(`${environment.apiUrl}/maps/${id}/preview`, {
-			headers: {
-				'Authorization': `bearer ${this.loginService.getToken()}`
-			}
-		});
-	}
-
-	closePreview(id: string) {
-		return this.httpClient.get(`${environment.apiUrl}/maps/${id}/close`, {
-			headers: {
-				'Authorization': `bearer ${this.loginService.getToken()}`
-			}
-		});
+	// Descarga un mapa (file)
+	download(selectedMaps: string[]) {
+		if (selectedMaps.length > 0) {
+			selectedMaps.forEach((mapId: string) => {
+				this.mapsService.download(mapId).subscribe(data => {
+					if (!data) {
+						console.error("Error al descargar el archivo");
+						return
+					}
+					let blob = new Blob([data], { type: "application/octet-stream" });
+					fileSaver.saveAs(blob, mapId + '.mbtiles');
+				}, error => {
+					console.log(error);
+				});
+			});
+		}
 	}
 }
-
 

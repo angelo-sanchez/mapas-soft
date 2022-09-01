@@ -1,10 +1,13 @@
 <div class="grid-view-container">
-    <div class="container-file" *ngFor="let map of maps" (click)="onClick($event,map)">
-        <div class="file">
+    <ng-container *ngFor="let map of maps">
+        <div class="container-file" (click)="map && onClick($event,map)" (contextmenu)="onContextMenu($event, map)" (dblclick)="onDblClickEvent(map)"
+            [ngClass]="{'selected': selectedMaps.has(map.id),'firstSelectedMap': firstSelectedMap == map.id }">
+            <div class="file">
 
+            </div>
+            <div class="name-file">
+                <p>{{ map.name}}</p>
+            </div>
         </div>
-        <div class="name-file">
-            <p>{{ map.name}}</p>
-        </div>
-    </div>
+    </ng-container>
 </div>

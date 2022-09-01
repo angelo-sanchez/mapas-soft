@@ -99,7 +99,10 @@
     </div>
     <mat-menu #contextMenu="matMenu">
         <ng-template matMenuContent>
-            <button *ngIf="item && item.ext == 'mbtiles'" mat-menu-item (click)="descargar(item)">
+            <button mat-menu-item (click)="descargar(item)">
+                <mat-icon>search</mat-icon>Ver mapa
+            </button>
+            <button *ngIf="item && item.ext == 'mbtiles'" mat-menu-item (click)="verMapa(item)">
                 <mat-icon>file_download</mat-icon>Descargar
             </button>
             <button mat-menu-item (click)="eliminar(item)">

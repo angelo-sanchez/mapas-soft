@@ -18,8 +18,12 @@
     background-color: #2e2e2e;
 }
 
-.container-file.active{
-    background-color: yellow;
+.container-file.selected{
+    background-color: grey;
+}
+
+.container-file.firstSelectedMap{
+    border: 1px solid grey;
 }
 
 .file{
