@@ -3,7 +3,7 @@
 		<div>
 			<button mat-icon-button (click)="isListView = !isListView">
 				<ng-container *ngIf="isListView">
-					<mat-icon>view_module</mat-icon>
+					<mat-icon>grid_view</mat-icon>
 				</ng-container>
 				<ng-container *ngIf="!isListView">
 					<mat-icon>view_list</mat-icon>
@@ -21,7 +21,8 @@
 			</app-list-view>
 
 			<!-- vista grilla -->
-			<app-grid-view *ngIf="!isListView" 
+			<app-grid-view #gridView 
+				*ngIf="!isListView" 
 				[maps]="maps"
 				(onClick)="onClick($event)"
 				(onContextMenu)="onContextMenu($event)"
@@ -38,6 +39,9 @@
 
 <mat-menu #contextMenu="matMenu">
     <ng-template matMenuContent>
+		<button *ngIf="!(mapsSectionService.isListView)" mat-menu-item (click)="openViewDetail()">
+            <mat-icon>details</mat-icon>Ver detalle
+        </button>
         <button *ngIf="item && item.ext == 'mbtiles'" mat-menu-item (click)="download()">
             <mat-icon>file_download</mat-icon>Descargar
         </button>

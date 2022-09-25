@@ -3,7 +3,7 @@ import { ViewChild } from '@angular/core';
 
 import { MapsService } from '../../services/maps.service';
 import { MapWsService } from '../../websocket/map-ws.service';
-import { MapsSectionService } from './maps-section-service';
+import { MapsSectionService } from './maps-section.service';
 import { SelectedMapManagerService } from './selected-map-manager.service';
 import { UploadFileOptionsComponent } from '../general-component/upload-file-options/upload-file-options.component';
 import { UploadingFileProgressComponent } from '../general-component/uploading-file-progress/uploading-file-progress.component';
@@ -49,13 +49,14 @@ export class MapsSectionComponent implements OnInit, AfterViewInit {
 	public horizontalPosition: MatSnackBarHorizontalPosition = 'end';
 	public verticalPosition: MatSnackBarVerticalPosition = 'bottom';
 
+	@ViewChild('gridView') gridView : any;
 
 	public itemSeleccionado: any;
 	public verVistaDetalle: boolean = false;
 
 	public fileOptions: string = "";
 
-	constructor(private mapsSectionService: MapsSectionService,
+	constructor(public mapsSectionService: MapsSectionService,
 		private selectedMapManagerService: SelectedMapManagerService,
 		private _snackBar: MatSnackBar,
 		private mapWsService: MapWsService,
@@ -261,8 +262,8 @@ export class MapsSectionComponent implements OnInit, AfterViewInit {
 
 	openMap(map: MapData) {
 		if (map) {
-			const data = { 'map': map };
-			const detailDialogConfig: MatDialogConfig = { data }
+			let data = { 'map': map };
+			let detailDialogConfig: MatDialogConfig = { data }
 			let modal = this.dialog.open(MapVisualizerComponent, detailDialogConfig);
 
 			modal.afterClosed().subscribe((closed: any) => {
@@ -289,6 +290,11 @@ export class MapsSectionComponent implements OnInit, AfterViewInit {
 		this.selectedMaps.forEach((id: string) => { mapsIds.push(id) });
 		this.mapsSectionService.remove(mapsIds);
 		this.mapsService.getMaps();
+	}
+
+	// Muestra la vista detalle en la vista grilla
+	openViewDetail(){
+		this.gridView.openDetailView();
 	}
 
 }

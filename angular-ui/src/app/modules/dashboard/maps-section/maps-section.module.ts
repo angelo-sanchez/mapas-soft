@@ -19,7 +19,6 @@ import { MatCardModule } from '@angular/material/card';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { DashboardModule } from '../dashboard.module';
 
 @NgModule({
   declarations: [

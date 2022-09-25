@@ -9,15 +9,11 @@ import { MapsService } from '../../services/maps.service';
 })
 export class MapsSectionService {
 
-	// True: Muestra la vista detalle; False: Oculta la vista detalle
-	private viewDetailsActive : boolean = false;
+	// Boolean que controla si se reenderiza list-view o grid-view
+	public isListView: boolean = false;
 
 	constructor(private selectedMapsManager: SelectedMapManagerService,
 		private mapsService : MapsService) {
-	}
-
-	setViewDetails(){
-		this.viewDetailsActive = !this.viewDetailsActive;
 	}
 
 	// Elimina los mapas seleccionados

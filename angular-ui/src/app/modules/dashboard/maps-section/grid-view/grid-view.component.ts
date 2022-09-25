@@ -1,5 +1,5 @@
 
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, HostListener, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, HostListener, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { MapData } from '../../../models/map-data.model';
 import { SelectedMapManagerService } from '../selected-map-manager.service';
@@ -19,6 +19,8 @@ export class GridViewComponent implements OnInit, OnDestroy {
   @Output() public onContextMenu = new EventEmitter();
   @Output() public onDblClick = new EventEmitter();
 
+  @ViewChild('drawer') drawer : any;
+
   private subscriptionMaps: Subscription = new Subscription;
 
   // Subcripcion a la lista de MapData seleccionados
@@ -28,7 +30,7 @@ export class GridViewComponent implements OnInit, OnDestroy {
   public selectedMaps: Set<string> = new Set<string>(""); // Set que contiene los mapas seleccionados
   public firstSelectedMap: string = "";
 
-  public openViewDetail : boolean = false;
+  public isOpenDetailView : boolean = false;
 
   constructor(
     private selectedMapManager: SelectedMapManagerService,
@@ -84,10 +86,6 @@ export class GridViewComponent implements OnInit, OnDestroy {
     this.subscriptionMapSelected.unsubscribe();
   }
 
-  setViewDetails(){
-    this.openViewDetail = !this.openViewDetail;
-  }
-
   reportClickEvent(event: MouseEvent, map: MapData) {
     let data = {
       "event": event,
@@ -106,5 +104,17 @@ export class GridViewComponent implements OnInit, OnDestroy {
 
   dblClickEvent(map : MapData) {
     this.onDblClick.emit(map);
+  }
+
+  closeDetailView(){
+    this.isOpenDetailView = false;
+  }
+
+  openDetailView(){
+    this.cdRef.markForCheck();
+
+    if(!this.isOpenDetailView){ 
+      this.isOpenDetailView = true;
+    }
   }
 }

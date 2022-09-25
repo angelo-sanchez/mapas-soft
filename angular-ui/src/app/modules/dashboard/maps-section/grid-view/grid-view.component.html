@@ -1,9 +1,6 @@
 <div class="grid-view-container">
     <mat-drawer-container autosize class="drawer-container">
         <div>
-            <button type="button" mat-button (click)="setViewDetails()">
-                Ver detalles
-            </button>
             <ng-container *ngFor="let map of maps">
                 <div class="container-file" (click)="map && click($event,map)" (contextmenu)="contextMenu($event, map)"
                     (dblclick)="dblClickEvent(map)"
@@ -18,8 +15,10 @@
             </ng-container>
         </div>
 
-        <mat-drawer #drawer mode="side" position="end" opened="openViewDetail" style="background: #1e1e1e">
-            <app-view-detail></app-view-detail>
+        <mat-drawer #drawer mode="side" position="end" [opened]="isOpenDetailView" style="background: #1e1e1e">
+            <app-view-detail
+                (closeView)="closeDetailView()"
+            ></app-view-detail>
         </mat-drawer>
     </mat-drawer-container>
 </div>
