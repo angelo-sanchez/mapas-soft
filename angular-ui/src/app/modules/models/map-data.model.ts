@@ -3,8 +3,8 @@ export type MapData = {
 	name: string;
 	date_creation: string;
 	owner: string;
-	estado: string;
-	log: string[];
+	estado?: string;
+	log?: string[];
 	ext: string;
 };
 export type Maps = MapData[];

@@ -1,12 +1,11 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import { Component, ElementRef, HostListener, Input, OnInit, ViewChild } from '@angular/core';
-import { MatMenuTrigger } from '@angular/material/menu';
-import { MatSnackBarHorizontalPosition, MatSnackBarVerticalPosition } from '@angular/material/snack-bar';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, HostListener, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Subscription } from 'rxjs' ;
+
 import { MatTableDataSource } from '@angular/material/table';
 import { MapData } from '../../../models/map-data.model';
-import { MapsSectionService } from '../maps-section-service';
-import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
-import { MapVisualizerComponent } from '../../general-component/map-visualizer/map-visualizer.component';
+
+import { SelectedMapManagerService } from '../selected-map-manager.service';
 
 @Component({
   selector: 'app-list-view',
@@ -16,22 +15,37 @@ import { MapVisualizerComponent } from '../../general-component/map-visualizer/m
     trigger('detailExpand', [
       state('collapsed', style({ display: 'none', height: '0px', minHeight: '0' })),
       state('expanded', style({ height: '*', display: 'block' })),
-      transition('expanded <=> collapsed', animate('1ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
+      transition('expanded <=> collapsed', animate('1ms cubic-bezier(0.4, 0.0, 0.2, 1)'))
     ]),
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 export class ListViewComponent implements OnInit {
 
-  @ViewChild(MatMenuTrigger) contextMenu!: MatMenuTrigger;
   @ViewChild("fileUpload", { static: true }) fileInput!: ElementRef<HTMLInputElement>;
 
-  @Input() public maps: MatTableDataSource<MapData> = new MatTableDataSource<MapData>();
+  @Input() public maps : MapData[] = []; 
+  public mapsDS : MatTableDataSource<MapData> = new MatTableDataSource<MapData>(); 
 
-  public item: MapData | null = null;
-  public contextMenuPosition = { x: '0px', y: '0px' };
-  public horizontalPosition: MatSnackBarHorizontalPosition = 'end';
-  public verticalPosition: MatSnackBarVerticalPosition = 'bottom';
+  @Output() public onClick = new EventEmitter();
+  @Output() public onContextMenu = new EventEmitter();
+  @Output() public onDblClick = new EventEmitter();
+
+  // Subcripcion a la lista de MapData
+  private subscriptionMaps : Subscription = new Subscription; 
+  
+  // Subcripcion a la lista de MapData seleccionados
+  private subscriptionMapSelected : Subscription = new Subscription;
+  
+  // Arreglo que contiene los id de @Input() maps
+  public mapsId: string[] = []; 
+
+  // Set que contiene los mapas seleccionados
+  public selectedMaps: Set<string> = new Set<string>(""); 
+
+  // String que contiene el id del primer mapa seleccionado
+  public firstSelectedMap: string = "";
 
 
   public displayedColumns: string[] = ['name', 'owner', 'date_creation', 'loading'];
@@ -40,13 +54,55 @@ export class ListViewComponent implements OnInit {
   public isNombreAsc: boolean = true; // variable para boton de ordenamiento por columna nombre. Asc: true, Desc: false
   public isFechaAsc: boolean = true; // variable para boton de ordenamiento por columna fecha. Asc: true, Desc: false
 
-  constructor(private mapsSectionService: MapsSectionService,
-    private readonly dialog: MatDialog) {
+  constructor(private selectedMapManager : SelectedMapManagerService,
+    private cdRef: ChangeDetectorRef) {
+  }
 
+  // Click izquierdo - Seleccion de mapas
+  @HostListener('click', ['$event', 'map'])
+  click(event: MouseEvent, map: MapData) {  
+    let res: boolean = false;
+    let paths: any[] = event.composedPath();
+
+    for (const path of paths) {
+      if (path.tagName === "BODY") { break; }
+      if (path.classList.contains("container-file")) {
+        res = true;
+        break;
+      }
+    } 
+    if (res && map === undefined) { return; }
+
+    this.reportClickEvent(event, map);
+  }
+
+  // Click derecho - Abrir menu contextual
+  @HostListener('contextmenu', ['$event', 'row'])
+  contextMenu(event: MouseEvent, map: MapData) {
+    event.preventDefault();
+    event.stopPropagation();  
+    if (!map) { return; }  
+
+    this.reportContextMenuEvent(event, map);
   }
 
   ngOnInit(): void {
-    console.log(this.maps);
+    this.mapsDS = new MatTableDataSource<MapData>(this.maps);
+
+    this.subscriptionMaps = this.selectedMapManager.getSelectedMaps().subscribe((data: any) => {
+      this.selectedMaps = data;
+      this.cdRef.markForCheck();
+    });
+
+    this.subscriptionMapSelected = this.selectedMapManager.getFirstSelected().subscribe((data: any) => {
+      this.firstSelectedMap = data;
+      this.cdRef.markForCheck();
+    });
+  }
+  
+  ngOnDestroy() {
+    this.subscriptionMaps.unsubscribe();
+    this.subscriptionMapSelected.unsubscribe();
   }
 
   // ordena las filas de la tabla (asc o desc), por el atributo 'nombre' o por 'fecha'
@@ -54,73 +110,40 @@ export class ListViewComponent implements OnInit {
     switch (tipo) {
       case 'nombre':
         if (ord === 'desc') {
-          this.maps.data = this.maps.data.sort((one, two) => (one.name > two.name ? -1 : 1));
+          this.mapsDS.data = this.mapsDS.data.sort((one, two) => (one.name > two.name ? -1 : 1));
         } else {
-          this.maps.data = this.maps.data.sort((one, two) => (one.name < two.name ? -1 : 1));
+          this.mapsDS.data = this.mapsDS.data.sort((one, two) => (one.name < two.name ? -1 : 1));
         }
         this.isNombreAsc = !this.isNombreAsc;
         break;
       case 'fecha':
         if (ord === 'desc') {
-          this.maps.data = this.maps.data.sort((one, two) => (one.date_creation > two.date_creation ? -1 : 1));
+          this.mapsDS.data = this.mapsDS.data.sort((one, two) => (one.date_creation > two.date_creation ? -1 : 1));
         } else {
-          this.maps.data = this.maps.data.sort((one, two) => (one.date_creation < two.date_creation ? -1 : 1));
+          this.mapsDS.data = this.mapsDS.data.sort((one, two) => (one.date_creation < two.date_creation ? -1 : 1));
         }
         this.isFechaAsc = !this.isFechaAsc;
         break;
     }
   }
 
-  @HostListener('contextmenu', ['$event', 'row'])
-  onContextMenu(event: MouseEvent, map: MapData) {
-    event.preventDefault();
-    event.stopPropagation();
-    this.contextMenu.closeMenu();
-    if (!map) {
-      return;
-    }
-    this.contextMenuPosition.x = event.clientX + 'px';
-    this.contextMenuPosition.y = event.clientY + 'px';
-    this.item = map;
-    this.contextMenu.menu.focusFirstItem('mouse');
-    this.contextMenu.menu.hasBackdrop = false;
-    this.contextMenu.openMenu();
+  reportClickEvent(event: MouseEvent, map: MapData) {
+    let data = {
+      "event": event,
+      "map": map
+    };
+    this.onClick.emit(data);
   }
 
-  @HostListener('document:click', ['$event'])
-  onClick(event: MouseEvent) {
-    console.log(this.contextMenu);
-    if (this.contextMenu || this.contextMenu != undefined)
-      this.contextMenu.closeMenu();
+  reportContextMenuEvent(event: MouseEvent, map: MapData) {
+    let data = {
+      "event": event,
+      "map": map
+    };
+    this.onContextMenu.emit(data);
   }
 
-  // Descarga un mapa (file)
-  descargar(item: MapData | null) {
-    if (item) {
-      //   this.mapsSectionService.download(item).subscribe(data => {
-      //     if (!data) {
-      //       console.error("Error al descargar el archivo");
-      //       return
-      //     }
-
-      //     let blob = new Blob([data], { type: "application/octet-stream" });
-
-      //     fileSaver.saveAs(blob, item.name + '.mbtiles');
-      //   }, error => console.error);
-      // } else {
-      //   console.log("no hay item");
-    }
-  }
-
-  // Elimina un mapa (file)
-  eliminar(item: MapData | null) {
-    // if (item) this.mapsSectionService.deleteMaps([item.id]).subscribe(data => {
-    //   this.maps.data = this.maps.data.filter(map => map.id != item.id);
-    // });
-  }
-
-  // Ver mapa
-  verMapa(item: MapData | null) {
-    
+  dblClickEvent(map : MapData) {
+    this.onDblClick.emit(map);
   }
 }

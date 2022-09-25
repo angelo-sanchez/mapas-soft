@@ -10,7 +10,6 @@ import { UploadingFileProgressComponent } from '../general-component/uploading-f
 
 import { MapData } from '../../models/map-data.model';
 
-import { MatTableDataSource } from '@angular/material/table';
 import { MatMenuTrigger } from '@angular/material/menu';
 import { MatSnackBar, MatSnackBarHorizontalPosition, MatSnackBarVerticalPosition } from '@angular/material/snack-bar';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
@@ -40,9 +39,6 @@ export class MapsSectionComponent implements OnInit, AfterViewInit {
 	// Lista que contiene los mapas seleccionados por el usuario
 	public selectedMaps: Set<string> = new Set<string>("");
 
-	// Solo para componente: view-list
-	public mapList: MatTableDataSource<MapData> = new MatTableDataSource<MapData>();
-
 	// Boolean que controla si se reenderiza list-view o grid-view
 	public isListView: boolean = false;
 
@@ -71,8 +67,6 @@ export class MapsSectionComponent implements OnInit, AfterViewInit {
 		// Obtener el listado de mapas del usuario
 		this.mapsService.mapSubscription().subscribe((data: MapData[]) => {
 			this.maps = data;
-			this.mapList = new MatTableDataSource<MapData>(data);
-			console.log(this.maps);
 		});
 		this.mapsService.getMaps();
 
@@ -81,7 +75,7 @@ export class MapsSectionComponent implements OnInit, AfterViewInit {
 			this.selectedMaps = data;
 		});
 
-		this.mapWsService.onProgress().subscribe((data) => this.mostrarLog(data));
+		this.mapWsService.onProgress().subscribe((data) => this.getLog(data));
 		this.mapWsService.onFinish().subscribe((data) => this.finalizar(data));
 	}
 
@@ -135,31 +129,25 @@ export class MapsSectionComponent implements OnInit, AfterViewInit {
 
 	// -----------------------------
 
-	private mostrarLog(data: any) {
-		if (!data) {
-			console.log("NO HAY DATA");
-			return;
-		}
-		// console.log(data);
-		if (!this.mapList) {
-			console.log("MAPLIST ES NULL");
-			return;
-		}
-		let maps = this.mapList.data;
-		let idx = maps.findIndex(map => map.id == data.id);
+	private getLog(data: any) {	
+		if (!data) { console.log("No hay logs para mostrar"); return; }
+
+		if (!this.maps) { console.log("No hay mapas"); return; }
+
+		let idx = this.maps.findIndex(map => map.id == data.id);
 		if (idx < 0) {
 			console.log("No se encontró el mapa con id: " + data.id);
 			return;
 		}
-		let mapa = maps[idx];
 
+		let mapa = this.maps[idx];
 		mapa.estado = "PROCESANDO";
-		if (!mapa.log)
+
+		if (!mapa.log){
 			mapa.log = [data.log];
-		else if (!mapa.log.includes(data.log))
+		} else if (!mapa.log.includes(data.log)) {
 			mapa.log.push(data.log);
-		// console.log(maps);
-		this.mapList.data = maps;
+		}
 	}
 
 	private finalizar(data: any) {
@@ -168,18 +156,17 @@ export class MapsSectionComponent implements OnInit, AfterViewInit {
 			return;
 		}
 		// console.log(data);
-		if (!this.mapList) {
+		if (!this.maps) {
 			console.log("MAPLIST ES NULL");
 			return;
 		}
 
-		let maps = this.mapList.data;
-		let idx = maps.findIndex(map => map.id == data.id);
+		let idx = this.maps.findIndex(map => map.id == data.id);
 		if (idx < 0) {
 			console.log("No se encontró el mapa con id: " + data.id);
 			return;
 		}
-		let mapa = maps[idx];
+		let mapa = this.maps[idx];
 
 		// console.log(mapa);
 
@@ -190,7 +177,6 @@ export class MapsSectionComponent implements OnInit, AfterViewInit {
 			mapa.log.push(data.log);
 		if (data.ext) mapa.ext = data.ext;
 		// console.log(maps);
-		this.mapList.data = maps;
 	}
 
 	subirArchivo(event: any) {

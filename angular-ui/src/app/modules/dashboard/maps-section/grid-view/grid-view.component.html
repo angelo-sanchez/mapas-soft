@@ -1,13 +1,25 @@
 <div class="grid-view-container">
-    <ng-container *ngFor="let map of maps">
-        <div class="container-file" (click)="map && onClick($event,map)" (contextmenu)="onContextMenu($event, map)" (dblclick)="onDblClickEvent(map)"
-            [ngClass]="{'selected': selectedMaps.has(map.id),'firstSelectedMap': firstSelectedMap == map.id }">
-            <div class="file">
-
-            </div>
-            <div class="name-file">
-                <p>{{ map.name}}</p>
-            </div>
+    <mat-drawer-container autosize class="drawer-container">
+        <div>
+            <button type="button" mat-button (click)="setViewDetails()">
+                Ver detalles
+            </button>
+            <ng-container *ngFor="let map of maps">
+                <div class="container-file" (click)="map && click($event,map)" (contextmenu)="contextMenu($event, map)"
+                    (dblclick)="dblClickEvent(map)"
+                    [ngClass]="{'selected': selectedMaps.has(map.id),'firstSelectedMap': firstSelectedMap == map.id }">
+                    <div class="file">
+        
+                    </div>
+                    <div class="name-file">
+                        <p>{{ map.name}}</p>
+                    </div>
+                </div>
+            </ng-container>
         </div>
-    </ng-container>
+
+        <mat-drawer #drawer mode="side" position="end" opened="openViewDetail" style="background: #1e1e1e">
+            <app-view-detail></app-view-detail>
+        </mat-drawer>
+    </mat-drawer-container>
 </div>

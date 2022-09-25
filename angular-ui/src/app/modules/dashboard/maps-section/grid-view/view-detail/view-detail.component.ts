@@ -7,8 +7,8 @@ import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 })
 export class ViewDetailComponent implements OnInit {
   
-  @Input() item : any;
-  @Output() cerrar = new EventEmitter<any>();
+  @Input() openViewDetail : any;
+  // @Output() cerrar = new EventEmitter<any>();
 
   constructor() { }
 
@@ -16,7 +16,7 @@ export class ViewDetailComponent implements OnInit {
   }
 
   close(){
-    this.cerrar.emit(true);
+    // this.cerrar.emit(true);
   }
 
 }

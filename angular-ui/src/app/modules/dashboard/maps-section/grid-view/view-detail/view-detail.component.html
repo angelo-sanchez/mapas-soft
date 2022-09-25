@@ -1,27 +1,28 @@
 <div class="contenedor-general">
     <div class="header">
         <h1 class="header-titulo">Detalle</h1>
-        <div (click)="close()" style="cursor: pointer">
+        <!-- (click)="close()" -->
+        <div style="cursor: pointer">
             <mat-icon>close</mat-icon>
         </div>
     </div>
     <div class="content"> 
         <div>
             <p class="title">Nombre</p>
-            <p>{{ item?.name }}</p>
+            <!-- <p>{{ map?.name }}</p> -->
         </div>
         <div>
             <p class="title">Fecha</p>
-            <p>{{ item?.date_creation | date : 'dd-MM-yyyy' }}</p>
+            <!-- <p>{{ map?.date_creation | date : 'dd-MM-yyyy' }}</p> -->
         </div>
         <div>
             <p class="title">Propietario</p>
-            <p>{{ item?.owner }}</p>
+            <!-- <p>{{ map?.owner }}</p> -->
         </div>
         <div>
             <p class="title">Logs</p>
             <div class="contenedor-visor">
-                <p class="log" *ngFor="let log of item?.log" [innerHtml]="log"></p>
+                <!-- <p class="log" *ngFor="let log of map?.log" [innerHtml]="log"></p> -->
             </div>
         </div>
     </div>

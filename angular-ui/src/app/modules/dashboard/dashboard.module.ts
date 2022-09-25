@@ -27,7 +27,6 @@ import { SettingComponent } from './setting/setting.component';
 import { DragDropComponent } from './general-component/drag-drop/drag-drop.component';
 import { DragDropDirective } from './general-component/drag-drop/drag-drop.directive';
 import { UploadingFileProgressComponent } from './general-component/uploading-file-progress/uploading-file-progress.component';
-import { ViewDetailComponent } from './view-detail/view-detail.component';
 import { UploadFileOptionsComponent } from './general-component/upload-file-options/upload-file-options.component'; 
 import { MapVisualizerComponent } from './general-component/map-visualizer/map-visualizer.component';
 
@@ -41,7 +40,6 @@ import { MapVisualizerComponent } from './general-component/map-visualizer/map-v
     DragDropComponent,
     DragDropDirective,
     UploadingFileProgressComponent,
-    ViewDetailComponent,
     UploadFileOptionsComponent ,
     MapVisualizerComponent,
   ],
@@ -71,7 +69,6 @@ import { MapVisualizerComponent } from './general-component/map-visualizer/map-v
     MapsSectionComponent,
     SidenavComponent,
     UploadingFileProgressComponent,
-    ViewDetailComponent,
     UploadFileOptionsComponent,
     MapVisualizerComponent
   ]

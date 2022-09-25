@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 
 import { GridViewComponent } from './grid-view/grid-view.component';  
 import { ListViewComponent } from './list-view/list-view.component';
+import { ViewDetailComponent } from './grid-view/view-detail/view-detail.component';
 
 // Coponentes angular-material
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -18,11 +19,13 @@ import { MatCardModule } from '@angular/material/card';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { DashboardModule } from '../dashboard.module';
 
 @NgModule({
   declarations: [
     ListViewComponent,
-    GridViewComponent
+    GridViewComponent,
+    ViewDetailComponent
   ],
   imports: [
     CommonModule,
@@ -43,7 +46,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
   ], 
   exports: [
     ListViewComponent,
-    GridViewComponent
+    GridViewComponent,
+    ViewDetailComponent
   ]
 })
 export class MapsSectionModule { }

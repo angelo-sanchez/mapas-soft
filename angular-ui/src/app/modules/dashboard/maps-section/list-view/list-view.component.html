@@ -83,31 +83,13 @@
             </ng-container>
 
 
-
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
             <tr mat-row *matRowDef="let element; columns: displayedColumns;" class="example-element-row"
                 [class.example-expanded-row]="expandedElement === element"
-                (contextmenu)="onContextMenu($event, element)"
+                (contextmenu)="contextMenu($event, element)"
                 (click)="expandedElement = expandedElement === element ? null : element">
             </tr>
             <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
         </table>
     </form>
-
-    <div style="visibility: hidden; position: fixed;" [style.left]="contextMenuPosition.x"
-        [style.top]="contextMenuPosition.y" [matMenuTriggerFor]="contextMenu">
-    </div>
-    <mat-menu #contextMenu="matMenu">
-        <ng-template matMenuContent>
-            <button mat-menu-item (click)="descargar(item)">
-                <mat-icon>search</mat-icon>Ver mapa
-            </button>
-            <button *ngIf="item && item.ext == 'mbtiles'" mat-menu-item (click)="verMapa(item)">
-                <mat-icon>file_download</mat-icon>Descargar
-            </button>
-            <button mat-menu-item (click)="eliminar(item)">
-                <mat-icon>delete</mat-icon>Eliminar
-            </button>
-        </ng-template>
-    </mat-menu>
 </div>

@@ -11,7 +11,8 @@
 
 .view-container{
 	width: 100%;
-	height: calc(100% - 56px);
+	/* height: calc(100% - 56px); */
+	height: 100%;
 	overflow: hidden;
 }
 

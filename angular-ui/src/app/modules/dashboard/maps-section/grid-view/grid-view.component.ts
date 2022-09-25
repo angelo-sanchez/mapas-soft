@@ -1,5 +1,5 @@
 
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, HostListener, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, HostListener, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { MapData } from '../../../models/map-data.model';
 import { SelectedMapManagerService } from '../selected-map-manager.service';
@@ -15,17 +15,20 @@ export class GridViewComponent implements OnInit, OnDestroy {
 
   @Input() public maps: MapData[] = [];
   
-  @Output() public onClickEvent = new EventEmitter();
-  @Output() public contextMenuEvent = new EventEmitter();
-  @Output() public dblClickEvent = new EventEmitter();
+  @Output() public onClick = new EventEmitter();
+  @Output() public onContextMenu = new EventEmitter();
+  @Output() public onDblClick = new EventEmitter();
 
   private subscriptionMaps: Subscription = new Subscription;
-  private subscriptionMapSelected: Subscription = new Subscription;
+
+  // Subcripcion a la lista de MapData seleccionados
+  private subscriptionMapSelected: Subscription = new Subscription; 
 
   public mapsId: string[] = []; // Arreglo que contiene los id de @Input() maps
   public selectedMaps: Set<string> = new Set<string>(""); // Set que contiene los mapas seleccionados
   public firstSelectedMap: string = "";
 
+  public openViewDetail : boolean = false;
 
   constructor(
     private selectedMapManager: SelectedMapManagerService,
@@ -36,7 +39,7 @@ export class GridViewComponent implements OnInit, OnDestroy {
 
   // Click izquierdo - Seleccion de mapas
   @HostListener('click', ['$event', 'map'])
-  onClick(event: MouseEvent, map: MapData) {  
+  click(event: MouseEvent, map: MapData) {  
     let res: boolean = false;
     let paths: any[] = event.composedPath();
 
@@ -54,7 +57,7 @@ export class GridViewComponent implements OnInit, OnDestroy {
 
   // Click derecho - Abrir menu contextual
   @HostListener('contextmenu', ['$event', 'row'])
-  onContextMenu(event: MouseEvent, map: MapData) {
+  contextMenu(event: MouseEvent, map: MapData) {
     event.preventDefault();
     event.stopPropagation();  
     if (!map) { return; }  
@@ -74,7 +77,6 @@ export class GridViewComponent implements OnInit, OnDestroy {
       this.firstSelectedMap = data;
       this.cdRef.markForCheck();
     });
-
   }
 
   ngOnDestroy() {
@@ -82,12 +84,16 @@ export class GridViewComponent implements OnInit, OnDestroy {
     this.subscriptionMapSelected.unsubscribe();
   }
 
+  setViewDetails(){
+    this.openViewDetail = !this.openViewDetail;
+  }
+
   reportClickEvent(event: MouseEvent, map: MapData) {
     let data = {
       "event": event,
       "map": map
     };
-    this.onClickEvent.emit(data);
+    this.onClick.emit(data);
   }
 
   reportContextMenuEvent(event: MouseEvent, map: MapData) {
@@ -95,10 +101,10 @@ export class GridViewComponent implements OnInit, OnDestroy {
       "event": event,
       "map": map
     };
-    this.contextMenuEvent.emit(data);
+    this.onContextMenu.emit(data);
   }
 
-  onDblClickEvent(map : MapData) {
-    this.dblClickEvent.emit(map);
+  dblClickEvent(map : MapData) {
+    this.onDblClick.emit(map);
   }
 }
