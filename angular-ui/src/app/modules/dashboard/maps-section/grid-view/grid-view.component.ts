@@ -13,7 +13,7 @@ import { SelectedMapManagerService } from '../selected-map-manager.service';
 })
 export class GridViewComponent implements OnInit, OnDestroy {
 
-  @Input() public maps: MapData[] = [];
+  @Input() public maps : MapData[] = [];
   
   @Output() public onClick = new EventEmitter();
   @Output() public onContextMenu = new EventEmitter();
@@ -27,8 +27,8 @@ export class GridViewComponent implements OnInit, OnDestroy {
   private subscriptionMapSelected: Subscription = new Subscription; 
 
   public mapsId: string[] = []; // Arreglo que contiene los id de @Input() maps
-  public selectedMaps: Set<string> = new Set<string>(""); // Set que contiene los mapas seleccionados
-  public firstSelectedMap: string = "";
+  public selectedMaps: MapData[] = []; // Arreglo que contiene los mapas seleccionados
+  public firstSelectedMap: any;
 
   public isOpenDetailView : boolean = false;
 
@@ -70,12 +70,12 @@ export class GridViewComponent implements OnInit, OnDestroy {
   // --------------------------------------------------
 
   ngOnInit(): void {
-    this.subscriptionMaps = this.selectedMapManager.getSelectedMaps().subscribe((data: any) => {
+    this.subscriptionMaps = this.selectedMapManager.getSelectedMaps().subscribe((data: MapData[]) => {
       this.selectedMaps = data;
       this.cdRef.markForCheck();
     });
 
-    this.subscriptionMapSelected = this.selectedMapManager.getFirstSelected().subscribe((data: any) => {
+    this.subscriptionMapSelected = this.selectedMapManager.getFirstSelected().subscribe((data: MapData) => {
       this.firstSelectedMap = data;
       this.cdRef.markForCheck();
     });

@@ -4,12 +4,12 @@
             <ng-container *ngFor="let map of maps">
                 <div class="container-file" (click)="map && click($event,map)" (contextmenu)="contextMenu($event, map)"
                     (dblclick)="dblClickEvent(map)"
-                    [ngClass]="{'selected': selectedMaps.has(map.id),'firstSelectedMap': firstSelectedMap == map.id }">
+                    [ngClass]="{'selected': selectedMaps.includes(map),'firstSelectedMap': firstSelectedMap == map.id }">
                     <div class="file">
         
                     </div>
                     <div class="name-file">
-                        <p>{{ map.name}}</p>
+                        <p>{{ map.name}}.{{ map.ext }}</p>
                     </div>
                 </div>
             </ng-container>

@@ -6,24 +6,39 @@
             <mat-icon>close</mat-icon>
         </div>
     </div>
-    <div class="content"> 
-        <div>
-            <p class="title">Nombre</p>
-            <!-- <p>{{ map?.name }}</p> -->
-        </div>
-        <div>
-            <p class="title">Fecha</p>
-            <!-- <p>{{ map?.date_creation | date : 'dd-MM-yyyy' }}</p> -->
-        </div>
-        <div>
-            <p class="title">Propietario</p>
-            <!-- <p>{{ map?.owner }}</p> -->
-        </div>
-        <div>
-            <p class="title">Logs</p>
-            <div class="contenedor-visor">
-                <!-- <p class="log" *ngFor="let log of map?.log" [innerHtml]="log"></p> -->
+    <ng-container *ngIf="maps.length == 1 else mensaje">
+        <div class="content"> 
+            <div>
+                <p class="title">Nombre</p>
+                <p>{{ maps[0].name }}</p>
+            </div>
+            <div>
+                <p class="title">Fecha</p>
+                <p>{{ maps[0].date_creation | date : 'dd-MM-yyyy' }}</p>
+            </div>
+            <div>
+                <p class="title">Propietario</p>
+                <p>{{ maps[0].owner }}</p>
+            </div>
+            <div>
+                <p class="title">Logs</p>
+                <div class="contenedor-visor">
+                    <p class="log" *ngFor="let log of maps[0].log" [innerHtml]="log"></p>
+                </div>
             </div>
         </div>
-    </div>
+    </ng-container>
+
+    <ng-template #mensaje>
+        <div class="flexible contenedor-mensaje">
+            <!-- <div style="margin: auto;">
+                <mat-icon>notification_important</mat-icon>
+            </div> -->
+            <div>
+                <p>Para ver el detalle, debe seleccionar un solo mapa</p>
+            </div>
+        </div>
+    </ng-template>
+
+
 </div>

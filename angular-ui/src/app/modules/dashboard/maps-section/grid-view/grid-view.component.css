@@ -43,14 +43,23 @@
 }
 
 .name-file{
+    display: block;
     width: 100%;
     height: 30px;
-    overflow: hidden;
+    /* overflow: hidden; */
+    /* background-color: yellow; */
 }
 
 .name-file p{
-    width: 100px;
+    background-color: blueviolet;
+    width: 100%;
+    height: 30px;
     text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
     text-overflow: ellipsis;
-    line-height: 30px;
+    font-size: 12px;
+    line-height: 12px;
+    padding: 0;
+    margin: 0;
 }

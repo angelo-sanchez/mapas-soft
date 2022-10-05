@@ -37,7 +37,7 @@ export class MapsSectionComponent implements OnInit, AfterViewInit {
 	public maps: MapData[] = [];
 
 	// Lista que contiene los mapas seleccionados por el usuario
-	public selectedMaps: Set<string> = new Set<string>("");
+	public selectedMaps: MapData[] = [];
 
 	// Boolean que controla si se reenderiza list-view o grid-view
 	public isListView: boolean = false;
@@ -72,7 +72,7 @@ export class MapsSectionComponent implements OnInit, AfterViewInit {
 		this.mapsService.getMaps();
 
 		// Obtener los mapas seleccionados por el usuario
-		this.selectedMapManagerService.getSelectedMaps().subscribe((data: Set<string>) => {
+		this.selectedMapManagerService.getSelectedMaps().subscribe((data: MapData[]) => {
 			this.selectedMaps = data;
 		});
 
@@ -92,19 +92,14 @@ export class MapsSectionComponent implements OnInit, AfterViewInit {
 		let event: MouseEvent = data.event;
 		let map: MapData = data.map;
 
-		let id = "";
-		if (map) { id = map.id }
-
 		if (this.contextMenu || this.contextMenu != undefined) { this.contextMenu.closeMenu(); }
 
 		if (event.shiftKey) {
-			let mapsIds: string[] = [];
-			this.maps.forEach(m => { mapsIds.push(m.id) });
-			this.selectedMapManagerService.selectWithShiftCase(mapsIds, id);
+			this.selectedMapManagerService.selectWithShiftCase(this.maps, map);
 		} else if (event.ctrlKey) {
-			this.selectedMapManagerService.selectWithCtrlCase(id);
+			this.selectedMapManagerService.selectWithCtrlCase(map);
 		} else {
-			this.selectedMapManagerService.selectWithClickCase(id);
+			this.selectedMapManagerService.selectWithClickCase(map);
 		}
 	}
 
@@ -112,11 +107,8 @@ export class MapsSectionComponent implements OnInit, AfterViewInit {
 		let event: MouseEvent = data.event;
 		let map: MapData = data.map;
 
-		let id = "";
-		if (map) { id = map.id }
-
 		if (this.selectedMapManagerService.isSelectedMapsEmpty()) {
-			this.selectedMapManagerService.selectWithClickCase(id);
+			this.selectedMapManagerService.selectWithClickCase(map);
 		}
 
 		this.contextMenu.closeMenu();
@@ -279,16 +271,12 @@ export class MapsSectionComponent implements OnInit, AfterViewInit {
 
 	// Descarga un mapa (file)
 	download() {
-		let mapsIds: string[] = [];
-		this.selectedMaps.forEach((id: string) => { mapsIds.push(id) });
-		this.mapsSectionService.download(mapsIds);
+		this.mapsSectionService.download(this.selectedMaps);
 	}
 
 	// Elimina un mapa (file)
 	async remove() {
-		let mapsIds: string[] = [];
-		this.selectedMaps.forEach((id: string) => { mapsIds.push(id) });
-		this.mapsSectionService.remove(mapsIds);
+		this.mapsSectionService.remove(this.selectedMaps);
 		this.mapsService.getMaps();
 	}
 
