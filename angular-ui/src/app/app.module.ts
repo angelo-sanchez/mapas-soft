@@ -32,7 +32,7 @@ import { RegisterComponent } from './modules/register/register.component';
 // Servicios
 import { LoginService } from './modules/login/login.service';
 import { LoginGuardianService } from './modules/login/login-guardian.service';
-import { MapsSectionService } from './modules/dashboard/maps-section/maps-section-service';
+import { MapsSectionService } from './modules/dashboard/maps-section/maps-section.service';
 import { SocketIoConfig, SocketIoModule } from 'ngx-socket-io';
 import { environment } from '../environments/environment';
 
