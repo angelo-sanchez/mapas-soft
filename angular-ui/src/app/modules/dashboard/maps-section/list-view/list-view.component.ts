@@ -134,6 +134,22 @@ export class ListViewComponent implements OnInit {
     };
     this.onClick.emit(data);
   }
+    // Inspeccionar mapa
+  inspeccionar(item: MapData | null) {
+    if (item) {
+      const data = { map: item };
+      const detailDialogConfig: MatDialogConfig = {
+        data
+      }
+      this.dialog.open(MapVisualizerComponent, detailDialogConfig).afterClosed().subscribe(
+				(closed) => {
+					if (closed) {
+						this.mapsSectionService.closePreview(data.map.id)
+					}
+			)
+				}
+    }
+  }
 
   reportContextMenuEvent(event: MouseEvent, map: MapData) {
     let data = {
