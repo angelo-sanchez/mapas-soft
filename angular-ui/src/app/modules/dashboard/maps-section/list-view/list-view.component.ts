@@ -58,6 +58,10 @@ export class ListViewComponent implements OnInit {
     private cdRef: ChangeDetectorRef) {
   }
 
+  toggleExpanded(map: MapData): void {
+    this.expandedElement = this.expandedElement === map ? null : map;
+  }
+
   // Click izquierdo - Seleccion de mapas
   @HostListener('click', ['$event', 'map'])
   click(event: MouseEvent, map: MapData) {
@@ -66,7 +70,7 @@ export class ListViewComponent implements OnInit {
 
     for (const path of paths) {
       if (path.tagName === "BODY") { break; }
-      if (path.classList.contains("container-file")) {
+      if (path.classList.contains("example-element-row")) {
         res = true;
         break;
       }

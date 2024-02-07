@@ -15,6 +15,7 @@ import { MatSnackBar, MatSnackBarHorizontalPosition, MatSnackBarVerticalPosition
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { MapVisualizerComponent } from '../general-component/map-visualizer/map-visualizer.component';
+import { ListViewComponent } from './list-view/list-view.component';
 
 @Component({
 	selector: 'app-maps-section',
@@ -50,6 +51,7 @@ export class MapsSectionComponent implements OnInit, AfterViewInit {
 	public verticalPosition: MatSnackBarVerticalPosition = 'bottom';
 
 	@ViewChild('gridView') gridView : any;
+  @ViewChild('listView') listView! : ListViewComponent;
 
 	public itemSeleccionado: any;
 	public verVistaDetalle: boolean = false;
@@ -99,7 +101,10 @@ export class MapsSectionComponent implements OnInit, AfterViewInit {
 		} else if (event.ctrlKey) {
 			this.selectedMapManagerService.selectWithCtrlCase(map);
 		} else {
-			this.selectedMapManagerService.selectWithClickCase(map);
+      if(this.isListView) {
+        this.listView.toggleExpanded(map);
+      }
+      this.selectedMapManagerService.selectWithClickCase(map);
 		}
 	}
 
@@ -107,11 +112,14 @@ export class MapsSectionComponent implements OnInit, AfterViewInit {
 		let event: MouseEvent = data.event;
 		let map: MapData = data.map;
 
+    this.contextMenu.closeMenu();
+    if(!this.selectedMapManagerService.isSelected(map)) {
+      this.selectedMapManagerService.resetSelectedMap();
+    }
 		if (this.selectedMapManagerService.isSelectedMapsEmpty()) {
 			this.selectedMapManagerService.selectWithClickCase(map);
 		}
 
-		this.contextMenu.closeMenu();
 		this.contextMenuPosition.x = event.clientX + 'px';
 		this.contextMenuPosition.y = event.clientY + 'px';
 		this.item = map;
@@ -122,7 +130,7 @@ export class MapsSectionComponent implements OnInit, AfterViewInit {
 
 	// -----------------------------
 
-	private getLog(data: any) {	
+	private getLog(data: any) {
 		if (!data) { console.log("No hay logs para mostrar"); return; }
 
 		if (!this.maps) { console.log("No hay mapas"); return; }

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { MapData } from '../../models/map-data.model'; 
+import { MapData } from '../../models/map-data.model';
 
 @Injectable({
   providedIn: 'root'
@@ -14,6 +14,10 @@ export class SelectedMapManagerService {
 
   getSelectedMaps() : Observable<any>  {
     return this.dataSource$.asObservable();
+  }
+
+  isSelected(map: MapData) {
+    return this.dataSource$.value.includes(map);
   }
 
   getFirstSelected() : Observable<any>{
@@ -41,19 +45,19 @@ export class SelectedMapManagerService {
 
   selectWithShiftCase(maps : MapData[], selectedMap : MapData) : void {
     let finalPositionMap = maps.findIndex((e : MapData) =>  e.id == selectedMap.id)
-    
+
     if(!maps || maps.length == 0 || finalPositionMap == -1) { return; };
 
     if(this.isSelectedMapsEmpty()){
-      this.selectedMaps = maps.slice(0, finalPositionMap + 1); 
+      this.selectedMaps = maps.slice(0, finalPositionMap + 1);
     } else {
       let initialPositionMap : number = maps.findIndex((element : MapData) => element.id == this.firstMap.id ); // seleccion de der a izq
 
-      if(initialPositionMap > finalPositionMap){      
-        this.selectedMaps = maps.slice(finalPositionMap, initialPositionMap + 1); 
+      if(initialPositionMap > finalPositionMap){
+        this.selectedMaps = maps.slice(finalPositionMap, initialPositionMap + 1);
       } else {
         initialPositionMap  = maps.findIndex((element : MapData) => element.id == this.firstMap.id ); // seleccion de izq a der
-        this.selectedMaps = maps.slice(initialPositionMap, finalPositionMap + 1);      
+        this.selectedMaps = maps.slice(initialPositionMap, finalPositionMap + 1);
       }
     }
     this.dataSource$.next(this.selectedMaps);
@@ -66,7 +70,7 @@ export class SelectedMapManagerService {
     let index : number = this.selectedMaps.findIndex(sameMap);
 
     // Si el mapa a agregar ya se encuentra en el listado, lo elimino
-    if(index !== -1){ 
+    if(index !== -1){
       let arrayAux = this.selectedMaps.filter((map : MapData) => map.id != selectedMap.id);
       this.selectedMaps = arrayAux;
     } else {
