@@ -16,13 +16,16 @@
 	<form appDragDrop (fileDropped)="subirArchivo($event)" class="contenedor-lista">
 		<div class="view-container">
 			<!-- vista lista -->
-			<app-list-view *ngIf="isListView" 
-				[maps]="maps">
-			</app-list-view>
+			<app-list-view *ngIf="isListView"
+        [maps]="maps"
+        (onClick)="onClick($event)"
+        (onContextMenu)="onContextMenu($event)"
+        (onDblClick)="openMap($event)">
+      </app-list-view>
 
 			<!-- vista grilla -->
-			<app-grid-view #gridView 
-				*ngIf="!isListView" 
+			<app-grid-view #gridView
+				*ngIf="!isListView"
 				[maps]="maps"
 				(onClick)="onClick($event)"
 				(onContextMenu)="onContextMenu($event)"

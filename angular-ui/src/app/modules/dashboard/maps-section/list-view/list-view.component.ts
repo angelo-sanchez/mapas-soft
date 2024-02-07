@@ -25,24 +25,24 @@ export class ListViewComponent implements OnInit {
 
   @ViewChild("fileUpload", { static: true }) fileInput!: ElementRef<HTMLInputElement>;
 
-  @Input() public maps : MapData[] = []; 
-  public mapsDS : MatTableDataSource<MapData> = new MatTableDataSource<MapData>(); 
+  @Input() public maps : MapData[] = [];
+  public mapsDS : MatTableDataSource<MapData> = new MatTableDataSource<MapData>();
 
   @Output() public onClick = new EventEmitter();
   @Output() public onContextMenu = new EventEmitter();
   @Output() public onDblClick = new EventEmitter();
 
   // Subcripcion a la lista de MapData
-  private subscriptionMaps : Subscription = new Subscription; 
-  
+  private subscriptionMaps : Subscription = new Subscription;
+
   // Subcripcion a la lista de MapData seleccionados
   private subscriptionMapSelected : Subscription = new Subscription;
-  
+
   // Arreglo que contiene los id de @Input() maps
-  public mapsId: string[] = []; 
+  public mapsId: string[] = [];
 
   // Set que contiene los mapas seleccionados
-  public selectedMaps: Set<string> = new Set<string>(""); 
+  public selectedMaps: Set<string> = new Set<string>("");
 
   // String que contiene el id del primer mapa seleccionado
   public firstSelectedMap: string = "";
@@ -60,7 +60,7 @@ export class ListViewComponent implements OnInit {
 
   // Click izquierdo - Seleccion de mapas
   @HostListener('click', ['$event', 'map'])
-  click(event: MouseEvent, map: MapData) {  
+  click(event: MouseEvent, map: MapData) {
     let res: boolean = false;
     let paths: any[] = event.composedPath();
 
@@ -70,7 +70,7 @@ export class ListViewComponent implements OnInit {
         res = true;
         break;
       }
-    } 
+    }
     if (res && map === undefined) { return; }
 
     this.reportClickEvent(event, map);
@@ -80,8 +80,8 @@ export class ListViewComponent implements OnInit {
   @HostListener('contextmenu', ['$event', 'row'])
   contextMenu(event: MouseEvent, map: MapData) {
     event.preventDefault();
-    event.stopPropagation();  
-    if (!map) { return; }  
+    event.stopPropagation();
+    if (!map) { return; }
 
     this.reportContextMenuEvent(event, map);
   }
@@ -99,7 +99,7 @@ export class ListViewComponent implements OnInit {
       this.cdRef.markForCheck();
     });
   }
-  
+
   ngOnDestroy() {
     this.subscriptionMaps.unsubscribe();
     this.subscriptionMapSelected.unsubscribe();
@@ -133,22 +133,6 @@ export class ListViewComponent implements OnInit {
       "map": map
     };
     this.onClick.emit(data);
-  }
-    // Inspeccionar mapa
-  inspeccionar(item: MapData | null) {
-    if (item) {
-      const data = { map: item };
-      const detailDialogConfig: MatDialogConfig = {
-        data
-      }
-      this.dialog.open(MapVisualizerComponent, detailDialogConfig).afterClosed().subscribe(
-				(closed) => {
-					if (closed) {
-						this.mapsSectionService.closePreview(data.map.id)
-					}
-			)
-				}
-    }
   }
 
   reportContextMenuEvent(event: MouseEvent, map: MapData) {
