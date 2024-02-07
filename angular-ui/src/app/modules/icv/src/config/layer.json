@@ -1,0 +1,167 @@
+[
+    {
+        "description": "ICV Raster",
+        "name": "icvRaster",
+        "source": {
+            "type": "raster",
+            "tiles": [
+                "https://api.mapbox.com/styles/v1/azunino/ck8nrrf3611nv1jpj33wavtyq/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoiYXp1bmlubyIsImEiOiJjand0czBvc24wZ2l5NDhucnc2Ym9zNXNiIn0.tAtTepUSFqApaOQygq_9iw"
+            ]
+        },
+        "layer": {
+            "id": "icvRaster",
+            "type": "raster",
+            "source": "icvRaster"
+        }
+    },
+    {
+        "description": "Índice de calidad de Vida (ICV)",
+        "name": "icv",
+        "config": "colorScales",
+        "source": {
+            "type": "vector",
+            "tiles": [
+                "https://icv.conicet.gov.ar/tileserver-php/icv/{z}/{x}/{y}.pbf"
+            ],
+            "maxzoom": 12,
+            "attribution": "Mapas ICV por <a href='https://igehcs.conicet.gov.ar/'>IGEHCS</a>. Desarrollo App por <a href='http://www.isistan.unicen.edu.ar/'>ISISTAN</a>. © <a href='http://www.conicet.gob.ar'>CONICET</a> & <a href='http://www.unicen.edu.ar'>UNCPBA</a>"
+        },
+        "layer": {
+            "id": "icv",
+            "type": "fill",
+            "source": "icv",
+            "source-layer": "Arg_RRFF_ICV_2010",
+            "layout": {
+                "visibility": "none"
+            },
+            "paint": {
+                "fill-outline-color": [
+                    "case",
+                    [
+                        "boolean",
+                        [
+                            "feature-state",
+                            "hover"
+                        ],
+                        false
+                    ],
+                    "rgba(0, 0, 0, 1)",
+                    "rgba(0, 0, 0, .1)"
+                ],
+                "fill-opacity": [
+                    "case",
+                    [
+                        "boolean",
+                        [
+                            "feature-state",
+                            "hover"
+                        ],
+                        false
+                    ],
+                    0.9,
+                    0.6
+                ],
+                "fill-color": "icvFillColor(0)"
+            }
+        }
+    },
+    {
+        "description": "Barrios populares",
+        "name": "barrios",
+        "source": {
+            "type": "vector",
+            "maxzoom": 12,
+            "tiles": [
+                "http://localhost:8080/data/65bf9ab18c801b054cfb8aad/{z}/{x}/{y}.pbf"
+            ]
+        },
+        "layer": {
+            "id": "barrios",
+            "type": "circle",
+            "source": "barrios",
+            "source-layer": "7198fce88170807000d81205ca8dda4b",
+            "layout": {
+                "visibility": "none"
+            },
+            "paint": {
+                "circle-radius": 30,
+                "circle-color": "rgba(0, 0, 255, .9)",
+                "circle-opacity": 0.5
+            }
+        }
+    },
+    {
+        "description": "Hospitales",
+        "name": "hospitales",
+        "source": {
+            "type": "geojson",
+            "data": "https://icv.netlify.app/prevalencia.json"
+        },
+        "layer": {
+            "id": "hospitales",
+            "type": "circle",
+            "source": "hospitales",
+            "layout": {
+                "visibility": "none"
+            },
+            "paint": {
+                "circle-radius": [
+                    "interpolate",
+                    [
+                        "linear"
+                    ],
+                    [
+                        "zoom"
+                    ],
+                    4,
+                    [
+                        "/",
+                        [
+                            "number",
+                            [
+                                "get",
+                                "prevalencia"
+                            ],
+                            0
+                        ],
+                        20
+                    ],
+                    15,
+                    [
+                        "/",
+                        [
+                            "number",
+                            [
+                                "get",
+                                "prevalencia"
+                            ],
+                            0
+                        ],
+                        2
+                    ]
+                ],
+                "circle-color": [
+                    "interpolate",
+                    [
+                        "linear"
+                    ],
+                    [
+                        "get",
+                        "prevalencia"
+                    ],
+                    0,
+                    "#ffffc8",
+                    5,
+                    "#ffd098",
+                    10,
+                    "#fd9e70",
+                    15,
+                    "#f5674c",
+                    30,
+                    "#e9002c"
+                ],
+                "circle-opacity": 0.5
+            }
+        }
+    }
+]

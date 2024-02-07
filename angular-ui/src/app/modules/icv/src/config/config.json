@@ -1,0 +1,74 @@
+{
+    "map": {
+        "base": "esri",
+        "item": [
+            {
+                "style": "ignStyleBase",
+                "name": "ignBase",
+                "description": "IGN"
+            },
+            {
+                "style": "ignStyleGrey",
+                "name": "ignGrey",
+                "description": "IGN Gris"
+            },
+            {
+                "style": "ignStyleDark",
+                "name": "ignDark",
+                "description": "IGN Oscuro"
+            },
+            {
+                "style": "osmStyle",
+                "name": "osm",
+                "description": "OpenStreetMap"
+            },
+            {
+                "style": "hereStyle",
+                "name": "here",
+                "description": "HERE"
+            },
+            {
+                "style": "esriStyle",
+                "name": "esri",
+                "description": "Esri"
+            },
+            {
+                "style": "esriNightStyle",
+                "name": "esriNight",
+                "description": "Esri Oscuro"
+            },
+            {
+                "style": "esriDarkCanvas",
+                "name": "esriDarkCanvas",
+                "description": "Esri Mínimo Oscuro"
+            },
+            {
+                "style": "esriLightCanvas",
+                "name": "esriLightCanvas",
+                "description": "Esri Mínimo Claro"
+            }
+        ]
+    },
+    "layer": {
+        "base": "barrios",
+        "item": [
+            {
+                "name": "icv",
+                "description": "Índice de calidad de Vida (ICV)",
+                "config": "colorScales"
+            },
+            {
+                "name": "barrios",
+                "description": "Barrios populares"
+            },
+            {
+                "name": "hospitales",
+                "description": "Hospitales"
+            },
+            {
+                "name": "icvRaster",
+                "description": "ICV Raster"
+            }
+        ]
+    }
+}

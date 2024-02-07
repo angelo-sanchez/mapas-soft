@@ -1,0 +1,21 @@
+# Dependency directories
+node_modules/
+
+# Grunt intermediate storage (https://gruntjs.com/creating-plugins#storing-task-files)
+.grunt
+
+# Grunt build / generate output
+build/
+
+# Parcel build / generate output
+dist/
+
+# parcel-bundler cache
+.cache
+.parcel-cache
+
+# vim session
+Session.vim
+
+# vim tags
+tags

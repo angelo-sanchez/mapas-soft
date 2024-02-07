@@ -1,0 +1,47 @@
+[
+    {
+        "layer": "hospitales",
+        "action": "click",
+        "lng": "e.lngLat",
+        "html": "\"<strong>\" + e.features[0].properties.nombre + \"</strong><br>\" +\"Prevalencia: \" +e.features[0].properties.prevalencia"
+    },
+    {
+        "layer": "hospitales",
+        "action": "mouseenter",
+        "cursor": "pointer"
+    },
+    {
+        "layer": "hospitales",
+        "action": "mouseleave",
+        "cursor": ""
+    },
+    {
+        "layer": "barrios",
+        "action": "click",
+        "lng": "e.lngLat",
+        "html":  "\"<strong>\" + \"Provincia: \" + \"</strong>\" + e.features[0].properties.iso_nombre"
+    },
+    {
+        "layer": "barrios",
+        "action": "mouseenter",
+        "cursor": "pointer"
+    },
+    {
+        "layer": "barrios",
+        "action": "mouseleave",
+        "cursor": ""
+    },
+    {
+        "layer": "icv",
+        "action" : "mousemove",
+        "source": "icvInfo",
+        "sourceLayer": "Arg_RRFF_ICV_2010",
+        "text_prefix": "ICV: ",
+        "value": "e.features[0].properties.ICV2010"
+    },
+    {
+        "layer": "icv",
+        "action" : "mouseleave",
+        "sourceLayer": "Arg_RRFF_ICV_2010"
+    }
+]

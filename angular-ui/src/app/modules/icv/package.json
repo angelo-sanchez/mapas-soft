@@ -1,0 +1,47 @@
+{
+  "name": "icv",
+  "version": "1.4.0",
+  "description": "Mapa interactivo índice de calidad de vida",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "parcel serve ./src/index.html",
+    "build": "parcel build ./src/index.html"
+  },
+  "engines": {
+    "node": ">= 14.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alezunino/icv.git"
+  },
+  "author": "Alejandro Zunino - ISISTAN, CONICET&UNCPBA",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/alezunino/icv/issues"
+  },
+  "homepage": "https://github.com/alezunino/icv#readme",
+  "browserslist": {
+    "production": [
+      "last 3 chrome versions",
+      "last 3 firefox versions",
+      "last 3 safari versions"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "dependencies": {
+    "autocompleter": "^6.1.2",
+    "cache-polyfill": "^1.0.1",
+    "maplibre-gl": "^2.1.9"
+  },
+  "devDependencies": {
+    "@parcel/packager-raw-url": "^2.6.1",
+    "@parcel/transformer-webmanifest": "^2.6.1",
+    "grunt": "^1.6.1",
+    "parcel": "^2.6.1",
+    "parcel-reporter-static-files-copy": "^1.3.4"
+  }
+}

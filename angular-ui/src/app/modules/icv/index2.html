@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="ES">
+
+<head>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-4142151-4"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'UA-4142151-4');
+    </script>
+
+    <meta charset='utf-8' />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <link rel='manifest' href='/site.webmanifest'>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <!-- Responsive Font Sizes (RFS) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/coliff/bootstrap-rfs/bootstrap-rfs.css">
+
+    <!-- jQuery with a CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    <!-- jQueryUI with a CDN -->
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+
+    <!-- jQueryUI base theme -->
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
+    <title>Índice de Calidad de Vida - IGEHCS & ISISTAN (UNCPBA & CONICET)</title>
+    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v1.0.0/mapbox-gl.js'></script>
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v1.0.0/mapbox-gl.css' rel='stylesheet' />
+
+    <!-- Add to Homescreen -->
+    <link rel="stylesheet" type="text/css" href="styles/addtohomescreen.css">
+    <script src="addtohomescreen.min.js"></script>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        #map {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 100%;
+        }
+
+        .info {
+            background-color: #fff;
+            border-radius: 3px;
+            bottom: 10px;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.10);
+            font-size: .75rem;
+            padding: .2rem;
+            position: absolute;
+            left: .5rem;
+            z-index: 1;
+        }
+
+        .menu {
+            left: .5rem;
+            top: .5rem;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.10);
+            border-radius: 3px;
+            position: absolute;
+            /*    padding: .4rem .2rem .2rem .2rem;*/
+            padding: .3rem;
+            font-size: .6rem;
+            background-color: #fff;
+            border-radius: 3px;
+            z-index: 1;
+        }
+
+        .ui-autocomplete.ui-widget {
+            font-size: .6rem;
+        }
+
+        .legend {
+            background-color: #fff;
+            border-radius: 3px;
+            bottom: 1.5rem;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.10);
+            font-size: .6rem;
+            padding: .3rem;
+            position: absolute;
+            right: .5rem;
+            z-index: 1;
+        }
+
+        .legend h4 {
+            font-size: 1rem;
+            margin: 0 0 .2rem;
+        }
+
+        .legend div span {
+            border-radius: 50%;
+            display: inline-block;
+            height: 10px;
+            margin-right: 5px;
+            width: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id='map'></div>
+    <div id='menu' class='menu'>
+        <fieldset style="vertical-align: text-bottom; text-align: center;">
+            <input id='ign' type='radio' name='rtoggle' value='ign' checked='checked'>
+            <label for='ign'>IGN</label>
+            <input id='osm' type='radio' name='rtoggle' value='osm'>
+            <label for='osm'>OSM</label>
+            <input id='here' type='radio' name='rtoggle' value='here'>
+            <label for='here'>HERE</label>
+        </fieldset>
+        <input id="search" placeholder="Buscar...">
+    </div>
+
+    <div id='icv-legend' class='legend'></div>
+
+    <div class='info' id='info'>Toque para ver el valor del <a
+            href="http://cienciahoy.org.ar/2015/04/geografia-y-calidad-de-vida-en-la-argentina/">Índice de Calidad de
+            Vida</a></div>
+
+    <script src='scales.js'></script>
+
+    <script>
+        addToHomescreen({
+            //            startDelay: 30
+            autostart: true,
+            autoHide: 0,
+            mandatory: false,
+            logging: true,
+            customCriteria: true,
+            onShow: function () {
+                console.log("showing");
+            },
+            onInit: function () {
+                console.log("initializing");
+            },
+            onAdd: function () {
+                console.log("adding");
+            },
+            onInstall: function () {
+                console.log("Installing");
+            },
+            onCancel: function () {
+                console.log("Cancelling");
+            },
+
+        });
+
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker
+                .register('/sw.js')
+                .then(function () { console.log("Service Worker Registered"); });
+        }
+
+        /*
+        $( ".menu" ).hover(
+          function() {
+            $( ".menu" ).animate({ width: "300px" },1000);
+          }, function() {
+            $( ".menu" ).animate({ width: "50px" },1000);
+          }
+        );*/
+        //https://gka.github.io/palettes/#colors=Lime,Green,yellow,Orange,Red|steps=10|bez=1|coL=0
+        const layerList = document.getElementById('menu');
+        const inputs = layerList.getElementsByTagName('input');
+        //console.log(inputs);
+        const ignStyle = {
+            "version": 8,
+            "sources": {
+                "simple-tiles": {
+                    "type": "raster",
+                    // point to our third-party tiles. Note that some examples
+                    // show a "url" property. This only applies to tilesets with
+                    // corresponding TileJSON (such as mapbox tiles). 
+                    "maxzoom": 16, "tileSize": 512,
+                    "attribution": 'Mapa del <a href="http://www.ign.gob.ar">Instituto Geográfico Nacional</a>, capa de calles por colaboradores de &copy; <a href="http://openstreetmap.org">OpenStreetMap</a>',
+                    "tiles": [
+                        "https://ide.ign.gob.ar/geoservicios/rest/services/Mapas_IGN/mapa_topografico/MapServer/tile/{z}/{y}/{x}"
+                    ]
+                }
+            },
+            "layers": [{
+                "id": "simple-tiles",
+                "type": "raster",
+                "source": "simple-tiles",
+                "minzoom": 0,
+                "maxzoom": 20
+            }]
+        };
+
+        const hereStyle = {
+            "version": 8,
+            //"sprite": 'https://maps.tilehosting.com/styles/basic/sprite',
+            //"glyphs": 'https://maps.tilehosting.com/fonts/{fontstack}/{range}.pbf.pict?key=alS7XjesrAd6uvek9nRE',
+            "sprite": 'mapbox://sprites/mapbox/streets-v8',
+            "glyphs": 'mapbox://fonts/mapbox/{fontstack}/{range}.pbf',
+            "sources": {
+                "raster-tiles": {
+                    "type": "raster",
+                    "tileSize": 512,
+                    // point to our third-party tiles. Note that some examples
+                    // show a "url" property. This only applies to tilesets with
+                    // corresponding TileJSON (such as mapbox tiles). 
+                    "attribution": 'Map Tiles &copy; ' + new Date().getFullYear() + ' ' +
+                        '<a href="http://developer.here.com">HERE</a>',
+                    "tiles": [
+                        "https://1.base.maps.api.here.com/maptile/2.1/maptile/newest/normal.day/{z}/{x}/{y}/512/png?lg=spa&app_id=jejhBr3f7xuxzOjxs6Xr&app_code=vK_udKQVKFKI6elL-HrN2g",
+                        "https://2.base.maps.api.here.com/maptile/2.1/maptile/newest/normal.day/{z}/{x}/{y}/512/png?lg=spa&app_id=jejhBr3f7xuxzOjxs6Xr&app_code=vK_udKQVKFKI6elL-HrN2g",
+                        "https://3.base.maps.api.here.com/maptile/2.1/maptile/newest/normal.day/{z}/{x}/{y}/512/png?lg=spa&app_id=jejhBr3f7xuxzOjxs6Xr&app_code=vK_udKQVKFKI6elL-HrN2g",
+                        "https://4.base.maps.api.here.com/maptile/2.1/maptile/newest/normal.day/{z}/{x}/{y}/512/png?lg=spa&app_id=jejhBr3f7xuxzOjxs6Xr&app_code=vK_udKQVKFKI6elL-HrN2g"
+                    ]
+                }
+            },
+            "layers": [{
+                "id": "simple-tiles",
+                "type": "raster",
+                "source": "raster-tiles",
+                "minzoom": 0,
+                "maxzoom": 22
+            }]
+        };
+
+        hereAppId = "jejhBr3f7xuxzOjxs6Xr";
+        hereAppCode = "vK_udKQVKFKI6elL-HrN2g";
+
+        openCageID = "b005488f173e4ea799cfe369efa2f56d";
+
+        mapboxgl.accessToken = 'pk.eyJ1IjoiYXp1bmlubyIsImEiOiJjand0czBvc24wZ2l5NDhucnc2Ym9zNXNiIn0.tAtTepUSFqApaOQygq_9iw';
+
+        var map = new mapboxgl.Map({
+            container: 'map', // container id
+            //            style: 'mapbox://styles/mapbox/streets-v11', // stylesheet location
+            style: ignStyle,
+            bounds: [[
+                -53.6374515,
+                -21.781168
+            ], [
+                -73.5605371,
+                -55.1850761
+            ]],
+            //            center: [-59.1083015, -37.3211264], // starting position [lng, lat]
+            //            center: [-62, -41], // starting position [lng, lat]
+            //            zoom: 3.4, // starting zoom
+            hash: false,
+            pitchWithRotate: false,
+            minzoom: 3.2,
+            maxzoom: 17
+        });
+
+
+        // disable map rotation using right click + drag
+        map.dragRotate.disable();
+
+        // disable map rotation using touch rotation gesture
+        map.touchZoomRotate.disableRotation();
+
+        var fillColor = setupScale();
+        //        console.log(fillColor);
+
+        function setupICVLayer(map) {
+            map.addSource("icv", {
+                "type": "vector",
+                //                "tiles": ["http://localhost:8000/icv/{z}/{x}/{y}.pbf"],
+                //"tiles": ["https://icv-tiles.herokuapp.com/icv/{z}/{x}/{y}.pbf"],
+                "tiles": ["https://icv-tiles.000webhostapp.com/icv2/{z}/{x}/{y}.pbf"],
+                //                "tiles": ["http://localhost:8080/icv/{z}/{x}/{y}.pbf"],
+                //                "tiles": ["https://staticICV.epizy.com/icv/{z}/{x}/{y}.pbf"],
+                //"tiles": ["http://localhost:8080/data/icv-vector/{z}/{x}/{y}.pbf"],
+                //"tiles": ['https://api.maptiler.com/tiles/4bd77e8e-e820-4047-b223-9a3aabcca2b8/{z}/{x}/{y}.pbf?key=3TEhrAr7f6axis9PhdlZ'],
+                "attribution": "Mapas ICV por <a href='https://tandil.conicet.gov.ar/igehcs/'>IGEHCS</a>. Desarrollo App por <a href='http://www.isistan.unicen.edu.ar/'>ISISTAN</a>. © <a href='http://www.conicet.gob.ar'>CONICET</a> & <a href='http://www.unicen.edu.ar'>UNCPBA</a>",
+                "maxzoom": 12
+            });
+            map.addLayer({
+                "id": "icv",
+                "type": "fill",
+                "source": "icv",
+                "source-layer": "Arg_RRFF_ICV_2010",
+                "layout": {
+                    "visibility": "visible"
+                },
+                "paint": {
+                    //                    "fill-outline-color": "rgba(0, 0, 0, .1)",
+                    "fill-outline-color": ["case",
+                        ["boolean", ["feature-state", "hover"], false],
+                        "rgba(0, 0, 0, 1)", "rgba(0, 0, 0, .1)"
+                    ],
+                    //                    "fill-opacity": .7,
+                    "fill-opacity": ["case",
+                        ["boolean", ["feature-state", "hover"], false],
+                        .9, 0.6
+                    ],
+                    "fill-color": fillColor
+                },
+                layout: {}
+            });
+        }
+
+        /*      map.on('load', function () {
+                    setupICVLayer(map)
+                });
+        */
+        map.on('style.load', function () {
+            //console.log("style.load");
+            setupICVLayer(map);
+        });
+
+        const info = document.getElementById('info');
+
+        var hoveredAreaId = null;
+
+        map.on('mousemove', 'icv', function (e) {
+            //            var coordinates = e.features[0].geometry.coordinates.slice();
+            //            var description = e.features[0].properties.ICV2010;
+            //            var bbox = [[e.point.x - 5, e.point.y - 5], [e.point.x + 5, e.point.y + 5]];
+            //            console.log(bbox);
+            //            var polygons = map.queryRenderedFeatures(e.point, {
+            //                layers: ['icv']
+            //            });
+
+            //            var polygons = map.queryRenderedFeatures(e.point, { layers: ['icv'] });
+            //            if (polygons.length > 0) {
+            map.getCanvas().style.cursor = 'pointer';
+            if (e.features.length > 0) {
+                if (hoveredAreaId) {
+                    map.setFeatureState({ sourceLayer: 'Arg_RRFF_ICV_2010', source: 'icv', id: hoveredAreaId }, { hover: false });
+                }
+                hoveredAreaId = e.features[0].id;
+                //                console.log("mousemove "+hoveredAreaId);
+                //              console.log(e.features[0].properties["ICV2010"]);
+                map.setFeatureState({ sourceLayer: 'Arg_RRFF_ICV_2010', source: 'icv', id: hoveredAreaId }, { hover: true });
+                //                info.innerText = "ICV=" + polygons[0].properties.ICV2010;
+                info.innerText = "ICV=" + e.features[0].properties["ICV2010"];
+                info.style.opacity = 1;
+            } else {
+                info.innerText = '';
+                info.style.opacity = 0;
+            }
+        });
+
+        map.on("mouseleave", "icv", function () {
+            if (hoveredAreaId) {
+                map.getCanvas().style.cursor = '';
+                map.setFeatureState({ sourceLayer: 'Arg_RRFF_ICV_2010', source: 'icv', id: hoveredAreaId }, { hover: false });
+            }
+            hoveredAreaId = null;
+        });
+
+
+
+        map.addControl(new mapboxgl.NavigationControl());
+
+        // Add geolocate control to the map.
+        map.addControl(new mapboxgl.GeolocateControl({
+            positionOptions: {
+                enableHighAccuracy: true
+            },
+            trackUserLocation: true
+        }));
+
+        function switchLayer(layer) {
+            map.removeLayer('icv');
+            map.removeSource('icv');
+            const layerId = layer.target.id;
+            // console.log("------------ switchLayer " + layerId);
+            // map.getStyle().layers.forEach((layer) => {
+            //     console.log(layer.id)
+            // });
+            if (layerId == "ign") {
+                //                console.log("load ign");
+                map.setStyle(ignStyle);
+            } else if (layerId == "here") {
+                //                console.log("load here");
+                map.setStyle(hereStyle);
+            }
+            else if (layerId == "osm") {
+                //                console.log("load osm");
+                map.setStyle('https://api.maptiler.com/maps/4a6d4db4-16fe-4d97-856a-7771cc43706d/style.json?key=3TEhrAr7f6axis9PhdlZ');
+
+            }
+        }
+
+        for (var i = 0; i < inputs.length; i++) {
+            if (inputs[i].id != "search") {
+                inputs[i].onclick = switchLayer;
+            }
+        }
+
+
+        $(function () {
+            $("input:radio").checkboxradio({
+                icon: false
+            });
+        });
+        const openCageUrl = 'https://api.opencagedata.com/geocode/v1/json'
+
+        $("#search").autocomplete({
+            source: function (request, response) {
+                const request_url = openCageUrl
+                    + '?'
+                    + 'key=' + openCageID
+                    + '&q=' + encodeURIComponent(request.term)
+                    + '&countrycode=AR'
+                    + '&language=es'
+                    + '&abbrv=1'
+                    + '&limit=10'
+                    + '&no_annotations=1';
+                $.ajax({
+                    url: request_url,
+                    dataType: "json",
+                    success: function (data) {
+                        // console.log("data:" + JSON.stringify(data.results));
+                        response($.map(data.results, function (value, key) {
+                            //console.log("value:" + value);
+                            //console.log("key:"+key);
+                            return {
+                                label: value.formatted,
+                                value: value.bounds
+                            };
+                        }));
+                    }
+                });
+            },
+            minLength: 5,
+            delay: 300,
+            select: function (event, ui) {
+                event.preventDefault();
+                $('#search').val(ui.item.label);
+                const bbox = ui.item.value;
+                //                console.log("Selected: " + ui.item.value);
+                map.fitBounds([[
+                    bbox.northeast.lng,
+                    bbox.northeast.lat
+                ], [
+                    bbox.southwest.lng,
+                    bbox.southwest.lat
+                ]]);;
+                this.value = "";
+                return false;
+            }
+        });
+    </script>
+
+</body>
+
+</html>
