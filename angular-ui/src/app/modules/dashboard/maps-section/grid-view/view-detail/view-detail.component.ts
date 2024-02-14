@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { MapData } from 'src/app/modules/models/map-data.model';
 import { SelectedMapManagerService } from '../../selected-map-manager.service';
 

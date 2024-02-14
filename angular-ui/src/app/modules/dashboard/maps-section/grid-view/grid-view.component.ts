@@ -14,7 +14,7 @@ import { SelectedMapManagerService } from '../selected-map-manager.service';
 export class GridViewComponent implements OnInit, OnDestroy {
 
   @Input() public maps : MapData[] = [];
-  
+
   @Output() public onClick = new EventEmitter();
   @Output() public onContextMenu = new EventEmitter();
   @Output() public onDblClick = new EventEmitter();
@@ -24,7 +24,7 @@ export class GridViewComponent implements OnInit, OnDestroy {
   private subscriptionMaps: Subscription = new Subscription;
 
   // Subcripcion a la lista de MapData seleccionados
-  private subscriptionMapSelected: Subscription = new Subscription; 
+  private subscriptionMapSelected: Subscription = new Subscription;
 
   public mapsId: string[] = []; // Arreglo que contiene los id de @Input() maps
   public selectedMaps: MapData[] = []; // Arreglo que contiene los mapas seleccionados
@@ -41,7 +41,7 @@ export class GridViewComponent implements OnInit, OnDestroy {
 
   // Click izquierdo - Seleccion de mapas
   @HostListener('click', ['$event', 'map'])
-  click(event: MouseEvent, map: MapData) {  
+  click(event: MouseEvent, map: MapData) {
     let res: boolean = false;
     let paths: any[] = event.composedPath();
 
@@ -51,7 +51,7 @@ export class GridViewComponent implements OnInit, OnDestroy {
         res = true;
         break;
       }
-    } 
+    }
     if (res && map === undefined) { return; }
 
     this.reportClickEvent(event, map);
@@ -61,8 +61,8 @@ export class GridViewComponent implements OnInit, OnDestroy {
   @HostListener('contextmenu', ['$event', 'row'])
   contextMenu(event: MouseEvent, map: MapData) {
     event.preventDefault();
-    event.stopPropagation();  
-    if (!map) { return; }  
+    event.stopPropagation();
+    if (!map) { return; }
 
     this.reportContextMenuEvent(event, map);
   }
@@ -75,7 +75,7 @@ export class GridViewComponent implements OnInit, OnDestroy {
       this.cdRef.markForCheck();
     });
 
-    this.subscriptionMapSelected = this.selectedMapManager.getFirstSelected().subscribe((data: MapData) => {
+    this.subscriptionMapSelected = this.selectedMapManager.getFirstSelected().subscribe((data) => {
       this.firstSelectedMap = data;
       this.cdRef.markForCheck();
     });
@@ -113,7 +113,7 @@ export class GridViewComponent implements OnInit, OnDestroy {
   openDetailView(){
     this.cdRef.markForCheck();
 
-    if(!this.isOpenDetailView){ 
+    if(!this.isOpenDetailView){
       this.isOpenDetailView = true;
     }
   }

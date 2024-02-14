@@ -1,13 +1,12 @@
 <div class="contenedor-general">
     <div class="header">
         <h1 class="header-titulo">Detalle</h1>
-        <!-- (click)="close()" -->
         <div style="cursor: pointer" (click)="close()">
             <mat-icon>close</mat-icon>
         </div>
     </div>
     <ng-container *ngIf="maps.length == 1 else mensaje">
-        <div class="content"> 
+        <div class="content">
             <div>
                 <p class="title">Nombre</p>
                 <p>{{ maps[0].name }}</p>
@@ -31,11 +30,8 @@
 
     <ng-template #mensaje>
         <div class="flexible contenedor-mensaje">
-            <!-- <div style="margin: auto;">
-                <mat-icon>notification_important</mat-icon>
-            </div> -->
             <div>
-                <p>Para ver el detalle, debe seleccionar un solo mapa</p>
+                <p>Para ver el detalle, debe seleccionar un{{maps.length > 1 ? ' solo' : ''}} mapa</p>
             </div>
         </div>
     </ng-template>

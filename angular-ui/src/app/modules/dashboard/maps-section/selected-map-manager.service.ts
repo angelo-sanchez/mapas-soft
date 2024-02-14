@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { MapData } from '../../models/map-data.model';
 
 @Injectable({
@@ -10,9 +10,8 @@ export class SelectedMapManagerService {
   private dataSource$ = new BehaviorSubject<MapData[]>([]);
   private firstMap : any; // Variable que almacena el primer elemento al que se le hizo click
   private firstMapSelected$ = new BehaviorSubject({});
-  constructor() {}
 
-  getSelectedMaps() : Observable<any>  {
+  getSelectedMaps() {
     return this.dataSource$.asObservable();
   }
 
@@ -20,15 +19,12 @@ export class SelectedMapManagerService {
     return this.dataSource$.value.includes(map);
   }
 
-  getFirstSelected() : Observable<any>{
+  getFirstSelected() {
     return this.firstMapSelected$.asObservable();
   }
 
   isSelectedMapsEmpty() : boolean {
-    if(this.selectedMaps.length > 0){
-      return false;
-    }
-    return true;
+    return this.selectedMaps.length < 1;
   }
 
   selectWithClickCase(selectedMap : MapData) : void {

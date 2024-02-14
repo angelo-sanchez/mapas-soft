@@ -2,17 +2,12 @@ import { Injectable } from '@angular/core';
 import { SelectedMapManagerService } from './selected-map-manager.service';
 import * as fileSaver from 'file-saver';
 import { MapsService } from '../../services/maps.service';
-import { MapData } from '../../models/map-data.model'; 
-
+import { MapData } from '../../models/map-data.model';
 
 @Injectable({
 	providedIn: 'root'
 })
 export class MapsSectionService {
-
-	// Boolean que controla si se reenderiza list-view o grid-view
-	public isListView: boolean = false;
-
 	constructor(private selectedMapsManager: SelectedMapManagerService,
 		private mapsService : MapsService) {
 	}

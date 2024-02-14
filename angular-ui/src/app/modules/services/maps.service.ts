@@ -16,7 +16,7 @@ export class MapsService {
 	constructor(private httpClient: HttpClient,
 		private loginService: LoginService) { }
 
-	mapSubscription(): Observable<MapData[]> {
+	public mapSubscription(): Observable<MapData[]> {
 		return this.dataSource$.asObservable();
 	}
 
@@ -64,7 +64,6 @@ export class MapsService {
 		});
 	}
 
-	
 	preview(id: string) {
 		return this.httpClient.get(`${environment.apiUrl}/maps/${id}/preview`, {
 			headers: {
