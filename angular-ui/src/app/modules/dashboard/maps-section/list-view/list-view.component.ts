@@ -2,10 +2,10 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, HostListener, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs' ;
 
-import { MatTableDataSource } from '@angular/material/table';
 import { MapData } from '../../../models/map-data.model';
 
 import { SelectedMapManagerService } from '../selected-map-manager.service';
+import { MapSort } from '../maps-section.component';
 
 @Component({
   selector: 'app-list-view',
@@ -26,8 +26,8 @@ export class ListViewComponent implements OnInit {
   @ViewChild("fileUpload", { static: true }) fileInput!: ElementRef<HTMLInputElement>;
 
   @Input() public maps : MapData[] = [];
-  public mapsDS : MatTableDataSource<MapData> = new MatTableDataSource<MapData>();
-
+  @Input() public sorting!: MapSort;
+  @Output() public sort = new EventEmitter<{ active: keyof MapData, direction: 'asc'|'desc' }>();
   @Output() public onClick = new EventEmitter();
   @Output() public onContextMenu = new EventEmitter();
   @Output() public onDblClick = new EventEmitter();
@@ -38,21 +38,14 @@ export class ListViewComponent implements OnInit {
   // Subcripcion a la lista de MapData seleccionados
   private subscriptionMapSelected : Subscription = new Subscription;
 
-  // Arreglo que contiene los id de @Input() maps
-  public mapsId: string[] = [];
-
   // Set que contiene los mapas seleccionados
-  public selectedMaps: Set<string> = new Set<string>("");
+  public selectedMaps: MapData[] = [];
 
   // String que contiene el id del primer mapa seleccionado
   public firstSelectedMap: string = "";
 
-
   public displayedColumns: string[] = ['name', 'owner', 'date_creation', 'loading'];
   public expandedElement: any;
-
-  public isNombreAsc: boolean = true; // variable para boton de ordenamiento por columna nombre. Asc: true, Desc: false
-  public isFechaAsc: boolean = true; // variable para boton de ordenamiento por columna fecha. Asc: true, Desc: false
 
   constructor(private selectedMapManager : SelectedMapManagerService,
     private cdRef: ChangeDetectorRef) {
@@ -91,15 +84,13 @@ export class ListViewComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.mapsDS = new MatTableDataSource<MapData>(this.maps);
-
-    this.subscriptionMaps = this.selectedMapManager.getSelectedMaps().subscribe((data: any) => {
+    this.subscriptionMaps = this.selectedMapManager.getSelectedMaps().subscribe((data) => {
       this.selectedMaps = data;
       this.cdRef.markForCheck();
     });
 
     this.subscriptionMapSelected = this.selectedMapManager.getFirstSelected().subscribe((data: any) => {
-      this.firstSelectedMap = data;
+      this.firstSelectedMap = data?.id ?? '';
       this.cdRef.markForCheck();
     });
   }
@@ -109,26 +100,11 @@ export class ListViewComponent implements OnInit {
     this.subscriptionMapSelected.unsubscribe();
   }
 
-  // ordena las filas de la tabla (asc o desc), por el atributo 'nombre' o por 'fecha'
-  sort(tipo: string, ord: string) {
-    switch (tipo) {
-      case 'nombre':
-        if (ord === 'desc') {
-          this.mapsDS.data = this.mapsDS.data.sort((one, two) => (one.name > two.name ? -1 : 1));
-        } else {
-          this.mapsDS.data = this.mapsDS.data.sort((one, two) => (one.name < two.name ? -1 : 1));
-        }
-        this.isNombreAsc = !this.isNombreAsc;
-        break;
-      case 'fecha':
-        if (ord === 'desc') {
-          this.mapsDS.data = this.mapsDS.data.sort((one, two) => (one.date_creation > two.date_creation ? -1 : 1));
-        } else {
-          this.mapsDS.data = this.mapsDS.data.sort((one, two) => (one.date_creation < two.date_creation ? -1 : 1));
-        }
-        this.isFechaAsc = !this.isFechaAsc;
-        break;
-    }
+  reportSortChange(e:any, active: keyof MapData) {
+    e.preventDefault();
+    const activeChanged = active !== this.sorting.active;
+    const direction = activeChanged || this.sorting.direction === 'desc' ? 'asc' : 'desc';
+    this.sort.emit({ active: active, direction: direction});
   }
 
   reportClickEvent(event: MouseEvent, map: MapData) {

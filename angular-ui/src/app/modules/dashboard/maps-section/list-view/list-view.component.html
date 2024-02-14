@@ -1,95 +1,88 @@
 <div class="list-view-container">
-    <form>
-        <table mat-table [dataSource]="maps" multiTemplateDataRows matSort matSortActive="name" matSortDisableClear
-            matSortDirection="desc">
+    <table mat-table [dataSource]="maps" multiTemplateDataRows aria-label="Listado de mapas">
+        <div>
+            <!-- name column -->
             <div>
-                <!-- name column -->
-                <div>
-                    <ng-container matColumnDef="name">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>
-                            <span>Nombre</span>
-                            <ng-container *ngIf="isNombreAsc">
-                                <button mat-icon-button (click)="sort('nombre', 'asc')" class="icon-ordenar">
-                                    <mat-icon>north</mat-icon>
-                                </button>
-                            </ng-container>
-                            <ng-container *ngIf="!isNombreAsc">
-                                <button mat-icon-button (click)="sort('nombre', 'desc')" class="icon-ordenar">
-                                    <mat-icon>south</mat-icon>
-                                </button>
-                            </ng-container>
-                        </th>
-                        <td mat-cell *matCellDef="let element">
-                            <span class="etiqueta-ext"
-                                [ngClass]="{amarillo: element.ext == 'mbtiles', azul: element.ext == 'json', celeste: element.ext == 'geojson'}">{{element.ext
-                                | uppercase}}</span>
-                            <span>{{element.name}}</span>
-                        </td>
-                    </ng-container>
-                </div>
-
-                <!-- date_creation column -->
-                <div>
-                    <ng-container matColumnDef="date_creation">
-                        <th mat-header-cell *matHeaderCellDef>
-                            Fecha de Creación
-                            <ng-container *ngIf="isFechaAsc">
-                                <button mat-icon-button class="icon-ordenar" (click)="sort('fecha', 'asc')">
-                                    <mat-icon>north</mat-icon>
-                                </button>
-                            </ng-container>
-                            <ng-container *ngIf="!isFechaAsc">
-                                <button mat-icon-button class="icon-ordenar" (click)="sort('fecha', 'desc')">
-                                    <mat-icon>south</mat-icon>
-                                </button>
-                            </ng-container>
-                        </th>
-                        <td mat-cell *matCellDef="let element">
-                            <span>{{element.date_creation | date : 'dd-MM-yyyy'}}</span>
-                        </td>
-                    </ng-container>
-                </div>
-
-                <!-- owner column -->
-                <div>
-                    <ng-container matColumnDef="owner">
-                        <th mat-header-cell *matHeaderCellDef>Propietario</th>
-                        <td mat-cell *matCellDef="let element">
-                            <span>{{element.owner}}</span>
-                        </td>
-                    </ng-container>
-                </div>
-
-                <!-- loading columb -->
-                <div>
-                    <ng-container matColumnDef="loading">
-                        <th mat-header-cell *matHeaderCellDef></th>
-                        <td mat-cell *matCellDef="let element">
-                            <mat-spinner *ngIf="element.estado == 'PROCESANDO'" [diameter]="30"></mat-spinner>
-                        </td>
-                    </ng-container>
-                </div>
+                <ng-container matColumnDef="name">
+                    <th class="icon-ordenar" mat-header-cell *matHeaderCellDef (click)="reportSortChange($event, 'name')">
+                        Nombre
+                        <ng-container *ngIf="sorting.active !== 'name'; else sortingName">
+                          <mat-icon style="opacity: .3;">north</mat-icon>
+                        </ng-container>
+                        <ng-template #sortingName>
+                            <mat-icon *ngIf="sorting.direction === 'asc'">north</mat-icon>
+                            <mat-icon *ngIf="sorting.direction === 'desc'">south</mat-icon>
+                        </ng-template>
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                        <span class="etiqueta-ext"
+                            [ngClass]="{amarillo: element.ext == 'mbtiles', azul: element.ext == 'json', celeste: element.ext == 'geojson'}">{{element.ext
+                            | uppercase}}</span>
+                        <span>{{element.name}}</span>
+                    </td>
+                </ng-container>
             </div>
 
-            <ng-container matColumnDef="expandedDetail">
-                <td mat-cell *matCellDef="let element" [attr.colspan]="displayedColumns.length">
-                    <div *ngIf="element.log" [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
-                        <div class="contenido-expanded">
-                            <p class="log" style="font-family: monospace;" *ngFor="let log of element.log"
-                                [innerHtml]="log"></p>
-                        </div>
+            <!-- date_creation column -->
+            <div>
+                <ng-container matColumnDef="date_creation">
+                    <th class="icon-ordenar" mat-header-cell *matHeaderCellDef (click)="reportSortChange($event, 'date_creation')">
+                        Fecha de Creación
+                        <ng-container *ngIf="sorting.active !== 'date_creation'; else sortingDate">
+                          <mat-icon style="opacity: .3;">north</mat-icon>
+                        </ng-container>
+                        <ng-template #sortingDate>
+                            <mat-icon *ngIf="sorting.direction === 'asc'">north</mat-icon>
+                            <mat-icon *ngIf="sorting.direction === 'desc'">south</mat-icon>
+                        </ng-template>
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                        <span matTooltip="{{element.date_creation | date: 'dd-MM-yyyy HH:mm:ss' : 'GMT-3'}}">
+                            {{element.date_creation | date: 'dd-MM-yyyy' : 'GMT-3'}}
+                        </span>
+                    </td>
+                </ng-container>
+            </div>
+
+            <!-- owner column -->
+            <div>
+                <ng-container matColumnDef="owner">
+                    <th mat-header-cell *matHeaderCellDef>Propietario</th>
+                    <td mat-cell *matCellDef="let element">
+                        <span>{{element.owner}}</span>
+                    </td>
+                </ng-container>
+            </div>
+
+            <!-- loading columb -->
+            <div>
+                <ng-container matColumnDef="loading">
+                    <th mat-header-cell *matHeaderCellDef></th>
+                    <td mat-cell *matCellDef="let element">
+                        <mat-spinner *ngIf="element.estado == 'PROCESANDO'" [diameter]="30"></mat-spinner>
+                    </td>
+                </ng-container>
+            </div>
+        </div>
+
+        <ng-container matColumnDef="expandedDetail">
+            <td mat-cell *matCellDef="let element" [attr.colspan]="displayedColumns.length">
+                <div *ngIf="element.log" [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
+                    <div class="contenido-expanded">
+                        <p class="log" style="font-family: monospace;" *ngFor="let log of element.log"
+                            [innerHtml]="log"></p>
                     </div>
-                </td>
-            </ng-container>
+                </div>
+            </td>
+        </ng-container>
 
 
-            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-            <tr mat-row *matRowDef="let element; columns: displayedColumns;" class="example-element-row"
-                [class.example-expanded-row]="expandedElement === element"
-                (contextmenu)="contextMenu($event, element)"
-                (click)="reportClickEvent($event, element)">
-            </tr>
-            <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
-        </table>
-    </form>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let element; columns: displayedColumns;" class="example-element-row"
+            [class.example-expanded-row]="expandedElement === element"
+            (contextmenu)="contextMenu($event, element)"
+            (click)="reportClickEvent($event, element)">
+        </tr>
+        <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
+    </table>
 </div>

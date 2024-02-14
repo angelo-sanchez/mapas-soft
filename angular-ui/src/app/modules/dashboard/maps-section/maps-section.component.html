@@ -18,6 +18,8 @@
 			<!-- vista lista -->
 			<app-list-view #listView
         *ngIf="isListView"
+        (sort)="sort($event)"
+        [sorting]="sorting"
         [maps]="maps"
         (onClick)="onClick($event)"
         (onContextMenu)="onContextMenu($event)"

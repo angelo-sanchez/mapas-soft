@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, ElementRef, OnInit } from '@angular/core';
-import { ViewChild } from '@angular/core';
+import { ViewChild, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 
 import { MapsService } from '../../services/maps.service';
 import { MapWsService } from '../../websocket/map-ws.service';
@@ -17,6 +17,8 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
 import { MapVisualizerComponent } from '../general-component/map-visualizer/map-visualizer.component';
 import { ListViewComponent } from './list-view/list-view.component';
 
+export type MapSort = { active: keyof MapData, direction: 'asc' | 'desc' };
+
 @Component({
 	selector: 'app-maps-section',
 	templateUrl: './maps-section.component.html',
@@ -28,6 +30,7 @@ import { ListViewComponent } from './list-view/list-view.component';
 			transition('expanded <=> collapsed', animate('1ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
 		]),
 	],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 
 export class MapsSectionComponent implements OnInit, AfterViewInit {
@@ -41,7 +44,7 @@ export class MapsSectionComponent implements OnInit, AfterViewInit {
 	public selectedMaps: MapData[] = [];
 
 	// Boolean que controla si se reenderiza list-view o grid-view
-	public isListView: boolean = false;
+	public isListView: boolean = true;
 
 	// Conjunto de variable para la ejecucion del menu de opciones (menu-contextual)
 	@ViewChild(MatMenuTrigger) contextMenu!: MatMenuTrigger;
@@ -52,6 +55,7 @@ export class MapsSectionComponent implements OnInit, AfterViewInit {
 
 	@ViewChild('gridView') gridView : any;
   @ViewChild('listView') listView! : ListViewComponent;
+  sorting: MapSort = { active: 'name', direction: 'asc' };
 
 	public itemSeleccionado: any;
 	public verVistaDetalle: boolean = false;
@@ -61,6 +65,7 @@ export class MapsSectionComponent implements OnInit, AfterViewInit {
 	constructor(public mapsSectionService: MapsSectionService,
 		private selectedMapManagerService: SelectedMapManagerService,
 		private _snackBar: MatSnackBar,
+    private cdRef: ChangeDetectorRef,
 		private mapWsService: MapWsService,
 		private mapsService: MapsService,
 		private dialog: MatDialog
@@ -70,6 +75,7 @@ export class MapsSectionComponent implements OnInit, AfterViewInit {
 		// Obtener el listado de mapas del usuario
 		this.mapsService.mapSubscription().subscribe((data: MapData[]) => {
 			this.maps = data;
+      this.sort(this.sorting);
 		});
 		this.mapsService.getMaps();
 
@@ -82,6 +88,18 @@ export class MapsSectionComponent implements OnInit, AfterViewInit {
 		this.mapWsService.onFinish().subscribe((data) => this.finalizar(data));
 	}
 
+
+  public sort({active, direction}: MapSort) {
+    this.sorting = {active, direction};
+    const key = active;
+    const asc = direction === 'asc' ? 1 : -1;
+    let maps = [...this.maps];
+    maps.sort((a, b) => {
+      return asc * (a[key]! > b[key]! ? 1 : -1);
+    });
+    this.maps = maps;
+    this.cdRef.markForCheck();
+  }
 
 	ngAfterViewInit(): void {
 		console.log(this.fileInput);
