@@ -48,7 +48,7 @@
         <button *ngIf="item && selectedMaps.length === 1 && item.ext == 'mbtiles'" mat-menu-item (click)="openMap(item)">
           <mat-icon>search</mat-icon>Visualizar mapa
         </button>
-		    <button *ngIf="!isListView" mat-menu-item (click)="openViewDetail()">
+		    <button *ngIf="item && selectedMaps.length === 1" mat-menu-item (click)="openViewDetail()">
             <mat-icon>details</mat-icon>Ver detalle
         </button>
         <button *ngIf="item && item.ext == 'mbtiles'" mat-menu-item (click)="download()">

@@ -24,6 +24,10 @@
 	width: 50px;
 }
 
+.mat-column-expand {
+  width: 50px;
+}
+
 .etiqueta-ext{
 	height: 20px;
 	line-height: 20px;
@@ -73,8 +77,19 @@ tr.example-detail-row {
 	background: #efefef;
   } */
 
-.example-element-row td {
+.container-file td {
 	border-bottom-width: 0;
+}
+.container-file:hover{
+  background-color: #2e2e2e;
+}
+
+.container-file.selected{
+  background-color: grey;
+}
+
+.container-file.firstSelectedMap{
+  border: 1px solid grey;
 }
 
 .example-element-detail {

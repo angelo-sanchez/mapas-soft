@@ -119,9 +119,6 @@ export class MapsSectionComponent implements OnInit, AfterViewInit {
 		} else if (event.ctrlKey) {
 			this.selectedMapManagerService.selectWithCtrlCase(map);
 		} else {
-      if(this.isListView) {
-        this.listView.toggleExpanded(map);
-      }
       this.selectedMapManagerService.selectWithClickCase(map);
 		}
 	}
@@ -308,7 +305,11 @@ export class MapsSectionComponent implements OnInit, AfterViewInit {
 
 	// Muestra la vista detalle en la vista grilla
 	openViewDetail(){
-		this.gridView.openDetailView();
+    if(this.isListView) {
+      this.listView.toggleExpanded(this.item!);
+    } else {
+      this.gridView.openDetailView();
+    }
 	}
 
 }

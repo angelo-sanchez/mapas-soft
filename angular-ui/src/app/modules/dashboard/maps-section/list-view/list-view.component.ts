@@ -44,7 +44,7 @@ export class ListViewComponent implements OnInit {
   // String que contiene el id del primer mapa seleccionado
   public firstSelectedMap: string = "";
 
-  public displayedColumns: string[] = ['name', 'owner', 'date_creation', 'loading'];
+  public displayedColumns: string[] = ['expand', 'name', 'owner', 'date_creation', 'loading'];
   public expandedElement: any;
 
   constructor(private selectedMapManager : SelectedMapManagerService,
@@ -52,6 +52,7 @@ export class ListViewComponent implements OnInit {
   }
 
   toggleExpanded(map: MapData): void {
+    this.cdRef.markForCheck();
     this.expandedElement = this.expandedElement === map ? null : map;
   }
 
@@ -63,7 +64,7 @@ export class ListViewComponent implements OnInit {
 
     for (const path of paths) {
       if (path.tagName === "BODY") { break; }
-      if (path.classList.contains("example-element-row")) {
+      if (path.classList.contains("container-file")) {
         res = true;
         break;
       }
