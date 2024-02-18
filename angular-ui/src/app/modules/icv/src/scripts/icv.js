@@ -19,29 +19,6 @@ let hoveredAreaId = null;
 buildColorOptions(config.layer);
 buildBaseMapDialog(config.map);
 buildDataLayerDialog(config.layer);
-addToHomescreen({
-    //            startDelay: 30
-    autostart: true,
-    autoHide: 0,
-    mandatory: false,
-    logging: true,
-    customCriteria: true,
-    onShow: function () {
-        console.log("showing");
-    },
-    onInit: function () {
-        console.log("initializing");
-    },
-    onAdd: function () {
-        console.log("adding");
-    },
-    onInstall: function () {
-        console.log("Installing");
-    },
-    onCancel: function () {
-        console.log("Cancelling");
-    },
-});
 
 if ("serviceWorker" in navigator) {
     const x = "sw.js";

@@ -15,7 +15,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
-    <link rel='manifest' href='site.webmanifest'>
 
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.6.0/font/bootstrap-icons.css"
@@ -41,9 +40,6 @@
     <!-- Bootstrap bundle JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha256-9SEPo+fwJFpMUet/KACSwO+Z/dKMReF9q4zFhU/fT9M=" crossorigin="anonymous"></script>
-    <!-- Add to Homescreen -->
-    <link rel="stylesheet" type="text/css" href="libs/addtohomescreen.css">
-    <script src="libs/addtohomescreen.min.js"></script>
 
     <title>Índice de Calidad de Vida - IGEHCS & ISISTAN (UNCPBA & CONICET)</title>
 
@@ -173,108 +169,6 @@
 <body>
     <div id='map'>
     </div>
-
-    <div id='help' class='help'>
-        <a href="" data-bs-toggle="modal" data-bs-target="#myModal">
-            <img src="ICV_botON-33x33.png" alt="Ayuda"></a>
-    </div>
-
-    <div class="modal fade" tabindex="-1" role="dialog" id="myModal">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title me-auto">Sobre el ICV</h5>
-                    <a class="btn btn-info ms-auto btn-sm" target="_blank"
-                        href="https://www.conicet.gov.ar/dime-donde-resides-y-te-dire-cuan-bien-o-mal-vives/"
-                        rel="noopener">M&Aacute;S INFO</a>
-
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
-                        aria-hidden="true"></button>
-
-                </div>
-                <div class="modal-body">
-                    <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
-                        <div class="carousel-indicators">
-                            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0"
-                                class="active"></button>
-                            <button type="button" data-bs-target="#carouselExampleIndicators"
-                                data-bs-slide-to="1"></button>
-                            <button type="button" data-bs-target="#carouselExampleIndicators"
-                                data-bs-slide-to="2"></button>
-                            <button type="button" data-bs-target="#carouselExampleIndicators"
-                                data-bs-slide-to="3"></button>
-                            <button type="button" data-bs-target="#carouselExampleIndicators"
-                                data-bs-slide-to="4"></button>
-                        </div>
-                        <div class="carousel-inner">
-                            <div class="carousel-item active">
-                                <img class="d-block w-100" src="img/ICV_ilu1.png" alt="First slide">
-                                <!--                                <div class="carousel-caption d-none d-md-block">-->
-                                <div class="carousel-caption d-sm-block text-dark">
-                                    <h5>&iquest;Qu&eacute; es?</h5>
-                                    <p>Es un mapa que permite conocer cu&aacute;l es el &iacute;ndice de calidad de vida
-                                        (ICV) en cualquier punto del pa&iacute;s -esto es, para cada uno de los 52.408
-                                        radios censales en los que se divide la Argentina- utilizando una escala
-                                        num&eacute;rica que va del cero al diez.</p>
-                                </div>
-                            </div>
-                            <div class="carousel-item">
-                                <img class="d-block w-100" src="img/ICV_ilu2.png" alt="Second slide">
-                                <div class="carousel-caption d-sm-block text-dark">
-                                    <h5>&iquest;Qu&eacute; componentes toma en cuenta?</h5>
-                                    <p>Dos grandes grupos de indicadores: los socioecon&oacute;micos -vinculados a datos
-                                        de educaci&oacute;n, salud y vivienda- y los ambientales, relacionados con
-                                        condiciones contextuales que pueden impactar sobre el bienestar de las personas,
-                                        negativamente, como la contaminaci&oacute;n o la inundabilidad. o de forma
-                                        positiva, como la disponibilidad de recursos recreativos naturales y culturales.
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="carousel-item">
-                                <img class="d-block w-100" src="img/ICV_ilu3.png" alt="Third slide">
-                                <div class="carousel-caption d-sm-block text-dark">
-                                    <h5>&iquest;De d&oacute;nde surgen los datos?</h5>
-                                    <p>Censos nacionales de poblaci&oacute;n, hogares y vivienda, estad&iacute;sticas
-                                        vitales del Ministerio de Salud y Desarrollo Social de la Naci&oacute;n y una
-                                        serie de relevamientos realizados por investigadores del CONICET en terreno o a
-                                        partir de fuentes &eacute;ditas e in&eacute;ditas.</p>
-                                </div>
-                            </div>
-                            <div class="carousel-item">
-                                <img class="d-block w-100" src="img/ICV_ilu4.png" alt="Third slide">
-                                <div class="carousel-caption d-sm-block text-dark">
-                                    <h5>&iquest;Qu&eacute; significan los colores?</h5>
-                                    <p>Reflejan la situaci&oacute;n de calidad de vida en los diferentes radios censales
-                                        de la Argentina: cuanto mayor es el &iacute;ndice en determinado lugar,
-                                        m&aacute;s verde se lo ver&aacute;, mientras el rojo indica lo contrario y los
-                                        amarillos corresponden a situaciones intermedias.</p>
-                                </div>
-                            </div>
-                            <div class="carousel-item">
-                                <img class="d-block w-100" src="img/ICV_ilu5.png" alt="Third slide">
-                                <div class="carousel-caption d-sm-block text-dark">
-                                    <h5>&iquest;C&oacute;mo se usa?</h5>
-                                    <p>El usuario puede recorrer con el cursor el Mapa del ICV y hacer zoom en las zonas
-                                        que desee conocer en mayor detalle o utilizar el buscador para obtener
-                                        informaci&oacute;n sobre direcciones puntuales.</p>
-                                </div>
-                            </div>
-                        </div>
-                        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators"
-                            data-bs-slide="prev">
-                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                            <span class="visually-hidden">Previous</span>
-                        </button>
-                        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators"
-                            data-bs-slide="next">
-                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                            <span class="visually-hidden">Next</span>
-                        </button>
-                    </div>
-                </div>
-            </div><!-- /.modal-content -->
-        </div><!-- /.modal-dialog -->
-    </div><!-- /.modal -->
 
     <style type="text/css">
         #cookieConsent {
