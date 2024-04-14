@@ -1,4 +1,4 @@
-{
+export default {
     "map": {
         "base": "esri",
         "item": [

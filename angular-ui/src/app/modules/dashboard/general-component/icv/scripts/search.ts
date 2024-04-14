@@ -10,7 +10,7 @@ export function addSearchBox(map) {
         ? 1
         : 0;
 
-    const input = document.getElementById("search");
+    const input = document.getElementById("search") as HTMLInputElement;
 
     autocomplete({
         input: input,
@@ -39,7 +39,7 @@ export function addSearchBox(map) {
                     );
                 });
         },
-        onSelect: function(item) {
+        onSelect: function(item: any) {
             input.value = item.label;
             const bbox = item.value;
             //                console.log("Selected: " + item.value);

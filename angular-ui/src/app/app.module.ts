@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { ReactiveFormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http'; 
+import { HttpClientModule } from '@angular/common/http';
 
 // Coponentes angular-material
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -23,7 +23,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { AppRoutingModule } from './app-routing.module';
 import { DashboardModule } from './modules/dashboard/dashboard.module';
 
-// Componentes 
+// Componentes
 import { AppComponent } from './app.component';
 import { LoginComponent } from './modules/login/login.component';
 import { ErrorComponent } from './modules/error/error.component';
@@ -76,6 +76,6 @@ const wsConfig: SocketIoConfig = {
     MatDialogModule,
   ],
   providers: [LoginService, LoginGuardianService, MapsSectionService],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
 export class AppModule { }

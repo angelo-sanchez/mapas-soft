@@ -1,0 +1,67 @@
+<!-- Bootstrap bundle JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha256-9SEPo+fwJFpMUet/KACSwO+Z/dKMReF9q4zFhU/fT9M=" crossorigin="anonymous"></script>
+
+<div id='map'>
+</div>
+
+<div id="menu" class="menu d-flex mb-3 gap-1">
+    <!-- Button trigger config modal -->
+    <button type="button" class="btn btn-primary btn-sm p-1" data-bs-toggle="modal" data-bs-target="#configModal">
+        <i class="bi bi-gear-fill"></i>
+    </button>
+    <input class="ms-auto p-1" id="search" placeholder="Buscar...">
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="configModal" tabindex="-1" aria-labelledby="configModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Configurar</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <fieldset id="basemapForm" class="form-group">
+                    <div class="row">
+                        <legend class="col-form-label col-sm-2 pt-0">Mapa base</legend>
+                        <div class="col-sm-10" id='baseOptions'>
+                        </div>
+                    </div>
+                </fieldset>
+
+                <fieldset id="overlayForm" class="form-group">
+                    <div class="row">
+                        <legend class="col-form-label col-sm-2 pt-0">Capas</legend>
+                        <div class="col-sm-10" id='dataLayers'>
+                        </div>
+                    </div>
+                </fieldset>
+
+                <fieldset id="icvConfig" class="form-group collapse show">
+                    <div class="row">
+                        <legend class="col-form-label col-sm-2 pt-0">Colores ICV</legend>
+                        <div class="col-sm-10" id='colorOptions'>
+                        </div>
+                    </div>
+                </fieldset>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <button id="save" type="button" class="btn btn-primary" data-bs-dismiss="modal">Aceptar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+  <div id="location" style="display: none;"></div>
+
+  <div id='icvLegend' class='legend' data-bs-toggle="tooltip"
+      title="Colores cercanos a D1 indican mejor calidad de vida, mientras que colores cercanos a D10 peor calidad de vida.">
+  </div>
+
+  <div class='icvInfo' data-bs-toggle="tooltip" title="Valores más altos indican mejor calidad de vida." id='icvInfo'>
+      Toque el mapa para ver el valor del
+      <a href="http://cienciahoy.org.ar/2015/04/geografia-y-calidad-de-vida-en-la-argentina/">Índice de Calidad de Vida</a>
+  </div>

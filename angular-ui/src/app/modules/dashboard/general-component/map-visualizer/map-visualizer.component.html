@@ -1,7 +1,7 @@
 <ng-container *ngIf="urlPreview else loading">
     <p>{{ data.map.name }}</p>
     <div class="iframe-container">
-        <iframe id="map-visor" referrerpolicy="unsafe-url" [src]="this.data.map.urlPreview" width="1250" height="1000" frameborder="0"></iframe>
+        <app-icv></app-icv>
     </div>
 </ng-container>
 

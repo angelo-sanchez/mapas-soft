@@ -1,3 +1,5 @@
+import chroma from 'chroma-js';
+
 const colorScales = [
     ['red', 'orange', 'yellow', 'lime'],
     chroma.brewer.YlGn,
@@ -30,7 +32,7 @@ export function buildColorOptions(layer) {
         radioElement.className = "form-check-input";
         radioElement.name = "gridChecks";
         radioElement.id = "colorRadio" + i;
-        radioElement.setAttribute("value", i);
+        radioElement.setAttribute("value", i.toString());
         if (i == 0) {
             radioElement.checked = true;
         }

@@ -1,4 +1,4 @@
-[
+export default [
     {
         "layer": "hospitales",
         "action": "click",

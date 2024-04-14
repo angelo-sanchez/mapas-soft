@@ -27,8 +27,9 @@ import { SettingComponent } from './setting/setting.component';
 import { DragDropComponent } from './general-component/drag-drop/drag-drop.component';
 import { DragDropDirective } from './general-component/drag-drop/drag-drop.directive';
 import { UploadingFileProgressComponent } from './general-component/uploading-file-progress/uploading-file-progress.component';
-import { UploadFileOptionsComponent } from './general-component/upload-file-options/upload-file-options.component'; 
+import { UploadFileOptionsComponent } from './general-component/upload-file-options/upload-file-options.component';
 import { MapVisualizerComponent } from './general-component/map-visualizer/map-visualizer.component';
+import { IcvComponent } from './general-component/icv/icv.component';
 
 
 @NgModule({
@@ -42,6 +43,7 @@ import { MapVisualizerComponent } from './general-component/map-visualizer/map-v
     UploadingFileProgressComponent,
     UploadFileOptionsComponent ,
     MapVisualizerComponent,
+    IcvComponent
   ],
   imports: [
     CommonModule,
@@ -62,7 +64,6 @@ import { MapVisualizerComponent } from './general-component/map-visualizer/map-v
     MatGridListModule,
     MatSnackBarModule,
     MatProgressSpinnerModule,
-    
   ],
   exports:[
     DashboardComponent,

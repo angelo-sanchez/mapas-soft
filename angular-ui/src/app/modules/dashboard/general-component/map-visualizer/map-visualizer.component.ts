@@ -14,7 +14,7 @@ import { MapData } from 'src/app/modules/models/map-data.model';
   export class MapVisualizerComponent implements OnInit {
 
     // Variable boolean que se pone en TRUE cuando la url del mapa esta disponible
-    public urlPreview : boolean = false;
+    public urlPreview : boolean = true;
 
     // Variable para el manejo de la dimesion del iframe
     public iframeWidth = "1250px";
@@ -28,21 +28,16 @@ import { MapData } from 'src/app/modules/models/map-data.model';
       public dialog: MatDialog
     ) {
     }
-  
+
     ngOnInit(): void {
       let map = this.data.map;
 
       if(map){
-        this.openMap(map);
+        //this.openMap(map);
       } else {
         console.error("No hay mapa para visualizar : Map is Null");
         this.dialog.closeAll();
       }
-    }
-
-    initializeMapDimensions(){
-      let visualizer = document.getElementById("map-visor");
-      console.log(visualizer);
     }
 
     openMap(map : MapData){
@@ -56,10 +51,9 @@ import { MapData } from 'src/app/modules/models/map-data.model';
 
           this.data.map.urlPreview = url;
           this.urlPreview = true;
-          this.initializeMapDimensions();
         } else {
           this.data.map.urlPreview = '';
-        } 
+        }
       }, error => {
         console.error("Se produjo un error al ver la vista previa del mapa");
         console.log(error);
