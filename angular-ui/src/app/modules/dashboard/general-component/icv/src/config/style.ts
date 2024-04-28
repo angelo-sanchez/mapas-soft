@@ -1,89 +1,5 @@
 export default [
     {
-        "name": "ignStyleBase",
-        "import": "",
-        "style": {
-            "version": 8,
-            "sources": {
-                "simple-tiles": {
-                    "type": "raster",
-                    "maxzoom": 16,
-                    "tileSize": 256,
-                    "attribution": "Mapa del <a href=\"http://www.ign.gob.ar\">Instituto Geográfico Nacional</a>, capa de calles por colaboradores de &copy; <a href=\"http://openstreetmap.org\">OpenStreetMap</a>",
-                    "scheme": "tms",
-                    "tiles": [
-                        "https://wms.ign.gob.ar/geoserver/gwc/service/tms/1.0.0/capabaseargenmap@EPSG%3A3857@png/{z}/{x}/{y}.png"
-                    ]
-                }
-            },
-            "layers": [
-                {
-                    "id": "simple-tiles",
-                    "type": "raster",
-                    "source": "simple-tiles",
-                    "minzoom": 0,
-                    "maxzoom": 20
-                }
-            ]
-        }
-    },
-    {
-        "name": "ignStyleGrey",
-        "import": "",
-        "style": {
-            "version": 8,
-            "sources": {
-                "simple-tiles": {
-                    "type": "raster",
-                    "maxzoom": 16,
-                    "tileSize": 256,
-                    "attribution": "Mapa del <a href=\"http://www.ign.gob.ar\">Instituto Geográfico Nacional</a>, capa de calles por colaboradores de &copy; <a href=\"http://openstreetmap.org\">OpenStreetMap</a>",
-                    "scheme": "tms",
-                    "tiles": [
-                        "https://wms.ign.gob.ar/geoserver/gwc/service/tms/1.0.0/mapabase_gris@EPSG%3A3857@png/{z}/{x}/{y}.png"
-                    ]
-                }
-            },
-            "layers": [
-                {
-                    "id": "simple-tiles",
-                    "type": "raster",
-                    "source": "simple-tiles",
-                    "minzoom": 0,
-                    "maxzoom": 20
-                }
-            ]
-        }
-    },
-    {
-        "name": "ignStyleDark",
-        "import": "",
-        "style": {
-            "version": 8,
-            "sources": {
-                "simple-tiles": {
-                    "type": "raster",
-                    "maxzoom": 16,
-                    "tileSize": 256,
-                    "attribution": "Mapa del <a href=\"http://www.ign.gob.ar\">Instituto Geográfico Nacional</a>, capa de calles por colaboradores de &copy; <a href=\"http://openstreetmap.org\">OpenStreetMap</a>",
-                    "scheme": "tms",
-                    "tiles": [
-                        "https://wms.ign.gob.ar/geoserver/gwc/service/tms/1.0.0/argenmap_oscuro@EPSG%3A3857@png/{z}/{x}/{y}.png"
-                    ]
-                }
-            },
-            "layers": [
-                {
-                    "id": "simple-tiles",
-                    "type": "raster",
-                    "source": "simple-tiles",
-                    "minzoom": 0,
-                    "maxzoom": 20
-                }
-            ]
-        }
-    },
-    {
         "name": "hereStyle",
         "import": "",
         "style": {
@@ -111,12 +27,6 @@ export default [
                     "maxzoom": 22
                 }
             ]
-        }
-    },
-    {
-        "name": "osmStyle",
-        "import": "https://icv.netlify.app/osm.json",
-        "style": {
         }
     },
     {

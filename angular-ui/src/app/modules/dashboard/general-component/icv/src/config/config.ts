@@ -3,26 +3,6 @@ export default (mapName: string) => ({
         "base": "esri",
         "item": [
             {
-                "style": "ignStyleBase",
-                "name": "ignBase",
-                "description": "IGN"
-            },
-            {
-                "style": "ignStyleGrey",
-                "name": "ignGrey",
-                "description": "IGN Gris"
-            },
-            {
-                "style": "ignStyleDark",
-                "name": "ignDark",
-                "description": "IGN Oscuro"
-            },
-            {
-                "style": "osmStyle",
-                "name": "osm",
-                "description": "OpenStreetMap"
-            },
-            {
                 "style": "hereStyle",
                 "name": "here",
                 "description": "HERE"
@@ -60,15 +40,7 @@ export default (mapName: string) => ({
             {
                 "name": "barrios",
                 "description": mapName
-            },
-            {
-                "name": "hospitales",
-                "description": "Hospitales"
-            },
-            {
-                "name": "icvRaster",
-                "description": "ICV Raster"
             }
         ]
     }
-}
+})

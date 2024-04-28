@@ -1,25 +1,9 @@
 export default [
     {
-        "layer": "hospitales",
-        "action": "click",
-        "lng": "e.lngLat",
-        "html": "\"<strong>\" + e.features[0].properties.nombre + \"</strong><br>\" +\"Prevalencia: \" +e.features[0].properties.prevalencia"
-    },
-    {
-        "layer": "hospitales",
-        "action": "mouseenter",
-        "cursor": "pointer"
-    },
-    {
-        "layer": "hospitales",
-        "action": "mouseleave",
-        "cursor": ""
-    },
-    {
         "layer": "barrios",
         "action": "click",
         "lng": "e.lngLat",
-        "html":  "\"<strong>\" + \"Provincia: \" + \"</strong>\" + e.features[0].properties.iso_nombre"
+        "html":  "\"ID: \" + e.features[0].properties.id"
     },
     {
         "layer": "barrios",

@@ -1,20 +1,5 @@
 export default (mapName: string, mapUrl: string, sourceLayer: string) => [
     {
-        "description": "ICV Raster",
-        "name": "icvRaster",
-        "source": {
-            "type": "raster",
-            "tiles": [
-                "https://api.mapbox.com/styles/v1/azunino/ck8nrrf3611nv1jpj33wavtyq/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoiYXp1bmlubyIsImEiOiJjand0czBvc24wZ2l5NDhucnc2Ym9zNXNiIn0.tAtTepUSFqApaOQygq_9iw"
-            ]
-        },
-        "layer": {
-            "id": "icvRaster",
-            "type": "raster",
-            "source": "icvRaster"
-        }
-    },
-    {
         "description": "Índice de calidad de Vida (ICV)",
         "name": "icv",
         "config": "colorScales",
@@ -86,80 +71,6 @@ export default (mapName: string, mapUrl: string, sourceLayer: string) => [
             "paint": {
                 "circle-radius": 15,
                 "circle-color": "rgba(0, 0, 255, .9)",
-                "circle-opacity": 0.5
-            }
-        }
-    },
-    {
-        "description": "Hospitales",
-        "name": "hospitales",
-        "source": {
-            "type": "geojson",
-            "data": "https://icv.netlify.app/prevalencia.json"
-        },
-        "layer": {
-            "id": "hospitales",
-            "type": "circle",
-            "source": "hospitales",
-            "layout": {
-                "visibility": "none"
-            },
-            "paint": {
-                "circle-radius": [
-                    "interpolate",
-                    [
-                        "linear"
-                    ],
-                    [
-                        "zoom"
-                    ],
-                    4,
-                    [
-                        "/",
-                        [
-                            "number",
-                            [
-                                "get",
-                                "prevalencia"
-                            ],
-                            0
-                        ],
-                        20
-                    ],
-                    15,
-                    [
-                        "/",
-                        [
-                            "number",
-                            [
-                                "get",
-                                "prevalencia"
-                            ],
-                            0
-                        ],
-                        2
-                    ]
-                ],
-                "circle-color": [
-                    "interpolate",
-                    [
-                        "linear"
-                    ],
-                    [
-                        "get",
-                        "prevalencia"
-                    ],
-                    0,
-                    "#ffffc8",
-                    5,
-                    "#ffd098",
-                    10,
-                    "#fd9e70",
-                    15,
-                    "#f5674c",
-                    30,
-                    "#e9002c"
-                ],
                 "circle-opacity": 0.5
             }
         }
