@@ -1,5 +1,5 @@
-import { Component, OnInit } from "@angular/core";
-import maplibregl, {} from "maplibre-gl";
+import { Component, Input, OnInit } from '@angular/core';
+import maplibregl, { Map } from 'maplibre-gl';
 
 import {
   buildColorOptions,
@@ -8,104 +8,84 @@ import {
   buildDataLayerDialog,
   colorScale,
   getBase,
-} from "./scripts/dialogs";
-import { setupLayers } from "./scripts/layers";
-import config from "./src/config/config";
-import style from "./src/config/style";
-import layer from "./src/config/layer"; // The overlayer order determines how they overlap
-import layerAction from "./src/config/layer_action";
+} from './scripts/dialogs';
+import { setupLayers } from './scripts/layers';
+import config from './src/config/config';
+import style from './src/config/style';
+import layerAction from './src/config/layer_action';
+import { MapData } from '../../../models/map-data.model';
 
 declare const bootstrap: any;
 
 @Component({
-  selector: "app-icv",
-  templateUrl: "./icv.component.html",
-  styleUrls: ["./icv.component.css"],
+  selector: 'app-icv',
+  templateUrl: './icv.component.html',
+  styleUrls: ['./icv.component.css'],
 })
 export class IcvComponent implements OnInit {
-  title = "ICV";
+  @Input('map') mapData!: MapData;
+  title = 'ICV';
   search: any;
+
+  config: any;
+  layer: any;
 
   constructor() {}
 
-  async init() {
+  async init(map: Map) {
     this.search = await import('./scripts/search');
+    this.search.addSearchBox(map);
   }
 
   ngOnInit() {
-    this.init();
+    this.config = config(this.mapData.name);
     const urlParams = new URLSearchParams(window.location.search);
-    // maplibregl.accessToken =
-    //   "pk.eyJ1IjoiYXp1bmlubyIsImEiOiJjand0czBvc24wZ2l5NDhucnc2Ym9zNXNiIn0.tAtTepUSFqApaOQygq_9iw";
 
-    let basemap = getBase(config.map);
-    let initialStyle = getStyleConfig(getStyle(basemap));
+    let basemap = getBase(this.config.map);
+    let initialStyle = this.getStyleConfig(this.getStyle(basemap));
     let hoveredAreaId: number | null = null;
+    buildBaseMapDialog(this.config.map);
+    buildColorOptions(this.config.layer);
+    buildDataLayerDialog(this.config.layer);
 
-    buildColorOptions(config.layer);
-    buildBaseMapDialog(config.map);
-    buildDataLayerDialog(config.layer);
-
-    if ("serviceWorker" in navigator) {
-      const x = "sw.js";
-      navigator.serviceWorker.register(x).then(function () {
-        console.log("Service Worker Registered");
-      });
-    }
-
-    function getStyle(name) {
-      const stylePosition = config.map.item.findIndex(
-        (element) => element.name == name
-      );
-      const configStyle =
-        config.map.item[stylePosition != -1 ? stylePosition : 0].style;
-      return style[style.findIndex((element) => element.name == configStyle)];
-    }
-
-    function getStyleConfig(styleName) {
-      if (styleName.import != "") {
-        return styleName.import;
-      } else {
-        return styleName.style;
-      }
-    }
-
-    function clearLayer(layer) {
+    const clearLayer = (layer) => {
       if (map.getLayer(layer)) {
         map.removeLayer(layer);
       }
-    }
+    };
 
-    function switchLayer(layer) {
+    const switchLayer = (layer) => {
       const layerId = layer;
       if (basemap == layerId) return;
       basemap = layerId;
 
-      for (let i = 0; i < layer.length; i++) {
-        clearLayer(layer[i].base);
+      for (const element of layer) {
+        clearLayer(element.base);
       }
       map.setStyle(
-        getStyleConfig(
-          getStyle(
-            config.map.item[
-              config.map.item.findIndex((element) => element.name == layerId)
+        this.getStyleConfig(
+          this.getStyle(
+            this.config.map.item[
+              this.config.map.item.findIndex(
+                (element) => element.name == layerId
+              )
             ].name
           )
         ),
         { diff: false }
       );
-    }
+    };
 
-    if (urlParams.has("basemap")) {
-      basemap = urlParams.get("basemap");
-      initialStyle = config.map.item.find(
-        (element:any) => element.value == urlParams.get("basemap")
+    if (urlParams.has('basemap')) {
+      basemap = urlParams.get('basemap');
+      initialStyle = this.config.map.item.find(
+        (element: any) => element.value == urlParams.get('basemap')
       ).style;
     }
 
     // Map config region
     const map = new maplibregl.Map({
-      container: "map", // container id
+      container: 'map', // container id
       //            style: 'mapbox://styles/mapbox/streets-v11', // stylesheet location
       style: initialStyle,
       bounds: [
@@ -129,21 +109,22 @@ export class IcvComponent implements OnInit {
 
     let fillStyle = 0;
 
-    map.on("style.load", function () {
+    map.on('style.load', async () => {
       let paintProps = {
-        icv: { "fill-color": setupScale(fillStyle) },
+        icv: { 'fill-color': setupScale(fillStyle) },
       };
-      setupLayers(map, layer, paintProps);
-      if (urlParams.has("raster")) {
-        (document.getElementById("icvRaster") as HTMLInputElement).checked = true;
-        (document.getElementById("icv") as HTMLInputElement).checked = false;
+      await setupLayers(map, this.mapData, paintProps);
+      if (urlParams.has('raster')) {
+        (document.getElementById('icvRaster') as HTMLInputElement).checked =
+          true;
+        (document.getElementById('icv') as HTMLInputElement).checked = false;
       }
 
       Array.prototype.forEach.call(
-        document.querySelectorAll("#overlayForm input"),
-        function (item, index) {
-          const visibility = item.checked ? "visible" : "none";
-          map.setLayoutProperty(item.value, "visibility", visibility);
+        document.querySelectorAll('#overlayForm input'),
+        (item, index) => {
+          const visibility = item.checked ? 'visible' : 'none';
+          map.setLayoutProperty(item.value, 'visibility', visibility);
         }
       );
     });
@@ -166,11 +147,11 @@ export class IcvComponent implements OnInit {
     );
 
     // Map controller region end
-    document.getElementById("save").addEventListener("click", function () {
-      let layer = "";
+    document.getElementById('save').addEventListener('click', () => {
+      let layer = '';
       Array.prototype.forEach.call(
-        document.querySelectorAll("#basemapForm input"),
-        function (item, index) {
+        document.querySelectorAll('#basemapForm input'),
+        (item, index) => {
           if (item.checked) {
             layer = item.value;
           }
@@ -179,8 +160,8 @@ export class IcvComponent implements OnInit {
 
       let color = 0;
       Array.prototype.forEach.call(
-        document.querySelectorAll("#icvConfig input"),
-        function (item, index) {
+        document.querySelectorAll('#icvConfig input'),
+        (item, index) => {
           if (item.checked) {
             color = item.value;
           }
@@ -192,46 +173,46 @@ export class IcvComponent implements OnInit {
 
       // Reset overlayer
       Array.prototype.forEach.call(
-        document.querySelectorAll("#overlayForm input"),
-        function (item, index) {
-          const visibility = item.checked ? "visible" : "none";
-          map.setLayoutProperty(item.value, "visibility", visibility);
+        document.querySelectorAll('#overlayForm input'),
+        (item, index) => {
+          const visibility = item.checked ? 'visible' : 'none';
+          map.setLayoutProperty(item.value, 'visibility', visibility);
         }
       );
 
-      if (document.getElementById("icv") != null) {
-        if ((document.getElementById("icv") as HTMLInputElement).checked) {
+      if (document.getElementById('icv') != null) {
+        if ((document.getElementById('icv') as HTMLInputElement).checked) {
           //show ICV info
-          document.getElementById("icvLegend").style.display = "";
-          document.getElementById("icvInfo").style.display = "";
-          map.setPaintProperty("icv", "fill-color", fillColor);
+          document.getElementById('icvLegend').style.display = '';
+          document.getElementById('icvInfo').style.display = '';
+          map.setPaintProperty('icv', 'fill-color', fillColor);
         } else {
           // hide ICV info
-          document.getElementById("icvLegend").style.display = "none";
-          document.getElementById("icvInfo").style.display = "none";
+          document.getElementById('icvLegend').style.display = 'none';
+          document.getElementById('icvInfo').style.display = 'none';
         }
       }
       console.log(layer);
       switchLayer(layer);
     });
 
-    function onMapDataClick(layerActionElement) {
-      map.on(layerActionElement.action, layerActionElement.layer, function (e) {
+    const onMapDataClick = (layerActionElement) => {
+      map.on(layerActionElement.action, layerActionElement.layer, (e) => {
         new maplibregl.Popup()
           .setLngLat(e.lngLat)
           .setHTML(eval(layerActionElement.html))
           .addTo(map);
       });
-    }
+    };
 
-    function onMapDataMouseEnter(layerActionElement) {
-      map.on(layerActionElement.action, layerActionElement.layer, function () {
+    const onMapDataMouseEnter = (layerActionElement) => {
+      map.on(layerActionElement.action, layerActionElement.layer, () => {
         map.getCanvas().style.cursor = layerActionElement.cursor;
       });
-    }
+    };
 
-    function onMapDataMouseLeave(layerActionElement) {
-      map.on(layerActionElement.action, layerActionElement.layer, function () {
+    const onMapDataMouseLeave = (layerActionElement) => {
+      map.on(layerActionElement.action, layerActionElement.layer, () => {
         // change cursor
         map.getCanvas().style.cursor = layerActionElement.cursor;
         // undo hoover area
@@ -247,10 +228,10 @@ export class IcvComponent implements OnInit {
           hoveredAreaId = null;
         }
       });
-    }
+    };
 
-    function onMapDataMouseMove(layerActionElement) {
-      map.on(layerActionElement.action, layerActionElement.layer, function (e) {
+    const onMapDataMouseMove = (layerActionElement) => {
+      map.on(layerActionElement.action, layerActionElement.layer, (e) => {
         const info = document.getElementById(layerActionElement.source);
         if (e.features.length > 0) {
           if (hoveredAreaId) {
@@ -284,47 +265,62 @@ export class IcvComponent implements OnInit {
           info.textContent =
             layerActionElement.text_prefix +
             Math.floor(elementValue * 100) / 100 +
-            " " +
+            ' ' +
             cScale[decile - 1][0];
           info.style.opacity = '1';
         } else {
-          info.textContent = "";
+          info.textContent = '';
           info.style.opacity = '0';
         }
       });
-    }
+    };
 
-    function setMapDataAction() {
-      for (let i = 0; i < layerAction.length; i++) {
-        switch (layerAction[i].action) {
-          case "click":
-            onMapDataClick(layerAction[i]);
+    const setMapDataAction = () => {
+      for (const element of layerAction) {
+        switch (element.action) {
+          case 'click':
+            onMapDataClick(element);
             break;
-          case "mouseenter":
-            onMapDataMouseEnter(layerAction[i]);
+          case 'mouseenter':
+            onMapDataMouseEnter(element);
             break;
-          case "mouseleave":
-            onMapDataMouseLeave(layerAction[i]);
+          case 'mouseleave':
+            onMapDataMouseLeave(element);
             break;
-          case "mousemove":
-            onMapDataMouseMove(layerAction[i]);
+          case 'mousemove':
+            onMapDataMouseMove(element);
             break;
         }
       }
-    }
-
+    };
     setMapDataAction();
 
     // esto es requerido por popper.js para mostrar tooltips
-    document.addEventListener("DOMContentLoaded", function () {
+    document.addEventListener('DOMContentLoaded', () => {
       let tooltipTriggerList = [].slice.call(
         document.querySelectorAll('[data-bs-toggle="tooltip"]')
       );
-      let tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+      tooltipTriggerList.map((tooltipTriggerEl) => {
         return new bootstrap.Tooltip(tooltipTriggerEl);
       });
     });
+    this.init(map);
+  }
 
-    this.search.addSearchBox(map);
+  getStyle(name: string) {
+    const stylePosition = this.config.map.item.findIndex(
+      (element) => element.name == name
+    );
+    const configStyle =
+      this.config.map.item[stylePosition != -1 ? stylePosition : 0].style;
+    return style[style.findIndex((element) => element.name == configStyle)];
+  }
+
+  getStyleConfig(styleName: any) {
+    if (styleName.import != '') {
+      return styleName.import;
+    } else {
+      return styleName.style;
+    }
   }
 }

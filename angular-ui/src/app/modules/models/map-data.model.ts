@@ -6,5 +6,6 @@ export type MapData = {
 	estado?: string;
 	log?: string[];
 	ext: string;
+  urlPreview?: string;
 };
 export type Maps = MapData[];

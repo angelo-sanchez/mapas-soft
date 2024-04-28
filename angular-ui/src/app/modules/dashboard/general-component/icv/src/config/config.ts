@@ -1,4 +1,4 @@
-export default {
+export default (mapName: string) => ({
     "map": {
         "base": "esri",
         "item": [
@@ -59,7 +59,7 @@ export default {
             },
             {
                 "name": "barrios",
-                "description": "Barrios populares"
+                "description": mapName
             },
             {
                 "name": "hospitales",

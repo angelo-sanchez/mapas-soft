@@ -14,7 +14,7 @@ import { MapData } from 'src/app/modules/models/map-data.model';
   export class MapVisualizerComponent implements OnInit {
 
     // Variable boolean que se pone en TRUE cuando la url del mapa esta disponible
-    public urlPreview : boolean = true;
+    public urlPreview : boolean = false;
 
     // Variable para el manejo de la dimesion del iframe
     public iframeWidth = "1250px";
@@ -33,7 +33,7 @@ import { MapData } from 'src/app/modules/models/map-data.model';
       let map = this.data.map;
 
       if(map){
-        //this.openMap(map);
+        this.openMap(map);
       } else {
         console.error("No hay mapa para visualizar : Map is Null");
         this.dialog.closeAll();
@@ -44,10 +44,6 @@ import { MapData } from 'src/app/modules/models/map-data.model';
       this.mapsService.preview(map.id).subscribe((response: any) => {
         if (response && response.status == "STARTED") {
           let url = response.url;
-
-          if (environment.tileserverTrustedUrls.find((v) => url.startsWith(v))){
-            url = this.sanitizer.bypassSecurityTrustResourceUrl(url);
-          }
 
           this.data.map.urlPreview = url;
           this.urlPreview = true;

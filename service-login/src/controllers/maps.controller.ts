@@ -98,7 +98,7 @@ export const MapsController = {
     addMap: async function (req: Request, res: Response) {
         if (!req.user)
             return res.status(Status.FORBIDDEN).json({ message: 'You must be logged in to make this action' });
-        if (!req.files || req.files.length <= 0)
+        if (!req.files || ((req.files.length as number) <= 0))
             return res.status(Status.BAD_REQUEST).json({ message: `You didn't attach any Json file` });
         let fileList = req.files as Express.Multer.File[];
         let errors = [];
@@ -174,7 +174,7 @@ export const MapsController = {
                 id,
                 name,
                 status: "STARTED",
-                url: `${config.tileserver.baseUrl}/data/${id}/`,
+                url: `${config.tileserver.baseUrl}/data/${id}`,
             });
         } catch (error) {
             console.error(error);

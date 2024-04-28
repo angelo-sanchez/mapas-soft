@@ -1,4 +1,4 @@
-export default [
+export default (mapName: string, mapUrl: string, sourceLayer: string) => [
     {
         "description": "ICV Raster",
         "name": "icvRaster",
@@ -66,25 +66,25 @@ export default [
         }
     },
     {
-        "description": "Barrios populares",
+        "description": mapName,
         "name": "barrios",
         "source": {
             "type": "vector",
             "maxzoom": 12,
             "tiles": [
-                "http://localhost:8080/data/65bf9ab18c801b054cfb8aad/{z}/{x}/{y}.pbf"
+                mapUrl
             ]
         },
         "layer": {
             "id": "barrios",
             "type": "circle",
             "source": "barrios",
-            "source-layer": "7198fce88170807000d81205ca8dda4b",
+            "source-layer": sourceLayer,
             "layout": {
                 "visibility": "none"
             },
             "paint": {
-                "circle-radius": 30,
+                "circle-radius": 15,
                 "circle-color": "rgba(0, 0, 255, .9)",
                 "circle-opacity": 0.5
             }

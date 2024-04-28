@@ -1,7 +1,7 @@
 <ng-container *ngIf="urlPreview else loading">
     <p>{{ data.map.name }}</p>
     <div class="iframe-container">
-        <app-icv></app-icv>
+        <app-icv [map]="data.map"></app-icv>
     </div>
 </ng-container>
 
