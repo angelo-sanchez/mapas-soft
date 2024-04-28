@@ -22,6 +22,9 @@ function getLayersWithColors(layers) {
 
 export function buildColorOptions(layer) {
     const colorOptions = document.getElementById("colorOptions");
+    while(colorOptions.firstChild) {
+        colorOptions.removeChild(colorOptions.firstChild);
+    }
     for (let i = 0; i < colorScales.length; i++) {
 
         const checkElement = document.createElement("div");
@@ -155,9 +158,12 @@ function getDataLayersElement(dataLayers, base, i) {
 
 export function buildDataLayerDialog(dataLayers) {
     const dataLayersDialog = document.getElementById("dataLayers");
+    while(dataLayersDialog.firstChild) {
+        dataLayersDialog.removeChild(dataLayersDialog.firstChild);
+    }
 
     for (let i = 0; i < dataLayers.item.length; i++) {
-        dataLayersDialog.appendChild(getDataLayersElement(dataLayers, getBase(dataLayers), i));
+      dataLayersDialog.appendChild(getDataLayersElement(dataLayers, getBase(dataLayers), i));
     }
 }
 // End of Layer Data Dialog
@@ -194,6 +200,9 @@ function getBaseMapCheckElement(baseMaps, base, i) {
 
 export function buildBaseMapDialog(baseMaps) {
     const baseOptionsDialog = document.getElementById("baseOptions");
+    while(baseOptionsDialog.firstChild) {
+        baseOptionsDialog.removeChild(baseOptionsDialog.firstChild);
+    }
 
     for (let i = 0; i < baseMaps.item.length; i++) {
         baseOptionsDialog.appendChild(getBaseMapCheckElement(baseMaps, getBase(baseMaps), i));
