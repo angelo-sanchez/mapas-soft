@@ -1,5 +1,7 @@
 .iframe-container{
+  position: relative;
     height: 70vh;
     width: 1000px;
-    overflow: hidden
+    overflow: hidden;
+    color: #000;
 }
