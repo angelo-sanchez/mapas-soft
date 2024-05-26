@@ -3,7 +3,7 @@ export default [
         "layer": "barrios",
         "action": "click",
         "lng": "e.lngLat",
-        "html":  "\"ID: \" + e.features[0].properties.id"
+        "html":  "Object.entries(e.features[0].properties).map(p => `<p><b>${p[0]}:</b> ${p[1]}</p>`).join('\\n')",
     },
     {
         "layer": "barrios",
