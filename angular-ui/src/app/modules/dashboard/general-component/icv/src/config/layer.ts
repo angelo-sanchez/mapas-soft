@@ -1,4 +1,4 @@
-export default (mapName: string, mapUrl: string, sourceLayer: string) => [
+export default (mapName: string, mapUrl: string, sourceLayer: string, geometry: string) => [
     {
         "description": "Índice de calidad de Vida (ICV)",
         "name": "icv",
@@ -61,18 +61,20 @@ export default (mapName: string, mapUrl: string, sourceLayer: string) => [
             ]
         },
         "layer": {
+            "type": layerTypes[geometry],
             "id": "barrios",
-            "type": "circle",
             "source": "barrios",
-            "source-layer": sourceLayer,
-            "layout": {
-                "visibility": "none"
-            },
-            "paint": {
-                "circle-radius": 15,
-                "circle-color": "rgba(0, 0, 255, .9)",
-                "circle-opacity": 0.5
-            }
+            "source-layer": sourceLayer
         }
     }
 ]
+
+
+const layerTypes = {
+  "Point": "circle",
+  "MultiPoint": "circle",
+  "LineString": "line",
+  "MultiLineString": "line",
+  "Polygon": "fill",
+  "MultiPolygon": "fill"
+}
