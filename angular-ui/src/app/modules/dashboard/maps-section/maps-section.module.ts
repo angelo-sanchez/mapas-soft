@@ -53,4 +53,4 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     ViewDetailComponent
   ]
 })
-export class MapsSectionModule { }
+export class MapsSectionModule {}

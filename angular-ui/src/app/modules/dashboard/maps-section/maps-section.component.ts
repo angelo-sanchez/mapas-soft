@@ -102,7 +102,7 @@ export class MapsSectionComponent implements OnInit, AfterViewInit {
   }
 
 	ngAfterViewInit(): void {
-		console.log(this.fileInput);
+
 	}
 
 	// -----------------------------
@@ -282,9 +282,7 @@ export class MapsSectionComponent implements OnInit, AfterViewInit {
 			let modal = this.dialog.open(MapVisualizerComponent, detailDialogConfig);
 
 			modal.afterClosed().subscribe((closed: any) => {
-				if (closed) {
-					this.mapsService.closePreview(data.map.id)
-				}
+				this.mapsService.closePreview(data.map.id).toPromise();
 			});
 		}
 	}
