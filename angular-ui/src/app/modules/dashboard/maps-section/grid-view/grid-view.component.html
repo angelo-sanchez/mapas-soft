@@ -4,6 +4,7 @@
             <ng-container *ngFor="let map of maps">
                 <div matTooltip="{{ map.name}}.{{ map.ext }}" matTooltipShowDelay="500" class="container-file" (click)="map && click($event,map)" (contextmenu)="contextMenu($event, map)"
                     (dblclick)="dblClickEvent(map)"
+                    (keydown.enter)="dblClickEvent(map)"
                     [ngClass]="{'selected': selectedMaps.includes(map),'firstSelectedMap': firstSelectedMap == map.id }">
                     <div class="file">
 

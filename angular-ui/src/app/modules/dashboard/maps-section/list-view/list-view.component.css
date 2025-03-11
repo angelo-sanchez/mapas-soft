@@ -53,6 +53,10 @@
 .contenido-expanded{
 	background: black;
 	padding: 10px;
+  max-height: 70vh;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #434343 #000000;
 }
 
 .spinner{

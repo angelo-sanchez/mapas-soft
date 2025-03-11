@@ -4,7 +4,7 @@
             <!-- name column -->
             <div>
                 <ng-container matColumnDef="name">
-                    <th class="icon-ordenar" mat-header-cell *matHeaderCellDef (click)="reportSortChange($event, 'name')">
+                    <th class="icon-ordenar" mat-header-cell *matHeaderCellDef (click)="reportSortChange($event, 'name')" (keydown.enter)="reportSortChange($event, 'name')">
                         Nombre
                         <ng-container *ngIf="sorting.active !== 'name'; else sortingName">
                           <mat-icon style="opacity: .3;">north</mat-icon>
@@ -26,7 +26,7 @@
             <!-- date_creation column -->
             <div>
                 <ng-container matColumnDef="date_creation">
-                    <th class="icon-ordenar" mat-header-cell *matHeaderCellDef (click)="reportSortChange($event, 'date_creation')">
+                    <th class="icon-ordenar" mat-header-cell *matHeaderCellDef (click)="reportSortChange($event, 'date_creation')" (keydown.enter)="reportSortChange($event, 'date_creation')">
                         Fecha de Creación
                         <ng-container *ngIf="sorting.active !== 'date_creation'; else sortingDate">
                           <mat-icon style="opacity: .3;">north</mat-icon>
@@ -94,6 +94,8 @@
             [class.example-expanded-row]="expandedElement === element"
             [ngClass]="{'selected': selectedMaps.includes(element),'firstSelectedMap': firstSelectedMap == element.id }"
             (contextmenu)="contextMenu($event, element)"
+            (dblclick)="dblClickEvent(element)"
+            (keydown.enter)="dblClickEvent(element)"
             (click)="reportClickEvent($event, element)">
         </tr>
         <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
