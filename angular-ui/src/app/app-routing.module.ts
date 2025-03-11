@@ -14,11 +14,12 @@ import { SettingComponent } from './modules/dashboard/setting/setting.component'
 const routes: Routes = [
   {path: '',component: DashboardComponent, canActivate : [LoginGuardianService], children : [
       {path: 'maps', component: MapsSectionComponent},
-      {path: 'setting', component: SettingComponent}
+      {path: 'setting', component: SettingComponent},
+      {path: '**', redirectTo: '/maps'}
   ]},
   {path: 'login', component: LoginComponent},
   {path: 'register', component: RegisterComponent},
-  {path: '**', component: ErrorComponent}
+  {path: '**', redirectTo: '/maps'}
 ];
 
 @NgModule({

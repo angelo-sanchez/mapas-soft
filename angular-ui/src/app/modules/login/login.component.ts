@@ -17,11 +17,17 @@ export class LoginComponent implements OnInit {
   constructor(
     private loginService : LoginService,
     private route : Router,
-  ) { 
+  ) {
     this.formulario = new FormGroup({});
   }
 
   ngOnInit(): void {
+    if(this.loginService.isAutenticado()) {
+      this.route.navigate(["/"], {
+        replaceUrl: true
+      });
+      return;
+    }
     this.initFormulario();
   }
 
@@ -43,7 +49,7 @@ export class LoginComponent implements OnInit {
         this.route.navigate(['/maps']);
       }, error => {
         console.log('Se produjo un error al iniciar sesion.');
-        console.log(error);   
+        console.log(error);
         this.errorMsg = error.error.msg;
       });
     }
