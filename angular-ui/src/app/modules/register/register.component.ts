@@ -16,7 +16,7 @@ export class RegisterComponent implements OnInit {
   constructor(
     private loginService : LoginService,
     private route : Router
-  ) { 
+  ) {
     this.formulario = new FormGroup({});
   }
 
@@ -28,14 +28,26 @@ export class RegisterComponent implements OnInit {
     this.formulario = new FormGroup({
       'email': new FormControl('',[Validators.required, Validators.email]),
       'password' : new FormControl('',[Validators.required, Validators.minLength(4)]),
+      'repeat': new FormControl('',[this.equalPasswords])
     });
+  }
+
+  equalPasswords(control : FormControl) : {[s:string]:boolean}{
+    let formulario : any = control.root.value;
+    if(formulario){
+      if(formulario.password === control.value){
+        return null;
+      }
+    }
+    return {notEqual:true};
   }
 
   signin(){
     if(!this.formulario.invalid){
       let email = this.formulario.controls.email.value;
       let password = this.formulario.controls.password.value;
-      this.loginService.register(email,password).subscribe(data =>{
+      let confirm = this.formulario.controls.repeat.value;
+      this.loginService.register(email,password, confirm).subscribe(data =>{
         if(data){
           this.errorMsg = '';
           this.route.navigate(['/login']);

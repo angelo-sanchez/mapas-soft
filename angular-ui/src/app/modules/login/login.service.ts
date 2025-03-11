@@ -19,9 +19,9 @@ export class LoginService {
     return this.httpClient.post(url, body);
   }
 
-  register(email: string, password: string) {
+  register(email: string, password: string, confirm: string) {
     let url = this.urlLocal + '/register';
-    let body = { email, password };
+    let body = { email, password, confirm };
     return this.httpClient.post(url, body);
   }
 
