@@ -1,14 +1,11 @@
 <div class="header">
-    <div>
-      <!-- <button type="button" mat-button  style="margin-right: 10px;">
-        <mat-icon aria-hidden="false" aria-label="Example home icon">menu</mat-icon>
-      </button> -->
+    <!-- <div>
       <button mat-icon-button color="accent" (click)="drawer.toggle();" style="margin: 0 5px; cursor: pointer;">
         <mat-icon>menu</mat-icon>
       </button>
-      <!-- <span>MAP-SOFT</span> -->
-    </div>
-    
+    </div> -->
+    <h1 class="flexible">Todos los mapas</h1>
+
     <div class="content-user" [matMenuTriggerFor]="menu">
       <!-- <span> {{ user.email.split('@')[0] }}</span> -->
       <!-- <div class="separador-10"></div> -->
@@ -17,7 +14,7 @@
       </div>
     </div>
     <mat-menu #menu="matMenu" class="material-menu">
-      <div class="info-menu"> 
+      <div class="info-menu">
         <div class="info-usuario">
           <div class="user user-big">
             <span>{{ user.email.charAt(0).toUpperCase() }}</span>
@@ -36,14 +33,14 @@
   </div>
   <!-- Fin Header -->
 
-  
+
   <mat-drawer-container class="example-container content" autosize>
-    <mat-drawer #drawer class="width-sidenav sidenav" mode="side" opened>
+    <!-- <mat-drawer #drawer class="width-sidenav sidenav" mode="side" opened>
       <app-sidenav></app-sidenav>
-    </mat-drawer>
-  
+    </mat-drawer> -->
+
     <div class="sidenav-content">
         <router-outlet></router-outlet>
     </div>
-  
+
   </mat-drawer-container>

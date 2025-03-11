@@ -1,15 +1,24 @@
 <ng-container>
 	<div class="contenedor-botones-acciones">
 		<div>
-			<button mat-icon-button (click)="isListView = !isListView">
+			<button mat-button (click)="isListView = !isListView">
 				<ng-container *ngIf="isListView">
 					<mat-icon>grid_view</mat-icon>
+          Ver como grilla
 				</ng-container>
 				<ng-container *ngIf="!isListView">
 					<mat-icon>view_list</mat-icon>
+          Ver como listado
 				</ng-container>
 			</button>
 		</div>
+    <label for="fileUpload" class="input-file mat-button mat-focus-indicator mat-button-base">
+      <div class="mat-button-wrapper">
+        <mat-icon>note_add</mat-icon>
+        Subir archivos
+      </div>
+      <div class="mat-button-focus-overlay"></div>
+    </label>
     <input type="file" #fileUpload id="fileUpload" (change)="subirArchivo($event.target);" multiple>
 	</div>
 

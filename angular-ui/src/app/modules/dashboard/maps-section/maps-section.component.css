@@ -74,7 +74,6 @@
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	
 }
 
 .file-ext{
@@ -105,4 +104,6 @@
 	background-color: #BB86FC33;
 }
 
-
+.input-file + input {
+  display: none;
+}

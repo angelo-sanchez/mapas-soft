@@ -1,16 +1,21 @@
 .header{
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end;
     align-items: center;
     height: 60px;
-    padding: 0 20px;
+    padding: 0 25px;
     background-color: var(--surface);
     color: var(--text-surface);
     border-bottom: 1px solid var(--border);
 }
 
+.flexible {
+  flex: 1 1 auto;
+  margin: 0;
+}
+
 .width-sidenav{
-    width: 300px; 
+    width: 300px;
  }
 
  .sidenav{
@@ -37,7 +42,7 @@
 .content-user:hover{
     cursor: pointer;
     background: var(--hovermenu);
-    
+
 }
 
 .separador-10{
