@@ -15,6 +15,6 @@ export default {
   },
   tileserver: {
     dir: process.env.TILESERVER_DIR || "/home/user/maps/output", // Sería el lugar donde tippecanoe guarda los mbtiles ($WORKDIR/output)
-    baseUrl: process.env.TILESERVER_URL || "http://localhost:8080"
+    baseUrl: process.env.TILESERVER_URL || "http://localhost"
   }
 };

@@ -22,7 +22,7 @@ export const MapsController = {
             console.error({ error });
             if (error)
                 return res.status(Status.INTERNAL_SERVER_ERROR).json(error);
-            if (result.length >= 0)
+            if (result.length > 0)
                 return res.status(Status.OK)
                     .json(result.map(map => {
                         return {
@@ -82,7 +82,7 @@ export const MapsController = {
             }
             success.push(id);
             try {
-                fs.rmSync(path);
+                fs.unlink(path, console.log);
             } catch (error) {
                 console.error({ error });
             }
@@ -168,13 +168,13 @@ export const MapsController = {
             return res.status(Status.BAD_REQUEST).json({ message: 'Map ID must be provided' });
         const id = req.params.id;
         try {
-            const name = await tileserver.start(id);
+            const {name, port} = await tileserver.start(id);
 
             return res.status(Status.OK).json({
                 id,
                 name,
                 status: "STARTED",
-                url: `${config.tileserver.baseUrl}/data/${id}`,
+                url: `${config.tileserver.baseUrl}:${port}/data/${id}`,
             });
         } catch (error) {
             console.error(error);
@@ -188,7 +188,7 @@ export const MapsController = {
         if (!req.params.id)
             return res.status(Status.BAD_REQUEST).json({ message: 'Map ID must be provided' });
         const id = req.params.id;
-        const name = await tileserver.stop();
+        const name = await tileserver.stop(id);
 
         return res.status(Status.OK).json({ id, name, status: "STOPPED" });
     }

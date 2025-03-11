@@ -4,16 +4,30 @@ import { spawn } from 'child_process';
 
 //TODO: Crear un pool de containers para "cachear" x cantidad de instancias del server
 // ideas: usar puertos incrementales, usar una clase, llevar una pool estática...
+declare type Containers = {
+    [key: string]: {
+        port: number,
+        listeners: number,
+    }
+}
 export const tileserver = {
+    containers: <Containers>{},
     start: function (id: string) {
-        return new Promise((resolve, reject) => {
+        return new Promise<{name:string, port:number}>((resolve, reject) => {
             let resolved = false;
-            const container = 'tileserver';
+            const container = `tileserver_${id}`;
             const responseTimer = setTimeout(() => {
-                reject("Timeout for response");
+                reject(new Error("Timeout for response"));
             }, 20_000);
-            const args = `run --rm -i -v ${path.resolve(config.tileserver.dir)}:/data -p 8080:8080 --name=${container} maptiler/tileserver-gl ${id}.mbtiles`.split(" ");
-            this.stop().then(() => {
+            if(this.containers[id]){
+                this.containers[id].listeners++;
+                resolve({name: container, port: this.containers[id].port});
+                return;
+            }
+            const port = 8080 + Object.keys(this.containers).length;
+            const args = `run --rm -i -v ${path.resolve(config.tileserver.dir)}:/data -p ${port}:8080 --name=${container} maptiler/tileserver-gl ${id}.mbtiles`.split(" ");
+            this.stop(id).then(() => {
+                this.containers[id] = {port, listeners: 1};
                 const docker = spawn("docker", args);
                 docker.on('error', (error) => {
                     console.warn(`Problemas levantando ${container}:`, error.name, error.message);
@@ -26,7 +40,7 @@ export const tileserver = {
                     if (data.includes("Listening at") && !resolved) {
                         resolved = true;
                         clearTimeout(responseTimer);
-                        resolve(container);
+                        resolve({name: container, port});
                     }
                 });
                 docker.stderr.on("data", (data) => {
@@ -34,6 +48,21 @@ export const tileserver = {
                     data.split(/\r?\n/).forEach((line: string) => {
                         line && console.log(`${container} error: ${line}`);
                     });
+                    if(data.includes("is in use by container")) {
+                        console.error(`El container name ${container} ya está en uso.`);
+                        this.containers[id] = {port, listeners: 1};
+                        const dockerPort = spawn("docker", `port ${container}`.split(" "));
+                        dockerPort.stdout.on("data", (data) => {
+                            resolved = true;
+                            clearTimeout(responseTimer);
+                            resolve({name: container, port: parseInt(`${data}`.split(":")[1])});
+                        });
+                    }
+                    if(data.includes("port is already allocated") && !resolved) {
+                        console.error(`El puerto ${port} ya está en uso.`);
+                        this.containers[port] = {port, listeners: 1};
+                        resolve(this.start(id));
+                    }
                     if (!resolved) {
                         resolved = true;
                         reject(data);
@@ -43,10 +72,23 @@ export const tileserver = {
         });
     },
 
-    stop: function () {
+    stop: function (id: string) {
         return new Promise<void>((resolve, reject) => {
             let resolved = false;
-            const container = 'tileserver';
+            const container = `tileserver_${id}`;
+            // Si no existe el container, no hay nada que hacer
+            if(!this.containers[id]){
+                resolve();
+                return;
+            }
+            // Si hay más de un listener, no se puede parar
+            if(--(this.containers[id].listeners) > 0){
+                resolve();
+                return;
+            }
+            // Si no hay más listeners, se puede parar y borrar el container
+            delete this.containers[id];
+
             const args = `stop ${container}`.split(" ");
             const docker = spawn("docker", args);
             docker.on('error', (error) => {

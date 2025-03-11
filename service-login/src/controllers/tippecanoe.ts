@@ -56,7 +56,9 @@ const showProgress = (command: string, map: IMap, inputPath: string, options?: s
                 map.ext = 'mbtiles';
             map.log = logs;
             map.save();
-            fs.rmSync(path.resolve(inputPath));
+            fs.unlink(path.resolve(inputPath), () => {
+                console.log("Archivo eliminado");
+            });
         });
 };
 
