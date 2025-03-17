@@ -64,8 +64,8 @@ export default (mapName: string, mapUrl: string, sourceLayer: string, geometry: 
             "type": layerTypes[geometry],
             "id": "barrios",
             "source": "barrios",
-            "source-layer": sourceLayer
-        }
+            "source-layer": sourceLayer,
+        },
     }
 ]
 

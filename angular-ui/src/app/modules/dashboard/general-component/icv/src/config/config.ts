@@ -39,6 +39,7 @@ export default (mapName: string) => ({
             },
             {
                 "name": "barrios",
+                "config": "colorScales",
                 "description": mapName
             }
         ]

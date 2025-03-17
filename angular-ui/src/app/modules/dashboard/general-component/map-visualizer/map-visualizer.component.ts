@@ -55,7 +55,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
       }, error => {
         console.error("Se produjo un error al ver la vista previa del mapa");
         console.log(error);
-        if(error.message == "docker daemon is not running"){
+        if(error.message.contains("docker daemon is not running")){
           this.snackbar.open("El servicio de visualización de mapas no está disponible", "Cerrar");
         }
         this.dialog.closeAll();
