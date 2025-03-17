@@ -15,11 +15,9 @@ const routes: Routes = [
   {path: '',component: DashboardComponent, canActivate : [LoginGuardianService], children : [
       {path: 'maps', component: MapsSectionComponent},
       {path: 'setting', component: SettingComponent},
-      {path: '**', redirectTo: '/maps'}
   ]},
   {path: 'login', component: LoginComponent},
   {path: 'register', component: RegisterComponent},
-  {path: '**', redirectTo: '/maps'}
 ];
 
 @NgModule({

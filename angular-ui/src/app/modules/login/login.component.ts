@@ -22,12 +22,12 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    if(this.loginService.isAutenticado()) {
-      this.route.navigate(["/"], {
-        replaceUrl: true
-      });
-      return;
-    }
+    // if(this.loginService.isAutenticado()) {
+    //   this.route.navigate(["/"], {
+    //     replaceUrl: true
+    //   });
+    //   return;
+    // }
     this.initFormulario();
   }
 
