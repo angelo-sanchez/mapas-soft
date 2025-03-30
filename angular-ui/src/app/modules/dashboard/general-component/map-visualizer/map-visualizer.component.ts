@@ -1,7 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { DomSanitizer } from '@angular/platform-browser';
-import { environment } from '../../../../../environments/environment';
 
 import { MapsService } from 'src/app/modules/services/maps.service';
 import { MapData } from 'src/app/modules/models/map-data.model';
@@ -54,8 +53,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
         }
       }, error => {
         console.error("Se produjo un error al ver la vista previa del mapa");
-        console.log(error);
-        if(error.message.contains("docker daemon is not running")){
+        console.log({error, message: error.message, msgError: error.error});
+        if(error.error.includes("docker daemon is not running")){
           this.snackbar.open("El servicio de visualización de mapas no está disponible", "Cerrar");
         }
         this.dialog.closeAll();
