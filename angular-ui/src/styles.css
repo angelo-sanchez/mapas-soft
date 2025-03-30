@@ -2,7 +2,7 @@
 
 :root {
     --background: #121212;
-    --surface: #1E1E1E; 
+    --surface: #1E1E1E;
     --primary: #BB86FC;
     --secondary: #03DAC6;
 
@@ -12,7 +12,7 @@
     --text-secondary: #002D29;
 
     --backgroundmenu: #2E2E2E;
-    --hovermenu: #2E2E2E; 
+    --hovermenu: #2E2E2E;
 
     --high-emphasis : rgba(255,255,255,0.87);
     --low-emphasis: rgba(255,255,255,0.6);
@@ -37,11 +37,6 @@ p,span{
   min-width: 200px;
 }
 
-mat-selection-list{
-  padding: 0px!important;
-}
-
-
 /* Iconos de listas */
 .color-icon-list{
   color: var(--low-emphasis)!important;
@@ -63,12 +58,6 @@ th.mat-sort-header-sorted {
 tr.mat-header-row {
   height: 45px!important;
   /* background: var(--background)!important; */
-}
-
-.mat-snack-bar-container{
-  padding: 0px !important;
-  overflow: hidden;
-  box-shadow: 0 5px 11px 0 rgb(0 0 0 / 18%), 0 4px 15px 0 rgb(0 0 0 / 15%) !important;
 }
 
 p, span, div, i {
