@@ -8,7 +8,7 @@ const router = Router();
 const multer = Multer({
     dest: config.workdir + "/input",
     limits: {
-        fileSize: 100 * 1000 * 1000 // 100MB
+        fileSize: config.maxUploadSize * 1000 * 1000
     }
 });
 

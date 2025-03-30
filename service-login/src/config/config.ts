@@ -2,6 +2,7 @@ import { config } from "dotenv";
 import { type as osType } from "os";
 config();
 export default {
+  maxUploadSize: process.env.MAX_UPLOAD_SIZE ? parseInt(process.env.MAX_UPLOAD_SIZE) : 100, // 100MB por defecto
   jwtSecret: process.env.JWT_SECRET || 'somesecrettoken',
   DB: {
     URI: process.env.MONGODB_URI || 'mongodb://localhost/ionicjwttutorial',
