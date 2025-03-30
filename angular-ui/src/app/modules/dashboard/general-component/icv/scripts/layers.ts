@@ -9,7 +9,8 @@ export const setupLayers = async (map: Map, mapData: MapData, paintProps) => {
     mapData.name,
     data.tiles[0],
     data.vector_layers[0].id,
-    data.tilestats.layers[0].geometry
+    data.tilestats.layers[0].geometry,
+    data.maxzoom
   );
   if(dataLayers[1].layer.type === 'fill') {
     dataLayers[1].layer.paint = {

@@ -1,4 +1,4 @@
-export default (mapName: string, mapUrl: string, sourceLayer: string, geometry: string) => [
+export default (mapName: string, mapUrl: string, sourceLayer: string, geometry: string, maxZoom) => [
     {
         "description": "Índice de calidad de Vida (ICV)",
         "name": "icv",
@@ -55,7 +55,7 @@ export default (mapName: string, mapUrl: string, sourceLayer: string, geometry: 
         "name": "barrios",
         "source": {
             "type": "vector",
-            "maxzoom": 12,
+            "maxzoom": maxZoom ? maxZoom : 12,
             "tiles": [
                 mapUrl
             ]
