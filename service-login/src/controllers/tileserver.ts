@@ -1,7 +1,21 @@
 import config from "../config/config";
 import * as path from 'path';
 import { spawn } from 'child_process';
-
+const buscarPuerto = (containers: Containers) : number => {
+    const contenedores = Object.values(containers);
+    let port = config.tileserver.basePort + contenedores.length;
+    const ports = contenedores.map(c => c.port);
+    if (ports.includes(port)) { // Si el puerto ya está en uso, busco uno libre
+        const set = new Set(ports);
+        for (let i = 0; i < set.size; i++) {
+            if (!set.has(config.tileserver.basePort + i)) {
+                port = config.tileserver.basePort + i;
+                break;
+            }
+        }
+    }
+    return port;
+}
 //TODO: Crear un pool de containers para "cachear" x cantidad de instancias del server
 // ideas: usar puertos incrementales, usar una clase, llevar una pool estática...
 declare type Containers = {
@@ -24,7 +38,7 @@ export const tileserver = {
                 resolve({name: container, port: this.containers[id].port});
                 return;
             }
-            const port = 8080 + Object.keys(this.containers).length;
+            const port = buscarPuerto(this.containers);
             const args = `run --rm -i -v ${path.resolve(config.tileserver.dir)}:/data -p ${port}:8080 --name=${container} maptiler/tileserver-gl ${id}.mbtiles`.split(" ");
             this.stop(id).then(() => {
                 this.containers[id] = {port, listeners: 1};
@@ -89,8 +103,7 @@ export const tileserver = {
             // Si no hay más listeners, se puede parar y borrar el container
             delete this.containers[id];
 
-            const args = `stop ${container}`.split(" ");
-            const docker = spawn("docker", args);
+            const docker = spawn("docker", ["stop", container]);
             docker.on('error', (error) => {
                 console.warn(`Problemas al terminar ${container}:`, error.name, error.message);
             });

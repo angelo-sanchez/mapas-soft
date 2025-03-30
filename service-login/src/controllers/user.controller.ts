@@ -7,7 +7,7 @@ import config from "../config/config";
 const tokenLifespan = 86400;
 function createToken(user: IUser) {
   return jwt.sign({ id: user.id, email: user.email }, config.jwtSecret, {
-    expiresIn: tokenLifespan
+    expiresIn: tokenLifespan,
   });
 }
 
@@ -31,10 +31,7 @@ export const register = async (
   return res.status(201).json(newUser);
 };
 
-export const login = async (
-  req: Request,
-  res: Response
-)=> {
+export const login = async (req: Request, res: Response) => {
   // return res.send('signin')
   if (!req.body.email || !req.body.password) {
     return res
@@ -44,19 +41,26 @@ export const login = async (
 
   const user = await User.findOne({ email: req.body.email });
   if (!user) {
-    return res.status(400).json({ msg: "El email o la contraseña son incorrecto" });
+    return res
+      .status(400)
+      .json({ msg: "El email o la contraseña son incorrecto" });
   }
 
   const isMatch = await user.comparePassword(req.body.password);
   if (isMatch) {
     let datosUsuario = {
-      'email' : user.email
-    }
-    return res.status(200).json({ 'token': createToken(user), user: datosUsuario, emmited: Date.now(), validity: tokenLifespan});
+      email: user.email,
+    };
+    return res.status(200).json({
+      token: createToken(user),
+      user: datosUsuario,
+      emmited: Date.now(),
+      validity: tokenLifespan,
+    });
   }
 
   return res.status(400).json({
-    msg: "El email o la contraseña son incorrecto"
+    msg: "El email o la contraseña son incorrecto",
   });
 };
 
