@@ -114,12 +114,12 @@ export const MapsController = {
                     errors.push({ message: `The file ${filename} already exists`, name: filename });
                     continue;
                 }
-                let str = fs.readFileSync(file.path).toString();
-                if (!str) {
-                    errors.push({ message: `The file ${filename} attached is not a valid Json file`, name: filename });
-                    continue;
-                }
-                let content = JSON.parse(str);
+                // let str = fs.readFileSync(file.path).toString();
+                // if (!str) {
+                //     errors.push({ message: `The file ${filename} attached is not a valid Json file`, name: filename });
+                //     continue;
+                // }
+                // let content = JSON.parse(str);
                 let map = new Map({
                     owner: (req.user as any).email,
                     createdAt: Date.now(),

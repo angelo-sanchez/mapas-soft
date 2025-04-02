@@ -8,6 +8,7 @@ import { DashboardComponent } from './modules/dashboard/dashboard.component';
 import { LoginGuardianService } from './modules/login/login-guardian.service';
 import { MapsSectionComponent } from './modules/dashboard/maps-section/maps-section.component';
 import { SettingComponent } from './modules/dashboard/setting/setting.component';
+import { AuthGuardianService } from './modules/login/auth-guardian.service';
 
 
 
@@ -16,8 +17,10 @@ const routes: Routes = [
       {path: 'maps', component: MapsSectionComponent},
       {path: 'setting', component: SettingComponent},
   ]},
-  {path: 'login', component: LoginComponent},
-  {path: 'register', component: RegisterComponent},
+  {path: 'login', component: LoginComponent, canActivate: [AuthGuardianService]},
+  {path: 'register', component: RegisterComponent, canActivate: [AuthGuardianService]},
+  { path: 'error', component: ErrorComponent }, // Ruta de error
+  { path: '**', redirectTo: 'error', pathMatch: 'full' } // Captura rutas no existentes
 ];
 
 @NgModule({

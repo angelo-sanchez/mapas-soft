@@ -39,8 +39,6 @@ export class LoginService {
   }
 
   getToken() {
-    if (+(localStorage.getItem('tokenValidBefore') || 0) <= Date.now())
-      this.logout();
     return localStorage.getItem('token');
   }
 
@@ -63,6 +61,6 @@ export class LoginService {
   }
 
   isAutenticado() {
-    return this.getToken() != null;
+    return this.getToken() !== null;
   }
 }
