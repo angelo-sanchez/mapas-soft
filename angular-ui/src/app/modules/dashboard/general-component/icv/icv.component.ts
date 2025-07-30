@@ -182,14 +182,9 @@ export class IcvComponent implements OnInit {
 
       if (document.getElementById('icv') != null) {
         if ((document.getElementById('icv') as HTMLInputElement).checked) {
-          //show ICV info
-          document.getElementById('icvLegend').style.display = '';
-          document.getElementById('icvInfo').style.display = '';
-          map.setPaintProperty('icv', 'fill-color', fillColor);
-        } else {
           // hide ICV info
-          document.getElementById('icvLegend').style.display = 'none';
-          document.getElementById('icvInfo').style.display = 'none';
+          document.getElementById('icvLegend') && (document.getElementById('icvLegend').style.display = 'none');
+          document.getElementById('icvInfo') && (document.getElementById('icvInfo').style.display = 'none');
         }
       }
       console.log(layer);

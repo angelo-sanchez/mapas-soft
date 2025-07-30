@@ -107,3 +107,7 @@
 .input-file + input {
   display: none;
 }
+
+::ng-deep .uploading-file-progress-panel {
+  padding: 0 !important;
+}

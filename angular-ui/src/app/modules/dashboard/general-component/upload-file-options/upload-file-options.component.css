@@ -1,0 +1,28 @@
+.header {
+  justify-content: space-between;
+}
+
+.header .text {
+  font-size: 1rem;
+}
+
+mat-drawer-container {
+  background: transparent;
+}
+mat-panel-description {
+  justify-content: end;
+  margin: 0;
+}
+
+mat-expansion-panel-header,
+mat-expansion-panel {
+  box-shadow: none !important;
+  background: transparent !important;
+}
+span.param {
+  font-family: monospace;
+  background-color: var(--bs-gray-600);
+  border-radius: 3px;
+  padding: 1px 5px;
+  user-select: text;
+}

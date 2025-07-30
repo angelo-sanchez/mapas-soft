@@ -1,12 +1,72 @@
-<div class="contenedor-general">
-    <form [formGroup]="formulario" autocomplete="off">
-        <p>Agregar opciones a tippecanoe.</p>
-        <mat-form-field *ngFor="let filename of files" class="mat-form-field" appearance="fill" color="accent" style="display: block;">
-            <mat-label style="font-size: 17px;">Opciones para {{filename}}</mat-label>
-            <input type="text" autocomplete="off" matInput [formControlName]="filename" [name]="filename" placeholder="Inserte opciones (ignorando la opción -o)">
-        </mat-form-field>
-    </form>
-    <div class="contenedor-button">
-        <button mat-raised-button color="primary" (click)="enviar()">Aceptar</button>
-    </div>
-</div>
+<mat-expansion-panel hideToggle #panel>
+  <mat-expansion-panel-header
+    class="header"
+    [tabIndex]="-1"
+    [style.padding]="0"
+  >
+    <mat-panel-title class="text">
+      Agregar opciones a tippecanoe.
+    </mat-panel-title>
+    <mat-panel-description>
+      <mat-icon>{{ panel.expanded ? "help" : "help_outline" }}</mat-icon>
+    </mat-panel-description>
+  </mat-expansion-panel-header>
+  <ng-template matExpansionPanelContent>
+    <p>
+      <span class="param">-z</span>, <span class="param">--maximum-zoom</span>:
+      Establece el nivel máximo de zoom de los mosaicos generados.<br />Ejemplo:
+      -z 14
+    </p>
+    <p>
+      <span class="param">-Z</span>, <span class="param">--minimum-zoom</span>:
+      Establece el nivel mínimo de zoom de los mosaicos generados.<br />Ejemplo:
+      -Z 6
+    </p>
+    <p>
+      <span class="param">--coalesce</span>: Combina varias características en
+      una sola si tienen el mismo valor de atributos y forman un polígono
+      adyacente. Esto reduce el tamaño de los archivos.
+    </p>
+    <p>
+      <span class="param">--detect-shared-borders</span>: Detecta y elimina
+      bordes compartidos entre polígonos adyacentes para evitar duplicación de
+      geometrías.
+    </p>
+    <p>
+      <span class="param">--extend-zooms-if-still-dropping</span>: Permite que
+      los niveles de zoom se extiendan si hay características que todavía se
+      están descartando. Útil para preservar detalles en niveles altos.
+    </p>
+    <p>
+      <span class="param">-P</span>, <span class="param">--parallel</span>:
+      Permite usar múltiples hilos para leer diferentes partes de un archivo
+      GeoJSON al mismo tiempo, lo que mejora el rendimiento en archivos grandes
+    </p>
+  </ng-template>
+</mat-expansion-panel>
+
+<form [formGroup]="formulario" autocomplete="off" (submit)="enviar()">
+  <mat-form-field
+    *ngFor="let filename of files; let first = first"
+    class="mat-form-field"
+    appearance="fill"
+    color="accent"
+    style="display: block"
+  >
+    <mat-label style="font-size: 17px"
+      >Opciones para {{ filename }}</mat-label
+    >
+    <input
+      type="text"
+      autocomplete="off"
+      matInput
+      [formControlName]="filename"
+      [autofocus]="first"
+      [tabIndex]="first ? 0 : 1"
+      [name]="filename"
+      placeholder="Inserte opciones (ignorando la opción -o)"
+    />
+  </mat-form-field>
+
+  <button type="submit" mat-raised-button color="primary">Aceptar</button>
+</form>

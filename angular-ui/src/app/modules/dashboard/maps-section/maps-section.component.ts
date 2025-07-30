@@ -212,7 +212,7 @@ export class MapsSectionComponent implements OnInit, AfterViewInit {
 		fd.append("socketId", this.mapWsService.socketId);
 
 		let dialogRef = this.dialog.open(UploadFileOptionsComponent, {
-			width: '500px',
+			width: '750px',
 			data: {
 				filenames
 			}
@@ -257,6 +257,7 @@ export class MapsSectionComponent implements OnInit, AfterViewInit {
 					this._snackBar.openFromComponent(UploadingFileProgressComponent, {
 						horizontalPosition: this.horizontalPosition,
 						verticalPosition: this.verticalPosition,
+            panelClass: "uploading-file-progress-panel",
 						data: {
 							cantidad: archivosLista.length,
 							archivos: archivosLista,

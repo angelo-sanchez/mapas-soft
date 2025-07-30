@@ -6,6 +6,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 // Coponentes angular-material
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatExpansionModule } from '@angular/material/expansion';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
@@ -58,6 +59,7 @@ import { IcvComponent } from './general-component/icv/icv.component';
     MatIconModule,
     MatButtonModule,
     MatSidenavModule,
+    MatExpansionModule,
     BrowserAnimationsModule,
     MatTableModule,
     MatCardModule,
