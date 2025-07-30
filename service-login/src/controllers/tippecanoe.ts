@@ -14,7 +14,8 @@ const showProgress = (command: string, map: IMap, inputPath: string, options?: s
     const program = type() == "Windows_NT" ? "powershell" : "sh";
     let process = spawn(program, args);
     let id = map.id;
-    let log = `Iniciando procesamiento del mapa con el comando "tippecanoe ${options}"`;
+    let started = new Date();
+    let log = `${started.toISOString()} - Iniciando procesamiento del mapa con el comando "tippecanoe ${options}"`;
     let logs = [log];
     sockets.emit(PROGRESS, {
         log,
@@ -22,7 +23,8 @@ const showProgress = (command: string, map: IMap, inputPath: string, options?: s
     }, socketId);
 
     process.stdout.on('data', (data) => {
-        let log = ('' + data).split(/\r?\n/);
+        let now = new Date();
+        let log = (`${now.toISOString()} ${data}`).split(/\r?\n/);
         logs.push(...log);
         sockets.emit(PROGRESS, {
             log: log.join("<br>"),
@@ -43,7 +45,9 @@ const showProgress = (command: string, map: IMap, inputPath: string, options?: s
 
     process
         .on('exit', (code, signal) => {
-            let log = error ? 'error' : 'done';
+            let finished = new Date();
+            let elapsed = finished.getTime() - started.getTime();
+            let log = `${finished.toISOString()} - ${error ? 'error' : 'done'} en ${elapsed / 1000} segundos con código ${code}`;
             logs.push(log);
             sockets.emit(FINISH, {
                 log,
