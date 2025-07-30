@@ -300,6 +300,8 @@ export class IcvComponent implements OnInit {
       });
     });
     this.init(map);
+    document.getElementById('icvLegend') && (document.getElementById('icvLegend').style.display = 'none');
+    document.getElementById('icvInfo') && (document.getElementById('icvInfo').style.display = 'none');
   }
 
   getStyle(name: string) {
