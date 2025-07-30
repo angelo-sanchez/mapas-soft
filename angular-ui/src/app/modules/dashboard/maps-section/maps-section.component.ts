@@ -223,8 +223,6 @@ export class MapsSectionComponent implements OnInit, AfterViewInit {
 			fd.append('opciones', result);
 			this.mapsService.insertMaps(fd).subscribe((data: any) => {
 				if (data) {
-					this.mapsService.getMaps();
-
 					// let mensaje = 'Se subió ' + data.maps.length + ' archivo/s correctamente. ';
 
 					// if(data.errors.length > 0){
@@ -268,6 +266,7 @@ export class MapsSectionComponent implements OnInit, AfterViewInit {
 				} else {
 					this._snackBar.open('Se produjo un error al subir un archivo', 'Aceptar');
 				}
+        this.mapsService.getMaps();
 			}, (error: any) => {
 				console.log("Se produjo un error al subir archivos");
 				console.error(error);
