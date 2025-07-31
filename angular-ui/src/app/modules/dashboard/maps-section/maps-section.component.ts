@@ -61,6 +61,7 @@ export class MapsSectionComponent implements OnInit, AfterViewInit {
 	public verVistaDetalle: boolean = false;
 
 	public fileOptions: string = "";
+  private processingCount: number = 0;
 
 	constructor(public mapsSectionService: MapsSectionService,
 		private selectedMapManagerService: SelectedMapManagerService,
@@ -99,7 +100,7 @@ export class MapsSectionComponent implements OnInit, AfterViewInit {
       return asc * (a[key]! > b[key]! ? 1 : -1);
     });
     this.maps = maps;
-    this.cdRef.markForCheck();
+    this.cdRef.detectChanges();
   }
 
 	ngAfterViewInit(): void {
@@ -166,8 +167,8 @@ export class MapsSectionComponent implements OnInit, AfterViewInit {
 			mapa.log = [data.log];
 		} else if (!mapa.log.includes(data.log)) {
 			mapa.log.push(data.log);
-      this.cdRef.detectChanges();
 		}
+    this.cdRef.detectChanges();
 	}
 
 	private finalizar(data: any) {
@@ -196,7 +197,12 @@ export class MapsSectionComponent implements OnInit, AfterViewInit {
 		else if (!mapa.log.includes(data.log))
 			mapa.log.push(data.log);
 		if (data.ext) mapa.ext = data.ext;
-    this.mapsService.getMaps();
+    this.maps = [...this.maps];
+    this.cdRef.detectChanges();
+    this.processingCount--;
+    if(this.processingCount <= 0) {
+      this.mapsService.getMaps();
+    }
 		// console.log(maps);
 	}
 
@@ -248,10 +254,12 @@ export class MapsSectionComponent implements OnInit, AfterViewInit {
               }
               // Si el mapa no está en la lista, lo agrego
               if(!this.maps.find(m => m.id === file.id)) {
+                file.estado = "PROCESANDO";
                 this.maps.push(file);
-                this.sort(this.sorting);
               }
 						});
+            this.sort(this.sorting);
+            this.processingCount = data.maps.length;
 					}
 
 					// Agrego los archivos que se subieron incorrectamente
