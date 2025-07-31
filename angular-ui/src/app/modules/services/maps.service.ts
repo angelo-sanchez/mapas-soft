@@ -32,6 +32,21 @@ export class MapsService {
 		this.dataSource$.next(maps);
 	}
 
+  async getLogs(mapId: string) {
+    let url = environment.apiUrl + "/maps/" + mapId + "/logs";
+    const map = await this.httpClient.get<{ log: any[], id: string }>(url, {
+      headers: {
+        'Authorization': `bearer ` + this.loginService.getToken()
+      }
+    }).toPromise();
+    const maps = [...this.dataSource$.value];
+    const index = maps.findIndex(m => m.id === map.id);
+    if (index !== -1) {
+      maps[index].log = map.log;
+      this.dataSource$.next(maps);
+    }
+  }
+
 	// Inserta un mapa. Retorna un MapData
 	insertMaps(datos: FormData) {
 		let url = environment.apiUrl + '/maps'

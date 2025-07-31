@@ -111,7 +111,9 @@ export class MapsSectionComponent implements OnInit, AfterViewInit {
 	onClick(data: any) {
 		let event: MouseEvent = data.event;
 		let map: MapData = data.map;
-
+    if(map && map.id && (!map.log || map.log.length <= 0)) {
+      this.mapsService.getLogs(map.id);
+    }
 		if (this.contextMenu || this.contextMenu != undefined) { this.contextMenu.closeMenu(); }
 
 		if (event.shiftKey) {
@@ -163,6 +165,7 @@ export class MapsSectionComponent implements OnInit, AfterViewInit {
 			mapa.log = [data.log];
 		} else if (!mapa.log.includes(data.log)) {
 			mapa.log.push(data.log);
+      this.cdRef.markForCheck();
 		}
 	}
 
@@ -192,6 +195,7 @@ export class MapsSectionComponent implements OnInit, AfterViewInit {
 		else if (!mapa.log.includes(data.log))
 			mapa.log.push(data.log);
 		if (data.ext) mapa.ext = data.ext;
+    this.mapsService.getMaps();
 		// console.log(maps);
 	}
 
@@ -238,6 +242,10 @@ export class MapsSectionComponent implements OnInit, AfterViewInit {
 								done: true
 							};
 							archivosLista.push(obj);
+              if(!this.maps.find(m => m.id === file.id)) {
+                this.maps.push(file);
+                this.sort(this.sorting);
+              }
 						});
 					}
 
@@ -266,7 +274,6 @@ export class MapsSectionComponent implements OnInit, AfterViewInit {
 				} else {
 					this._snackBar.open('Se produjo un error al subir un archivo', 'Aceptar');
 				}
-        this.mapsService.getMaps();
 			}, (error: any) => {
 				console.log("Se produjo un error al subir archivos");
 				console.error(error);
@@ -298,11 +305,14 @@ export class MapsSectionComponent implements OnInit, AfterViewInit {
 	// Elimina un mapa (file)
 	async remove() {
 		this.mapsSectionService.remove(this.selectedMaps);
-		this.mapsService.getMaps();
 	}
 
 	// Muestra la vista detalle en la vista grilla
 	openViewDetail(){
+    const map = this.item;
+    if(map && map.id && (!map.log || map.log.length <= 0)) {
+      this.mapsService.getLogs(map.id);
+    }
     if(this.isListView) {
       this.listView.toggleExpanded(this.item!);
     } else {

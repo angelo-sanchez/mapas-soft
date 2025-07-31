@@ -31,11 +31,24 @@ export const MapsController = {
                             date_creation: map.createdAt,
                             name: map.name,
                             ext: map.ext,
-                            log: map.log || []
+                            log: /* map.log || */ []
                         };
                     }));
             return res.status(Status.NO_CONTENT).json([]);
         });
+    },
+    getLogs: async function (req: Request, res: Response) {
+        if (!req.user)
+            return res.status(Status.FORBIDDEN).json({ message: 'You must be logged in to make this action' });
+        if (!req.params.id)
+            return res.status(Status.BAD_REQUEST).json({ message: 'Map ID must be provided' });
+        const id = req.params.id;
+        // Busca el mapa por ID, y se trae solo el campo log
+        const map = await Map.findById(id);
+        if(!map) {
+            return res.status(Status.NOT_FOUND).json({ message: `Map with id: ${id} not found` });
+        }
+        return res.status(Status.OK).json({ log: map.log || [], id: map._id });
     },
     download: function (req: Request, res: Response) {
         if (!req.user)

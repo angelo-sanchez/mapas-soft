@@ -22,6 +22,10 @@ router.route("/maps/download/:id")
     .all(passport.authenticate('jwt', { session: false }))
     .get(maps.download);
 
+router.route("/maps/:id/logs")
+    .all(passport.authenticate('jwt', { session: false }))
+    .get(maps.getLogs);
+
 router.route("/maps/:id/preview")
     .all(passport.authenticate('jwt', { session: false }))
     .get(maps.preview);
