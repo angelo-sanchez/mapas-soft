@@ -5,12 +5,13 @@ export const setupLayers = async (map: Map, mapData: MapData, paintProps) => {
   const data = await fetch(mapData.urlPreview + '.json').then((res) =>
     res.json()
   );
+  const maxZoom = parseInt(data.maxzoom, 10);
   const dataLayers: any = layer(
     mapData.name,
     data.tiles[0],
     data.vector_layers[0].id,
     data.tilestats.layers[0].geometry,
-    data.maxzoom
+    isNaN(maxZoom) || maxZoom > 12 ? 12 : maxZoom
   );
   if(dataLayers[1].layer.type === 'fill') {
     dataLayers[1].layer.paint = {

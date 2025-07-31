@@ -55,7 +55,7 @@ export default (mapName: string, mapUrl: string, sourceLayer: string, geometry: 
         "name": "barrios",
         "source": {
             "type": "vector",
-            "maxzoom": maxZoom ? maxZoom : 12,
+            "maxzoom": maxZoom,
             "tiles": [
                 mapUrl
             ]
