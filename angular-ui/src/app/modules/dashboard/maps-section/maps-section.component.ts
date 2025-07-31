@@ -90,6 +90,7 @@ export class MapsSectionComponent implements OnInit, AfterViewInit {
 
 
   public sort({active, direction}: MapSort) {
+    if(!this.maps || this.maps.length <= 0) return;
     this.sorting = {active, direction};
     const key = active;
     const asc = direction === 'asc' ? 1 : -1;
@@ -242,6 +243,10 @@ export class MapsSectionComponent implements OnInit, AfterViewInit {
 								done: true
 							};
 							archivosLista.push(obj);
+              if(!this.maps || this.maps.length <= 0) {
+                this.maps = [];
+              }
+              // Si el mapa no está en la lista, lo agrego
               if(!this.maps.find(m => m.id === file.id)) {
                 this.maps.push(file);
                 this.sort(this.sorting);
