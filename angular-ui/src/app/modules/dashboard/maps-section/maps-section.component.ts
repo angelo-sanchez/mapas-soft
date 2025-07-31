@@ -166,7 +166,7 @@ export class MapsSectionComponent implements OnInit, AfterViewInit {
 			mapa.log = [data.log];
 		} else if (!mapa.log.includes(data.log)) {
 			mapa.log.push(data.log);
-      this.cdRef.markForCheck();
+      this.cdRef.detectChanges();
 		}
 	}
 
@@ -310,6 +310,7 @@ export class MapsSectionComponent implements OnInit, AfterViewInit {
 	// Elimina un mapa (file)
 	async remove() {
 		this.mapsSectionService.remove(this.selectedMaps);
+    this.cdRef.detectChanges();
 	}
 
 	// Muestra la vista detalle en la vista grilla
